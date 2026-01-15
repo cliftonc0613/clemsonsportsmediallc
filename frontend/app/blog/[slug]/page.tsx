@@ -11,6 +11,10 @@ import {
   isWordPressConfigured,
   rewriteImageUrl,
   rewriteContentUrls,
+  getPostAuthorAvatar,
+  getPostAuthorBio,
+  getPostCategories,
+  getPostTags,
 } from "@/lib/wordpress";
 import { getRankMathMeta, generateSeoMetadata } from "@/lib/seo";
 import { generateArticleSchema, generateBreadcrumbSchema } from "@/lib/schema";
@@ -23,6 +27,8 @@ import { BlurImage } from "@/components/BlurImage";
 import { ShareButton } from "@/components/ShareButton";
 import { ReadingProgress } from "@/components/ReadingProgress";
 import { SaveOfflineButton } from "@/components/SaveOfflineButton";
+import { AuthorBio } from "@/components/AuthorBio";
+import { PostMeta } from "@/components/PostMeta";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -119,6 +125,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const date = formatDate(post.date);
   const readingTime = getReadingTime(post.content.rendered);
   const authorName = post.author_name || "Unknown Author";
+  const authorAvatar = getPostAuthorAvatar(post);
+  const authorBio = getPostAuthorBio(post);
+  const categories = getPostCategories(post);
+  const tags = getPostTags(post);
 
   // Rewrite image URLs from local to production
   const featuredImageUrl = rewriteImageUrl(post.featured_image_url);
@@ -158,29 +168,47 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Structured Data */}
       <MultiStructuredData schemas={[articleSchema, breadcrumbSchema]} />
 
-      {/* Article Header */}
-      <section className="bg-muted pb-16 pt-32 md:pb-24 md:pt-48">
+      {/* Article Header - Clemson Sports Media Style */}
+      <section className="bg-gray-100 pb-16 pt-32 md:pb-24 md:pt-48">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
-            {/* Meta */}
-            <div className="mb-6 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-              <span>{date}</span>
-              <span>•</span>
-              <span>{readingTime} min read</span>
-              <span>•</span>
-              <span>By {authorName}</span>
-            </div>
+            {/* Category Badges */}
+            {categories.length > 0 && (
+              <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/category/${category.slug}`}
+                    className="bg-[var(--clemson-orange)] text-white text-xs font-semibold uppercase px-3 py-1 hover:bg-[var(--clemson-purple)] transition-colors"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            )}
 
             {/* Title */}
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+            <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
               {title}
             </h1>
+
+            {/* Orange accent line */}
+            <div className="w-24 h-1 bg-[var(--clemson-orange)] mx-auto mb-6" />
+
+            {/* Meta */}
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
+              <span>{date}</span>
+              <span className="text-[var(--clemson-orange)]">•</span>
+              <span>{readingTime} min read</span>
+              <span className="text-[var(--clemson-orange)]">•</span>
+              <span>By {authorName}</span>
+            </div>
           </div>
 
           {/* Featured Image */}
           {featuredImageUrl && (
             <div className="mx-auto mt-12 max-w-4xl">
-              <div className="relative aspect-video overflow-hidden rounded-xl">
+              <div className="relative aspect-video overflow-hidden">
                 <BlurImage
                   src={featuredImageUrl}
                   alt={title}
@@ -201,13 +229,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="mx-auto max-w-3xl">
             <WordPressContent
               html={contentHtml}
-              className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-primary prose-img:rounded-xl"
+              className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:font-bold prose-a:text-[var(--clemson-orange)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-blockquote:border-l-[var(--clemson-purple)] prose-blockquote:border-l-4"
             />
           </div>
 
+          {/* Post Meta: Categories & Tags */}
+          <div className="mx-auto max-w-3xl mt-12 pt-8 border-t border-gray-200">
+            <PostMeta categories={categories} tags={tags} />
+          </div>
+
           {/* Actions: Back to Blog, Save Offline & Share */}
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-4">
-            <Button asChild variant="outline">
+          <div className="mx-auto max-w-3xl mt-8 flex flex-wrap items-center justify-between gap-4">
+            <Button asChild variant="outline" className="border-[var(--clemson-purple)] text-[var(--clemson-purple)] hover:bg-[var(--clemson-purple)] hover:text-white">
               <Link href="/blog">← Back to Blog</Link>
             </Button>
             <div className="flex items-center gap-2">
@@ -219,16 +252,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               />
             </div>
           </div>
+
+          {/* Author Bio */}
+          <div className="mx-auto max-w-3xl mt-12">
+            <AuthorBio
+              name={authorName}
+              avatar={authorAvatar}
+              bio={authorBio}
+            />
+          </div>
         </div>
       </article>
 
-      {/* Related Posts */}
+      {/* Related Posts - Clemson Style */}
       {relatedPosts.length > 0 && (
-        <section className="border-t bg-muted/50 py-16 md:py-24">
+        <section className="border-t bg-gray-100 py-16 md:py-24">
           <div className="container mx-auto px-4">
-            <h2 className="mb-12 text-center text-3xl font-bold tracking-tight">
-              Related Posts
-            </h2>
+            <div className="text-center mb-12">
+              <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-tight inline-block pb-2 border-b-4 border-[var(--clemson-orange)]">
+                Related Posts
+              </h2>
+            </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {relatedPosts.map((relatedPost) => (
                 <BlogCard key={relatedPost.id} post={relatedPost} />

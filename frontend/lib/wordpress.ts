@@ -133,6 +133,12 @@ export interface WPPost {
         };
       };
     }>;
+    'wp:term'?: Array<Array<{
+      id: number;
+      name: string;
+      slug: string;
+      taxonomy: string;
+    }>>;
   };
 }
 
@@ -823,4 +829,47 @@ export function getPostAuthorAvatar(post: WPPost): string | null {
     embeddedAuthor.avatar_urls['24'] ||
     null
   );
+}
+
+/**
+ * Get author bio from post's _embedded data
+ * Returns the author description or empty string if not available
+ */
+export function getPostAuthorBio(post: WPPost): string {
+  const embeddedAuthor = post._embedded?.author?.[0];
+  return embeddedAuthor?.description || "";
+}
+
+/**
+ * Get embedded categories from post's _embedded data
+ * Returns array of category objects with id, name, and slug
+ */
+export function getPostCategories(post: WPPost): Array<{ id: number; name: string; slug: string }> {
+  const terms = post._embedded?.['wp:term'];
+  if (!terms) return [];
+
+  // wp:term is an array of arrays, first array is categories, second is tags
+  const categories = terms.flat().filter((term) => term.taxonomy === 'category');
+  return categories.map((cat) => ({
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+  }));
+}
+
+/**
+ * Get embedded tags from post's _embedded data
+ * Returns array of tag objects with id, name, and slug
+ */
+export function getPostTags(post: WPPost): Array<{ id: number; name: string; slug: string }> {
+  const terms = post._embedded?.['wp:term'];
+  if (!terms) return [];
+
+  // wp:term is an array of arrays, first array is categories, second is tags
+  const tags = terms.flat().filter((term) => term.taxonomy === 'post_tag');
+  return tags.map((tag) => ({
+    id: tag.id,
+    name: tag.name,
+    slug: tag.slug,
+  }));
 }
