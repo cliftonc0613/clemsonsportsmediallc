@@ -47,8 +47,10 @@ export function TwitterEmbed({
   onError,
 }: TwitterEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [height, setHeight] = useState<number>(0);
 
   const id = extractTweetId(tweetId);
 
@@ -57,46 +59,29 @@ export function TwitterEmbed({
 
     setIsLoading(true);
     setHasError(false);
+    setHeight(0);
 
-    // Use Twitter's publish embed endpoint which returns an iframe
+    // Use Twitter's publish embed endpoint
     const embedUrl = `https://platform.twitter.com/embed/Tweet.html?id=${id}&theme=${theme}&dnt=true`;
 
     // Create iframe
     const iframe = document.createElement("iframe");
+    iframeRef.current = iframe;
     iframe.src = embedUrl;
     iframe.style.cssText = `
       width: 100%;
-      min-height: 250px;
       border: none;
-      border-radius: 12px;
-      background: transparent;
+      overflow: hidden;
+      display: block;
     `;
     iframe.allowFullscreen = true;
-    iframe.setAttribute("loading", "lazy");
-    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox");
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("frameborder", "0");
 
     // Handle load
     iframe.onload = () => {
       setIsLoading(false);
       onLoad?.();
-
-      // Try to resize iframe based on content
-      // Twitter embeds send postMessage with height
-      const handleMessage = (event: MessageEvent) => {
-        if (event.origin === "https://platform.twitter.com") {
-          try {
-            const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-            if (data["twttr.embed"]?.height) {
-              iframe.style.height = `${data["twttr.embed"].height}px`;
-            }
-          } catch {
-            // Ignore parse errors
-          }
-        }
-      };
-      window.addEventListener("message", handleMessage);
-
-      return () => window.removeEventListener("message", handleMessage);
     };
 
     iframe.onerror = () => {
@@ -109,6 +94,36 @@ export function TwitterEmbed({
     containerRef.current.innerHTML = "";
     containerRef.current.appendChild(iframe);
 
+    // Listen for height messages from Twitter
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== "https://platform.twitter.com") return;
+
+      try {
+        const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+
+        // Twitter sends height in twttr.embed object
+        if (data["twttr.embed"]) {
+          const embedData = data["twttr.embed"];
+          if (embedData.height && iframeRef.current) {
+            const newHeight = parseInt(embedData.height, 10);
+            setHeight(newHeight);
+            iframeRef.current.style.height = `${newHeight}px`;
+          }
+        }
+
+        // Also check for direct height property
+        if (data.height && iframeRef.current) {
+          const newHeight = parseInt(data.height, 10);
+          setHeight(newHeight);
+          iframeRef.current.style.height = `${newHeight}px`;
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+
     // Timeout fallback for loading state
     const timeout = setTimeout(() => {
       setIsLoading(false);
@@ -116,6 +131,8 @@ export function TwitterEmbed({
 
     return () => {
       clearTimeout(timeout);
+      window.removeEventListener("message", handleMessage);
+      iframeRef.current = null;
     };
   }, [id, theme, onLoad, onError]);
 
@@ -125,7 +142,7 @@ export function TwitterEmbed({
         <div
           className="twitter-embed-loading"
           style={{
-            minHeight: "250px",
+            height: "150px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -196,7 +213,8 @@ export function TwitterEmbed({
         ref={containerRef}
         style={{
           display: isLoading || hasError ? "none" : "block",
-          minHeight: "250px",
+          height: height > 0 ? `${height}px` : "auto",
+          overflow: "hidden",
         }}
       />
     </div>
