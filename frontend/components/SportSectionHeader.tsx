@@ -25,7 +25,7 @@ export function SportSectionHeader({
 
       {/* Category Title */}
       <div className="relative z-10 text-center">
-        <h2 className="inline-block font-heading text-2xl md:text-3xl font-bold pb-2 border-b-4 border-[var(--clemson-orange)]">
+        <h2 className="inline-block font-heading text-2xl md:text-3xl font-bold text-black pb-2 border-b-4 border-[var(--clemson-orange)]">
           {categoryName}
         </h2>
       </div>
