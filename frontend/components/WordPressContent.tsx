@@ -308,7 +308,9 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
 
   return (
     <div ref={containerRef} className={className}>
-      <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
+      {/* suppressHydrationWarning: Server uses regex sanitization, client uses DOMPurify.
+          Content is intentionally re-sanitized on client for security. */}
+      <div dangerouslySetInnerHTML={{ __html: processedHtml }} suppressHydrationWarning />
 
       {/* Render YouTube players via portals */}
       {mounted && youtubeEmbeds.map((embed) => (
