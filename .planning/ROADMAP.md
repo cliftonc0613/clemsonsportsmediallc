@@ -19,7 +19,7 @@ None
 - [x] **Phase 3: Content Cards** - Breaking news section, article cards, compact list views, EXCLUSIVE badges
 - [x] **Phase 4: Sport Sections** - Per-sport category sections with watermark headers, asymmetric grids
 - [x] **Phase 5: Blog Post Template** - Single post page with social sharing, author info, related posts
-- [ ] **Phase 6: Archive Pages** - Category and tag archive pages with pagination
+- [x] **Phase 6: Archive Pages** - Category and tag archive pages with pagination
 - [ ] **Phase 7: Navigation & Search** - Header navigation, mobile menu, search functionality
 - [ ] **Phase 8: PWA & Performance** - Lighthouse 95+, offline reading, push notifications
 
@@ -106,7 +106,10 @@ Key deliverables:
 **Goal**: Build category and tag archive pages
 **Depends on**: Phase 5
 **Research**: Unlikely (existing WordPress API patterns)
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [x] 06-01: Category and Tag Archives with Pagination
 
 Key deliverables:
 - Category archive page (Sport > Content Type hierarchy)
@@ -158,7 +161,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 3. Content Cards | 1/1 | Complete | 2026-01-15 |
 | 4. Sport Sections | 1/1 | Complete | 2026-01-15 |
 | 5. Blog Post Template | 1/1 | Complete | 2026-01-15 |
-| 6. Archive Pages | 0/TBD | Not started | - |
+| 6. Archive Pages | 1/1 | Complete | 2026-01-15 |
 | 7. Navigation & Search | 0/TBD | Not started | - |
 | 8. PWA & Performance | 0/TBD | Not started | - |
 

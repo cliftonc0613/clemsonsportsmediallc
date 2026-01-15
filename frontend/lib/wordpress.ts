@@ -560,6 +560,141 @@ export async function getPostsByCategorySlug(
   });
 }
 
+/**
+ * Pagination result interface
+ */
+export interface PaginatedResult<T> {
+  items: T[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+/**
+ * Fetch posts with pagination metadata
+ * Returns posts along with total count and page info from WordPress headers
+ */
+export async function getPostsWithPagination(params?: {
+  per_page?: number;
+  page?: number;
+  categories?: number[];
+  tags?: number[];
+  exclude?: number[];
+  orderby?: string;
+  order?: 'asc' | 'desc';
+}): Promise<PaginatedResult<WPPost>> {
+  const apiUrl = getApiUrl();
+  const queryParams = new URLSearchParams();
+
+  const perPage = params?.per_page || 12;
+  const page = params?.page || 1;
+
+  queryParams.set('per_page', perPage.toString());
+  queryParams.set('page', page.toString());
+  if (params?.categories?.length) queryParams.set('categories', params.categories.join(','));
+  if (params?.tags?.length) queryParams.set('tags', params.tags.join(','));
+  if (params?.exclude?.length) queryParams.set('exclude', params.exclude.join(','));
+  if (params?.orderby) queryParams.set('orderby', params.orderby);
+  if (params?.order) queryParams.set('order', params.order);
+  queryParams.set('_embed', 'true');
+
+  // Add cache-busting parameter
+  const separator = '&';
+  const url = `${apiUrl}/posts?${queryParams.toString()}${separator}_t=${Date.now()}`;
+
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const posts = await response.json() as WPPost[];
+
+  // Get pagination info from headers
+  const totalItems = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+  const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
+
+  return {
+    items: posts,
+    totalItems,
+    totalPages,
+    currentPage: page,
+  };
+}
+
+/**
+ * Fetch posts by category slug with pagination
+ */
+export async function getPostsByCategorySlugWithPagination(
+  categorySlug: string,
+  params?: {
+    per_page?: number;
+    page?: number;
+    orderby?: string;
+    order?: 'asc' | 'desc';
+  }
+): Promise<PaginatedResult<WPPost> & { category: WPCategory | null }> {
+  const category = await getCategoryBySlug(categorySlug);
+  if (!category) {
+    return {
+      items: [],
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 1,
+      category: null,
+    };
+  }
+
+  const result = await getPostsWithPagination({
+    categories: [category.id],
+    ...params,
+  });
+
+  return {
+    ...result,
+    category,
+  };
+}
+
+/**
+ * Fetch posts by tag slug with pagination
+ */
+export async function getPostsByTagSlugWithPagination(
+  tagSlug: string,
+  params?: {
+    per_page?: number;
+    page?: number;
+    orderby?: string;
+    order?: 'asc' | 'desc';
+  }
+): Promise<PaginatedResult<WPPost> & { tag: WPTag | null }> {
+  const tag = await getTagBySlug(tagSlug);
+  if (!tag) {
+    return {
+      items: [],
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 1,
+      tag: null,
+    };
+  }
+
+  const result = await getPostsWithPagination({
+    tags: [tag.id],
+    ...params,
+  });
+
+  return {
+    ...result,
+    tag,
+  };
+}
+
 // =============================================================================
 // Search
 // =============================================================================
