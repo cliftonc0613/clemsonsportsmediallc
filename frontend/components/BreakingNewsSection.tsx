@@ -61,7 +61,7 @@ export function BreakingNewsSection({
                 </span>
 
                 {/* Title */}
-                <h3 className="font-heading text-white text-lg leading-tight line-clamp-3">
+                <h3 className="font-heading text-white text-xl md:text-2xl leading-tight line-clamp-3">
                   {title}
                 </h3>
               </div>
