@@ -56,9 +56,13 @@ A modern sports media platform delivering Clemson athletics coverage with a news
 
 ### Typography
 
-- **Headlines**: Bold, condensed font (sports newspaper style)
-- **Body**: Clean, readable sans-serif
+- **Headlines**: Apotek (bold, condensed sports newspaper style)
+- **Body/Paragraphs**: Basic Sans (clean, readable)
 - **Style**: Modern sports newspaper aesthetic
+- **Font Source**: Adobe Fonts (Typekit)
+  ```html
+  <link rel="stylesheet" href="https://use.typekit.net/rlq1tnk.css">
+  ```
 
 ### Visual Elements
 
