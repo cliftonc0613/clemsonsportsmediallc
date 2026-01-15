@@ -76,14 +76,17 @@ export function SportCategorySection({
   );
 }
 
-// Top row image card - portrait image only, no title below
+// Top row image card - portrait image with title and byline below
 function TopImageCard({ post }: { post: WPPost }) {
   const imageUrl = rewriteImageUrl(post.featured_image_url);
   const title = decodeHtmlEntities(post.title.rendered);
+  const authorName = getPostAuthorName(post);
+  const authorAvatar = getPostAuthorAvatar(post);
+  const date = formatDate(post.date);
 
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden">
+      <div className="relative aspect-[4/5] overflow-hidden mb-3">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -96,6 +99,14 @@ function TopImageCard({ post }: { post: WPPost }) {
           <div className="absolute inset-0 bg-[var(--clemson-dark-purple)]" />
         )}
       </div>
+      <h3 className="font-heading text-base md:text-lg font-bold leading-tight mb-2 group-hover:text-[var(--clemson-orange)] transition-colors line-clamp-2">
+        {title}
+      </h3>
+      <AuthorByline
+        authorName={authorName}
+        authorAvatar={authorAvatar}
+        date={date}
+      />
     </Link>
   );
 }
