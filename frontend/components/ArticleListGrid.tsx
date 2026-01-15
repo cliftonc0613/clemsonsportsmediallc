@@ -42,7 +42,7 @@ export function ArticleListGrid({
                       Exclusive
                     </span>
                   )}
-                  <h4 className="inline font-heading text-base leading-snug group-hover:text-[var(--clemson-orange)] transition-colors">
+                  <h4 className="inline font-heading text-lg md:text-xl leading-snug group-hover:text-[var(--clemson-orange)] transition-colors">
                     {title}
                   </h4>
                 </div>
