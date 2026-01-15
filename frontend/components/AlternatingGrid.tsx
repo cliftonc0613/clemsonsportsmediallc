@@ -66,7 +66,7 @@ function ImageCard({ post }: { post: WPPost }) {
 
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden">
         {imageUrl ? (
           <Image
             src={imageUrl}
