@@ -45,7 +45,10 @@ Key deliverables:
 **Goal**: Build the main homepage hero section with featured article and grid layout
 **Depends on**: Phase 1
 **Research**: Unlikely (internal UI patterns)
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 02-01: Hero Grid Components & Homepage Integration
 
 Key deliverables:
 - Large featured article card (50% width, full height)
