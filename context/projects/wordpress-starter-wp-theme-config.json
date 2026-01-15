@@ -1,0 +1,80 @@
+{
+  "_metadata": {
+    "generatedAt": "2025-01-07T00:00:00Z",
+    "skillVersion": "1.0.0"
+  },
+  "project": {
+    "name": "Starter WP Theme",
+    "type": "business-services",
+    "primaryGoal": "multi-purpose",
+    "primaryGoalDetails": ["lead-generation", "content-marketing", "online-sales", "brand-presence"],
+    "migrationStatus": "fresh"
+  },
+  "content": {
+    "types": ["posts", "pages", "services", "testimonials"],
+    "customFieldsRequired": true,
+    "updateFrequency": "weekly"
+  },
+  "api": {
+    "strategy": "rest",
+    "rationale": "REST API is built into WordPress, simpler to cache, and has a lower learning curve. Suitable for moderate data complexity."
+  },
+  "frontend": {
+    "framework": "nextjs",
+    "renderingStrategy": "isr",
+    "previewRequired": true
+  },
+  "hosting": {
+    "wordpress": "flywheel",
+    "wordpressDev": "local-by-flywheel",
+    "frontend": "vercel",
+    "automaticRebuilds": true,
+    "rebuildStrategy": "on-demand-revalidation"
+  },
+  "timeline": {
+    "type": "mvp",
+    "estimate": "2-4 weeks",
+    "budgetRange": "minimal",
+    "budgetEstimate": "$0-50/month"
+  },
+  "recommendations": {
+    "starterTemplate": {
+      "name": "Vercel WordPress Starter",
+      "url": "https://vercel.com/templates/next.js/nextjs-wordpress-headless-cms",
+      "rationale": "Quick start with Vercel deployment, perfect for MVP timeline"
+    },
+    "alternativeTemplates": [
+      {
+        "name": "next-wp",
+        "url": "https://github.com/9d8dev/next-wp",
+        "rationale": "TypeScript + modern patterns"
+      },
+      {
+        "name": "gregrickaby starter",
+        "url": "https://github.com/gregrickaby/nextjs-wordpress",
+        "rationale": "Well-documented, TypeScript, App Router"
+      }
+    ],
+    "plugins": [
+      {
+        "name": "Advanced Custom Fields (ACF)",
+        "purpose": "Custom post types and custom fields for Services and Testimonials",
+        "required": true,
+        "free": true,
+        "note": "Using ACF for both CPT registration and custom fields"
+      },
+      {
+        "name": "Yoast SEO",
+        "purpose": "SEO optimization and meta tags",
+        "required": false,
+        "free": true
+      },
+      {
+        "name": "WP REST Cache",
+        "purpose": "Cache REST API responses for performance",
+        "required": false,
+        "free": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "_instructions": "Fill this out to document what you offer and how you're positioned. AI uses this to understand your business.",
+  "_metadata": {
+    "created_date": "2025-12-13T00:00:00Z",
+    "updated_date": "2025-12-13T00:00:00Z",
+    "version": "1.0"
+  },
+  "overview": {
+    "_instructions": "The big picture of what you do.",
+    "business_name": "",
+    "what_you_do": "",
+    "who_you_serve": "",
+    "primary_transformation": "What change do you create for people?",
+    "mission": "Why does your business exist?",
+    "vision": "Where are you heading?"
+  },
+  "positioning": {
+    "_instructions": "How you're different from everyone else.",
+    "unique_angle": "",
+    "what_makes_you_different": [],
+    "core_philosophy": "",
+    "methodology": "",
+    "problem_you_solve": "",
+    "core_value_proposition": ""
+  },
+  "offerings": {
+    "_instructions": "What can people buy or access?",
+    "free_offerings": [
+      {
+        "name": "",
+        "description": "",
+        "where_to_get_it": ""
+      }
+    ],
+    "paid_offerings": [
+      {
+        "name": "",
+        "description": "",
+        "pricing_model": "",
+        "where_to_get_it": ""
+      }
+    ],
+    "service_delivery_methods": []
+  },
+  "audience": {
+    "_instructions": "Who your customers are and what they need.",
+    "key_pain_points": [],
+    "expected_outcomes": [],
+    "customer_journey_stage": ""
+  },
+  "operations": {
+    "_instructions": "How you run your business.",
+    "team_size": "",
+    "organizational_structure": "",
+    "key_metrics": []
+  }
+}

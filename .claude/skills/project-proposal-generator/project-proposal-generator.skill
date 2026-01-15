@@ -1,0 +1,176 @@
+---
+name: project-proposal-generator
+description: Generate professional project proposals with executive summary, scope, timeline, budget, deliverables, and risk assessment. Use when creating comprehensive proposals for clients, stakeholders, or internal projects. Outputs a complete, ready-to-present proposal document with all necessary sections for decision-making.
+---
+
+# Project Proposal Generator
+
+Generate professional, comprehensive project proposals that clearly communicate value, scope, timeline, budget, and deliverables to stakeholders and clients.
+
+## Workflow
+
+### 1. Gather Project Information
+
+When invoked, ask the user the following questions to understand the project requirements:
+
+1. **Project Overview**: What is the project name and high-level objective? What problem does it solve?
+2. **Client/Stakeholder**: Who is the proposal for? (client name, internal stakeholder, department)
+3. **Project Type**: What type of project is this? (e.g., web development, consulting, marketing campaign, infrastructure upgrade, product development)
+4. **Scope Details**: What are the key deliverables and features? What's included and what's explicitly excluded?
+5. **Timeline Constraints**: What's the desired timeline or deadline? Are there any critical milestones or dependencies?
+6. **Budget Range**: What's the estimated budget or budget range? Should this include a breakdown by phase or deliverable?
+7. **Team & Resources**: Who will be involved? (team size, roles, external vendors, required expertise)
+8. **Success Metrics**: How will success be measured? What are the key performance indicators (KPIs)?
+9. **Risks & Assumptions**: Are there any known risks, dependencies, or assumptions to document?
+10. **Additional Context**: Any competitive context, previous attempts, or special requirements?
+
+Collect all responses before proceeding to generate the proposal.
+
+### 2. Generate Proposal Document
+
+Based on the user's responses, create a comprehensive proposal file:
+
+#### Project Proposal (`project_proposal.md`)
+
+The proposal should include the following sections:
+
+##### Executive Summary
+- Project name and overview (2-3 sentences)
+- Core problem being solved
+- Proposed solution summary
+- Expected outcomes and value proposition
+- Total investment and timeline at a glance
+
+##### Background & Context
+- Current situation analysis
+- Problem statement with impact
+- Opportunity description
+- Alignment with business goals/strategy
+
+##### Project Objectives
+- Primary objective
+- Secondary objectives (3-5 bullet points)
+- Success criteria and KPIs
+- Expected ROI or value metrics
+
+##### Scope of Work
+- **In Scope**: Detailed list of what will be delivered
+  - Organized by phases or workstreams
+  - Specific features, components, or activities
+- **Out of Scope**: Explicitly state what's not included
+- **Assumptions**: Key assumptions the proposal is based on
+- **Dependencies**: External factors or prerequisites
+
+##### Deliverables
+- Comprehensive list of all deliverables
+- Format: Deliverable name, description, acceptance criteria
+- Organized by phase or category
+- Include both tangible outputs and intangible outcomes
+
+##### Project Timeline
+- Overall project duration
+- Key phases with timeframes
+- Major milestones with dates
+- Critical path items
+- Buffer time for reviews and revisions
+- Format as a table or Gantt-style breakdown
+
+##### Budget & Investment
+- Total project cost (summary)
+- Breakdown by:
+  - Phase or deliverable
+  - Resource type (labor, tools, licenses, etc.)
+  - Cost category (development, design, testing, etc.)
+- Payment schedule/milestones
+- Optional: Tiered pricing options (if applicable)
+
+##### Team & Resources
+- Project team structure
+- Key roles and responsibilities
+- Required expertise and qualifications
+- External vendors or partners (if applicable)
+- Client/stakeholder responsibilities
+
+##### Methodology & Approach
+- Project management methodology (Agile, Waterfall, hybrid)
+- Development/execution approach
+- Communication plan and cadence
+- Quality assurance process
+- Change management process
+
+##### Risk Assessment & Mitigation
+- Identified risks (technical, timeline, budget, resource)
+- Risk level (High/Medium/Low)
+- Mitigation strategies for each risk
+- Contingency plans
+
+##### Terms & Conditions
+- Payment terms
+- Intellectual property ownership
+- Confidentiality requirements
+- Termination clauses
+- Warranty or support period (if applicable)
+
+##### Next Steps
+- Proposal acceptance process
+- Contract signing timeline
+- Project kickoff date
+- Immediate action items
+- Contact information for questions
+
+##### Appendices (Optional)
+- Technical specifications
+- Case studies or portfolio examples
+- Team member bios
+- Detailed technical architecture
+- Additional supporting documentation
+
+### 3. File Output Format
+
+The proposal should be created as a markdown (.md) file with:
+- Professional formatting with clear hierarchy
+- Tables for budget, timeline, and deliverables
+- Consistent styling throughout
+- Ready to convert to PDF or present directly
+- Client/stakeholder-friendly language (avoid jargon unless necessary)
+
+### 4. Optional Supplementary Files
+
+Depending on project complexity, consider creating additional files:
+
+#### Budget Breakdown (`budget_breakdown.md`)
+- Detailed cost breakdown with formulas
+- Assumptions for cost calculations
+- Alternative pricing scenarios
+
+#### Project Timeline (`project_timeline.md`)
+- Detailed Gantt chart or timeline
+- Task dependencies
+- Resource allocation by phase
+
+#### Technical Specifications (`technical_specs.md`)
+- Detailed technical requirements
+- Architecture diagrams (described)
+- Technology stack details
+- Integration requirements
+
+## Tips for Quality Output
+
+- **Be specific**: Use concrete numbers, dates, and deliverables rather than vague statements
+- **Show value**: Clearly articulate ROI and business impact throughout
+- **Manage expectations**: Be realistic with timelines and scope; under-promise and over-deliver
+- **Address concerns proactively**: Include risk mitigation to build confidence
+- **Use professional language**: Balance technical accuracy with accessibility
+- **Make it scannable**: Use headers, bullet points, and tables for easy navigation
+- **Include visuals**: Describe where charts, diagrams, or mockups would enhance understanding
+- **Customize tone**: Match the formality level to the audience (corporate vs. startup, internal vs. external)
+- **Highlight differentiators**: What makes this approach unique or superior?
+- **Call to action**: Make next steps crystal clear
+
+## Example Use Cases
+
+- **Web Development**: E-commerce site rebuild with timeline, tech stack, and phased delivery
+- **Consulting**: Digital transformation roadmap with workshops, assessments, and implementation
+- **Marketing**: Campaign proposal with creative concepts, media plan, and performance metrics
+- **Infrastructure**: Cloud migration with security assessment, migration phases, and cost optimization
+- **Product Development**: New feature development with user research, design, development, and launch phases

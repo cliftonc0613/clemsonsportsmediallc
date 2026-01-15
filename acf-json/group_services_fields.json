@@ -1,0 +1,152 @@
+{
+    "key": "group_services_fields",
+    "title": "Service Details",
+    "fields": [
+        {
+            "key": "field_service_pricing",
+            "label": "Pricing",
+            "name": "pricing",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Enter the price or pricing range (e.g., \"$99\/month\" or \"Starting at $500\")",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "$99\/month",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_service_duration",
+            "label": "Duration",
+            "name": "duration",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "How long does this service take? (e.g., \"2-4 weeks\", \"Ongoing\", \"1 hour session\")",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "2-4 weeks",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_service_features",
+            "label": "Features",
+            "name": "features",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "List the key features or deliverables included in this service",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Feature",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_service_feature_item",
+                    "label": "Feature",
+                    "name": "feature",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "Enter a feature",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_service_features"
+                }
+            ]
+        },
+        {
+            "key": "field_service_cta_text",
+            "label": "CTA Button Text",
+            "name": "cta_text",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Text for the call-to-action button",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Get Started",
+            "maxlength": "",
+            "placeholder": "Get Started",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_service_cta_link",
+            "label": "CTA Button Link",
+            "name": "cta_link",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Where should the CTA button link to? Leave empty to link to contact page.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "services"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Custom fields for the Services post type",
+    "show_in_rest": 1,
+    "display_title": "",
+    "modified": 1767865830
+}

@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WordPress Starter Project Configuration",
+  "description": "Configuration schema for headless WordPress project planning",
+  "type": "object",
+  "properties": {
+    "_metadata": {
+      "type": "object",
+      "description": "Metadata about when and how this config was generated",
+      "properties": {
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO timestamp when config was generated"
+        },
+        "skillVersion": {
+          "type": "string",
+          "description": "Version of wordpress-starter skill used"
+        }
+      },
+      "required": ["generatedAt", "skillVersion"]
+    },
+    "project": {
+      "type": "object",
+      "description": "Core project information",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Project name (used for file naming)"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["blog", "portfolio", "business", "ecommerce", "full"],
+          "description": "Type of website being built"
+        },
+        "primaryGoal": {
+          "type": "string",
+          "enum": ["lead-generation", "content-marketing", "online-sales", "brand-presence", "community"],
+          "description": "Primary business goal for the project"
+        },
+        "migrationStatus": {
+          "type": "string",
+          "enum": ["fresh", "wp-migration", "cms-migration", "rebuild"],
+          "description": "Whether this is new or migrating from existing"
+        }
+      },
+      "required": ["name", "type", "primaryGoal", "migrationStatus"]
+    },
+    "content": {
+      "type": "object",
+      "description": "Content architecture decisions",
+      "properties": {
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["posts", "pages", "portfolio", "services", "testimonials", "team", "products", "events", "faqs", "other"]
+          },
+          "description": "Content types needed for the site"
+        },
+        "customFieldsRequired": {
+          "type": "boolean",
+          "description": "Whether ACF custom fields are needed"
+        },
+        "updateFrequency": {
+          "type": "string",
+          "enum": ["daily", "weekly", "monthly", "rarely"],
+          "description": "How often content will be updated"
+        }
+      },
+      "required": ["types", "customFieldsRequired", "updateFrequency"]
+    },
+    "api": {
+      "type": "object",
+      "description": "API strategy decisions",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["graphql", "rest", "hybrid"],
+          "description": "Primary API approach"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Explanation for API choice"
+        }
+      },
+      "required": ["strategy", "rationale"]
+    },
+    "frontend": {
+      "type": "object",
+      "description": "Frontend framework and rendering decisions",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "enum": ["nextjs", "astro", "nuxt", "sveltekit", "gatsby"],
+          "description": "Selected frontend framework"
+        },
+        "renderingStrategy": {
+          "type": "string",
+          "enum": ["ssg", "ssr", "isr", "hybrid"],
+          "description": "Page rendering approach"
+        },
+        "previewRequired": {
+          "type": "boolean",
+          "description": "Whether draft preview is needed"
+        }
+      },
+      "required": ["framework", "renderingStrategy", "previewRequired"]
+    },
+    "hosting": {
+      "type": "object",
+      "description": "Hosting and deployment configuration",
+      "properties": {
+        "wordpress": {
+          "type": "string",
+          "enum": ["kinsta", "wpengine", "flywheel", "cloudways", "digitalocean", "self-hosted", "existing"],
+          "description": "WordPress backend hosting"
+        },
+        "frontend": {
+          "type": "string",
+          "enum": ["vercel", "netlify", "cloudflare", "amplify", "self-hosted"],
+          "description": "Frontend hosting platform"
+        },
+        "automaticRebuilds": {
+          "type": "boolean",
+          "description": "Whether content changes trigger rebuilds"
+        }
+      },
+      "required": ["wordpress", "frontend", "automaticRebuilds"]
+    },
+    "timeline": {
+      "type": "object",
+      "description": "Project timeline and budget",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["mvp", "standard", "extended", "flexible"],
+          "description": "Development timeline type"
+        },
+        "budgetRange": {
+          "type": "string",
+          "enum": ["minimal", "moderate", "enterprise"],
+          "description": "Monthly hosting/tools budget"
+        }
+      },
+      "required": ["type", "budgetRange"]
+    },
+    "recommendations": {
+      "type": "object",
+      "description": "Generated recommendations based on responses",
+      "properties": {
+        "starterTemplate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of recommended starter template"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL to starter template"
+            },
+            "rationale": {
+              "type": "string",
+              "description": "Why this template was recommended"
+            }
+          },
+          "required": ["name", "url"]
+        },
+        "plugins": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Plugin name"
+              },
+              "purpose": {
+                "type": "string",
+                "description": "What this plugin does"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Whether plugin is required vs optional"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "Plugin URL or documentation"
+              }
+            },
+            "required": ["name", "purpose", "required"]
+          },
+          "description": "Recommended WordPress plugins"
+        }
+      },
+      "required": ["starterTemplate", "plugins"]
+    },
+    "implementationChecklist": {
+      "type": "object",
+      "description": "Phased implementation checklist",
+      "properties": {
+        "phase1_wordpress": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "WordPress backend setup tasks"
+        },
+        "phase2_frontend": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Frontend setup tasks"
+        },
+        "phase3_preview": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Preview system setup tasks"
+        },
+        "phase4_deployment": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Deployment and go-live tasks"
+        },
+        "phase5_optimization": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Post-launch optimization tasks"
+        }
+      }
+    }
+  },
+  "required": ["_metadata", "project", "content", "api", "frontend", "hosting", "timeline", "recommendations"]
+}

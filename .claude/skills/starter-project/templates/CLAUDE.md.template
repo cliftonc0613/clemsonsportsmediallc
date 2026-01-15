@@ -1,0 +1,88 @@
+# {{PROJECT_NAME}} - CLAUDE.md
+
+## Project Overview
+
+**Project Name:** {{PROJECT_NAME}}
+**Project Type:** {{PROJECT_TYPE}}
+**Description:** {{PROJECT_DESCRIPTION}}
+
+## Project Structure
+
+```
+{{PROJECT_NAME}}/
+├── .claude/
+│   ├── agents/          # Specialized AI agents
+│   ├── commands/        # Custom slash commands
+│   └── skills/          # Reusable skills
+├── context/
+│   └── core/
+│       ├── business-profile.json    # Your business positioning
+│       ├── voice-dna.json           # Your communication style
+│       └── icp.json                 # Your ideal client profiles
+├── knowledge/
+│   ├── drafts/          # Work in progress
+│   ├── published/       # Finalized content
+│   ├── notes/           # Quick notes and ideas
+│   └── research/        # Research materials
+└── CLAUDE.md            # This file
+```
+
+## Available Skills
+
+This project includes access to pre-built skills for:
+
+- **business-profile-creator** - Document your business positioning
+- **voice-dna** - Capture your unique communication style
+- **ideal-client-profile** - Define your ideal customer personas
+- **starter-project** - Initialize new projects with this setup
+
+To use a skill:
+```
+/skill-name
+```
+
+## Available Agents
+
+Specialized agents are available in `.claude/agents/` for:
+- Content creation and research
+- Design and UI development
+- Market analysis and competitive intelligence
+- Marketing and copywriting
+- And more...
+
+## Getting Started
+
+1. **Fill out your profiles**:
+   - Use `/business-profile-creator` to document your business
+   - Use `/voice-dna` to capture your communication style
+   - Use `/ideal-client-profile` to define your ideal clients
+
+2. **Explore available commands**:
+   - Check `.claude/commands/` for custom slash commands
+   - Run `/status` for project overview
+
+3. **Start creating**:
+   - Use agents and commands for your first tasks
+   - Save research and drafts in the `knowledge/` folder
+
+## Synced Components
+
+The following components were synced from your central repository:
+
+**Items Synced:** {{SYNC_SCOPE}}
+
+- Location: `.claude/`
+- Last synced: {{SYNC_DATE}}
+
+To sync again or update, use:
+```
+/development:sync-claude-config
+```
+
+## Notes
+
+- This project was initialized with the starter-project skill
+- All placeholder JSON files are ready for you to fill out
+- Agents and commands are accessible throughout the project
+
+For questions about available tools, check the agent and command descriptions in `.claude/`.

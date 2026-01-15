@@ -1,0 +1,85 @@
+{
+  "_instructions": "Document your ideal client personas here. Use these to guide marketing, sales, product development, and content strategy.",
+  "_metadata": {
+    "created_date": "2025-12-13T00:00:00Z",
+    "updated_date": "2025-12-13T00:00:00Z",
+    "version": "1.0",
+    "total_personas": 0
+  },
+  "personas": [
+    {
+      "persona_name": "",
+      "persona_id": "",
+      "_metadata": {
+        "created_date": "2025-12-13T00:00:00Z",
+        "updated_date": "2025-12-13T00:00:00Z"
+      },
+      "demographics": {
+        "_instructions": "Who they are: age, industry, role, company size, location, income.",
+        "age_range": "",
+        "industries": [],
+        "company_size": "",
+        "job_title_or_role": [],
+        "location": "",
+        "income_or_revenue_level": ""
+      },
+      "psychographics_and_mindset": {
+        "_instructions": "How they think: values, beliefs, mindset, aspirations, fears, vision.",
+        "core_values": [],
+        "mindset_or_philosophy": "",
+        "aspirations": [],
+        "fears_and_anxieties": [],
+        "ideal_future_state": ""
+      },
+      "problems_and_pain_points": {
+        "_instructions": "What's keeping them up at night.",
+        "top_pain_points": [],
+        "cost_of_problem": {
+          "time": "",
+          "money": "",
+          "opportunity": "",
+          "morale": ""
+        },
+        "previous_solutions_attempted": [],
+        "why_previous_solutions_failed": ""
+      },
+      "goals_and_desired_outcomes": {
+        "_instructions": "What they want to achieve.",
+        "primary_goal": "",
+        "success_definition": {
+          "metrics": [],
+          "feelings": [],
+          "results": []
+        },
+        "secondary_goals": [],
+        "timeline": ""
+      },
+      "budget_and_decision_making": {
+        "_instructions": "Money and how they decide.",
+        "budget_range": "",
+        "decision_makers_involved": [],
+        "decision_making_process": "",
+        "sales_cycle_length": ""
+      },
+      "content_and_communication_preferences": {
+        "_instructions": "How they like to learn and where they hang out.",
+        "preferred_content_formats": [],
+        "online_communities_and_platforms": [],
+        "publications_blogs_and_influencers": [],
+        "discovery_methods": []
+      },
+      "objections_and_hesitations": {
+        "_instructions": "What might stop them from buying.",
+        "common_objections": [],
+        "solution_disqualifiers": [],
+        "change_concerns": []
+      },
+      "buying_signals_and_readiness": {
+        "_instructions": "When they're ready and what wins them over.",
+        "buying_signals": [],
+        "competitive_advantages": [],
+        "deal_breakers": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+---
+name: youtube-content-generator
+description: Generate comprehensive YouTube video content including scripts, descriptions, b-roll suggestions, and thumbnail recommendations. Use when creating complete video packages with scripts optimized for engagement, SEO-friendly descriptions, detailed b-roll shot lists, and thumbnail design concepts. Outputs multiple files for immediate production use.
+---
+
+# YouTube Content Generator
+
+Generate professional YouTube video content including scripts, descriptions, b-roll recommendations, and thumbnail suggestions in separate files ready for production.
+
+## Workflow
+
+### 1. Gather Video Information
+
+When invoked, ask the user the following questions in order to understand their video needs:
+
+1. **Target Audience & Topic**: What's the main topic or niche for your YouTube video? (e.g., AI education, product reviews, tutorials, vlogs)
+2. **Video Style & Tone**: What's your preferred tone? (e.g., educational, entertaining, motivational, conversational, formal)
+3. **Video Length**: Are you targeting short-form (under 5 mins), medium (5-15 mins), or longer videos?
+4. **Brand/Visual Identity**: Do you have specific brand colors, logos, or visual guidelines? Include company/organization name if applicable.
+5. **Content Structure**: Do you want a specific format? (e.g., problem-solution, tutorial, storytelling, interview format)
+6. **B-roll Specifics**: What types of b-roll footage should I suggest? (e.g., screen recordings, real-world footage, animations, stock footage categories)
+7. **Output Frequency**: Are you planning single videos or series? Any other context about the video's purpose?
+
+Collect all responses before proceeding to generate content.
+
+### 2. Generate Content Files
+
+Based on the user's responses, create four separate files:
+
+#### YouTube Script (`youtube_script.md`)
+- **Hook** (5-10 seconds): Compelling opening line
+- **Value Preview** (10-15 seconds): What the viewer will learn/gain
+- **Main Content**: Structured by sections with timing cues
+- **Call-to-Action**: Clear next steps (subscribe, visit link, etc.)
+- **Outro**: Channel branding and related videos
+- **Total word count**: Note approximate video length
+
+Include:
+- Speaker cues (PAUSE, EMPHASIS, SLOW DOWN)
+- Timing indicators for each section
+- Natural conversational language
+- Engagement hooks throughout
+
+#### Video Description (`video_description.md`)
+- **Hook line**: First 2-3 sentences with keywords
+- **Full description**: 200-500 words
+- **Timestamps**: If applicable
+- **Links section**: CTA links, website, social media
+- **Hashtags**: 5-10 relevant hashtags
+- **SEO optimization**: Keywords naturally woven in
+
+#### B-Roll Shot List (`broll_suggestions.md`)
+- **Scene-by-scene breakdown**: Matches script sections
+- **Shot descriptions**: Duration, type, mood/tone for each shot
+- **Content source suggestions**: Where to find/create footage
+- **Transitions**: Notes on how shots should connect
+- **Stock footage keywords**: For quick sourcing
+- **Custom creation notes**: If specific footage needs filming
+
+#### Thumbnail Concepts (`thumbnail_suggestions.md`)
+- **Design Concept 1**: Description with specific elements, colors, fonts
+- **Design Concept 2**: Alternative approach
+- **Design Concept 3**: Optional third variation
+- **Key elements to include**: Text, imagery, branding guidelines
+- **Color palette**: Based on brand identity
+- **Typography**: Font recommendations
+- **Accessibility notes**: Readability at small sizes
+
+### 3. File Output Format
+
+All files should be created as markdown (.md) files with:
+- Clear headings and sections
+- Ready-to-use content (not just outlines)
+- Practical, production-ready recommendations
+- Timing and technical specifications where relevant
+
+## Tips for Quality Output
+
+- Match the tone and style throughout all four files
+- Ensure script length aligns with target video duration
+- Make thumbnail suggestions contrast well and remain readable at small sizes
+- Suggest b-roll that complements rather than distracts from the message
+- Include specific, actionable recommendations (not vague suggestions)

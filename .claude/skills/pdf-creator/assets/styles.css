@@ -1,0 +1,151 @@
+/**
+ * PDF Creator - Default Style Sheet
+ *
+ * This stylesheet defines the default color palette, typography, and styling
+ * for generated PDFs. Customize these values to match your brand.
+ *
+ * Color Palette
+ * -------------
+ * Primary: #2563eb - Main brand color for headings and accents
+ * Secondary: #1e40af - Darker shade for gradients
+ * Accent: #f59e0b - Highlight color for call-to-actions and dividers
+ * Background: #ffffff - White background for content pages
+ * Text: #1f2937 - Dark gray for body text
+ */
+
+/* ============ Color Variables ============ */
+:root {
+    /* Brand Colors */
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --accent-color: #f59e0b;
+
+    /* Neutral Colors */
+    --background-color: #ffffff;
+    --text-color: #1f2937;
+    --text-muted: #6b7280;
+
+    /* Cover Page Colors */
+    --cover-title-color: #ffffff;
+    --cover-subtitle-color: #e0e7ff;
+    --cover-meta-color: #c7d2fe;
+
+    /* Content Colors */
+    --h1-color: #1e3a8a;
+    --h2-color: #1e40af;
+    --h3-color: #1d4ed8;
+    --link-color: #2563eb;
+    --link-hover-color: #1d4ed8;
+
+    /* UI Element Colors */
+    --header-border-color: #e5e7eb;
+    --header-title-color: #6b7280;
+    --footer-border-color: #e5e7eb;
+    --footer-text-color: #9ca3af;
+    --page-number-color: #9ca3af;
+    --corner-color: #ffffff;
+
+    /* Block Elements */
+    --blockquote-bg-color: #f3f4f6;
+    --code-bg-color: #f8fafc;
+
+    /* Table Colors */
+    --table-border-color: #e5e7eb;
+    --table-header-bg-color: #f9fafb;
+    --table-header-text-color: #1f2937;
+    --table-hover-color: #f9fafb;
+}
+
+/* ============ Typography ============ */
+
+/* Font Families */
+--font-family-heading: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+--font-family-body: 'Georgia', 'Times New Roman', Times, serif;
+
+/* Font Sizes */
+--base-font-size: 11pt;
+
+/* ============ Page Layout ============ */
+
+/* Page margins (affects all pages) */
+--page-margin: 0.75in;
+
+/* ============ Spacing ============ */
+
+--spacing-xs: 0.25rem;
+--spacing-sm: 0.5rem;
+--spacing-md: 1rem;
+--spacing-lg: 1.5rem;
+--spacing-xl: 2rem;
+--spacing-2xl: 3rem;
+
+/* ============ Border Radius ============ */
+
+--border-radius-sm: 3px;
+--border-radius-md: 5px;
+--border-radius-lg: 8px;
+--border-radius-full: 9999px;
+
+/* ============ Shadows ============ */
+
+--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+/*
+ * Custom Color Palettes
+ * ---------------------
+ * Choose one of these palettes or create your own by modifying the values above.
+ */
+
+/* Professional Blue (default) */
+/*
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --accent-color: #f59e0b;
+*/
+
+/* Elegant Purple */
+/*
+    :root {
+        --primary-color: #7c3aed;
+        --secondary-color: #5b21b6;
+        --accent-color: #f59e0b;
+    }
+*/
+
+/* Modern Green */
+/*
+    :root {
+        --primary-color: #059669;
+        --secondary-color: #047857;
+        --accent-color: #fbbf24;
+    }
+*/
+
+/* Bold Red */
+/*
+    :root {
+        --primary-color: #dc2626;
+        --secondary-color: #b91c1c;
+        --accent-color: #fbbf24;
+    }
+*/
+
+/* Monochromatic Black */
+/*
+    :root {
+        --primary-color: #111827;
+        --secondary-color: #374151;
+        --accent-color: #d1d5db;
+    }
+*/
+
+/* Warm Orange */
+/*
+    :root {
+        --primary-color: #ea580c;
+        --secondary-color: #c2410c;
+        --accent-color: #fbbf24;
+    }
+*/

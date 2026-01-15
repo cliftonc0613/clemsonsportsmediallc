@@ -1,0 +1,107 @@
+{
+  "metadata": {
+    "name": "Claude Code Central Configuration",
+    "description": "Central repository configuration for syncing agents, commands, and skills across projects",
+    "version": "2.0.0",
+    "lastUpdated": "2025-12-16"
+  },
+  "centralRepoUrl": "https://github.com/cliftonc0613/claude-starter.git",
+  "categories": {
+    "agents": {
+      "enabled": true,
+      "path": ".claude/agents",
+      "description": "AI agents for specialized tasks",
+      "categories": {
+        "research": {
+          "description": "Content research and analysis agents",
+          "items": ["search-specialist", "technical-researcher"]
+        },
+        "project-management": {
+          "description": "Project planning and task generation",
+          "items": ["create-prd", "generate-tasks", "process-task-list"]
+        },
+        "design-development": {
+          "description": "Design review and frontend development",
+          "items": ["design-review", "design-review-agent", "frontend-developer", "git-flow-manager", "javascript-pro", "meta-seo-agent", "premium-ui-designer"]
+        },
+        "content-research": {
+          "description": "Blog, newsletter, and content creation",
+          "items": ["blog-writer", "competitor-analyzer", "content-analyzer", "content-researcher", "keyword-extractor", "newsletter-writer", "seo-auditor", "technical-writer"]
+        },
+        "utilities": {
+          "description": "Utility agents for common tasks",
+          "items": ["git-feature-branch", "meta-agent"]
+        },
+        "personal-development": {
+          "description": "Personal growth and reflection tools",
+          "items": ["daily-reflection", "metrics-analyst", "time-checkin"]
+        },
+        "market-research-business": {
+          "description": "Market research and business analysis",
+          "items": ["data-analyzer", "market-researcher", "press-release-writer", "media-researcher"]
+        },
+        "youtube-analytics": {
+          "description": "YouTube content analysis",
+          "items": ["youtube-channel-analyzer", "youtube-search-analyzer", "youtube-video-analyzer"]
+        }
+      }
+    },
+    "commands": {
+      "enabled": true,
+      "path": ".claude/commands",
+      "description": "Slash commands for common workflows",
+      "categories": {
+        "content-creation": {
+          "description": "Blog, newsletter, and press release creation",
+          "items": ["blog-research", "newsletter-research", "press-release"]
+        },
+        "development": {
+          "description": "Git flow, design polish, and development workflows",
+          "items": ["design-polish", "git-flow", "sync-claude-config", "ultimate-developer"]
+        },
+        "utilities": {
+          "description": "Agent and prompt creation utilities",
+          "items": ["agent-creator", "prompt-creator"]
+        },
+        "research-analysis": {
+          "description": "Market, website, and YouTube research",
+          "items": ["market-research", "website-research", "youtube-research"]
+        },
+        "personal-development": {
+          "description": "Daily and weekly check-ins",
+          "items": ["daily-checkin", "weekly-checkin", "time-checkin"]
+        },
+        "media-communications": {
+          "description": "Content distribution and media outreach",
+          "items": []
+        }
+      }
+    },
+    "skills": {
+      "enabled": true,
+      "path": ".claude/skills",
+      "description": "Reusable skills with bundled resources",
+      "items": {
+        "ai-boardroom": "Create virtual advisory board through conversational Q&A",
+        "brand-guidelines": "Style guide and branding asset management",
+        "business-profile-creator": "Generate comprehensive business profiles",
+        "ideal-client-profile": "Create detailed ideal client personas",
+        "pdf-anthropic": "PDF handling with Anthropic integration and form utilities",
+        "pdf-processing": "PDF manipulation and processing utilities",
+        "presentor": "Build presentations using Presos framework",
+        "project-proposal-generator": "Generate structured project proposals",
+        "skill-creator": "Create new skills with proper structure",
+        "starter-project": "Initialize new projects with pre-configured setup",
+        "sync-claude-config": "Sync agents, commands, and skills from central repo",
+        "voice-dna": "Create voice and communication DNA profiles",
+        "youtube-content-generator": "Generate YouTube content strategy"
+      }
+    }
+  },
+  "syncOptions": {
+    "backupBeforeSync": true,
+    "overwriteExisting": true,
+    "preserveLocalChanges": false,
+    "defaultSyncScope": "interactive"
+  }
+}

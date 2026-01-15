@@ -1,0 +1,242 @@
+{
+    "key": "group_homepage_settings",
+    "title": "Homepage Settings",
+    "fields": [
+        {
+            "key": "field_homepage_logo",
+            "label": "Logo",
+            "name": "homepage_logo",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Upload the project logo to display on the WordPress landing page",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "jpg, jpeg, png, svg, webp",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_homepage_title",
+            "label": "Title",
+            "name": "homepage_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "The main heading displayed on the homepage",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Headless WordPress Theme",
+            "maxlength": "",
+            "placeholder": "Project Name",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_homepage_intro",
+            "label": "Introduction",
+            "name": "homepage_intro",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Introductory content describing the project. Supports rich text formatting.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "<p>This is a headless WordPress installation. The frontend is powered by Next.js.</p>",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_homepage_frontend_url",
+            "label": "Frontend URL",
+            "name": "homepage_frontend_url",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "URL to the Next.js frontend (displayed as a link on the homepage)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "http://localhost:3000",
+            "placeholder": "https://example.com"
+        },
+        {
+            "key": "field_homepage_frontend_label",
+            "label": "Frontend Link Label",
+            "name": "homepage_frontend_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Label for the frontend link button",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "View Frontend",
+            "maxlength": "",
+            "placeholder": "View Frontend",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_homepage_show_endpoints",
+            "label": "Show API Endpoints",
+            "name": "homepage_show_endpoints",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Toggle the REST API endpoints documentation section",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui_on_text": "Show",
+            "ui_off_text": "Hide",
+            "ui": 1
+        },
+        {
+            "key": "field_homepage_endpoints",
+            "label": "API Endpoints",
+            "name": "homepage_endpoints",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Configure the REST API endpoints to display in the documentation section",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_homepage_show_endpoints",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Add Endpoint",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_endpoint_name",
+                    "label": "Name",
+                    "name": "name",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "25",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "Posts",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_homepage_endpoints"
+                },
+                {
+                    "key": "field_endpoint_path",
+                    "label": "Path",
+                    "name": "path",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "40",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "/wp-json/wp/v2/posts",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_homepage_endpoints"
+                },
+                {
+                    "key": "field_endpoint_description",
+                    "label": "Description",
+                    "name": "description",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "35",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "Blog posts and articles",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_homepage_endpoints"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "homepage-settings"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Customizable settings for the WordPress homepage landing page",
+    "show_in_rest": 0,
+    "modified": 1736837000
+}

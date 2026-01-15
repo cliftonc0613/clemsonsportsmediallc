@@ -1,0 +1,59 @@
+{
+  "_instructions": "This is your Voice DNA—your unique communication signature. Use this to brief AI agents, writers, and team members on how to sound authentically like you.",
+  "_metadata": {
+    "created_date": "2025-12-13T00:00:00Z",
+    "updated_date": "2025-12-13T00:00:00Z",
+    "version": "1.0"
+  },
+  "personality_and_tone": {
+    "_instructions": "Your communication personality and how you come across.",
+    "overall_tone": "",
+    "personality_adjectives": [],
+    "energy_level": "",
+    "humor_style": "",
+    "vulnerability_balance": ""
+  },
+  "core_values_and_beliefs": {
+    "_instructions": "What drives your communication and what you stand for.",
+    "core_communication_values": [],
+    "beliefs_about_audience": "",
+    "signature_conviction": "",
+    "non_negotiables": []
+  },
+  "language_and_patterns": {
+    "_instructions": "Your distinctive language choices and communication patterns.",
+    "signature_phrases": [],
+    "thought_structure_patterns": [],
+    "avoided_words_or_phrases": [],
+    "punctuation_style": "",
+    "slang_and_jargon": []
+  },
+  "storytelling_and_connection": {
+    "_instructions": "How you tell stories and connect with your audience.",
+    "storytelling_style": "",
+    "preferred_story_types": [],
+    "credibility_approach": "",
+    "vulnerability_stance": "",
+    "how_you_make_audience_feel": []
+  },
+  "audience_connection": {
+    "_instructions": "How you directly engage with your audience.",
+    "audience_address_style": "",
+    "brand_authenticity_balance": ""
+  },
+  "communication_guidelines": {
+    "_instructions": "Guidelines for anyone writing or speaking in your voice.",
+    "must_haves": [
+      "What must be present in every piece of communication?"
+    ],
+    "never_include": [
+      "What should never appear in your communication?"
+    ],
+    "red_flags": [
+      "Warning signs that something doesn't sound like you?"
+    ],
+    "examples_of_on_brand": [
+      "Examples of communication that perfectly captures your voice?"
+    ]
+  }
+}

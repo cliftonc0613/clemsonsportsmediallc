@@ -1,0 +1,43 @@
+/*
+Theme Name: Starter WP Theme
+Theme URI: https://example.com/starter-wp-theme
+Author: Your Name
+Author URI: https://example.com
+Description: A headless WordPress starter theme for service-based businesses. Designed to work with a Next.js frontend via REST API.
+Version: 1.2.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: starter-wp-theme
+Tags: headless, rest-api, starter, services, business
+
+This theme is designed for headless WordPress setups.
+Frontend rendering is handled by Next.js with Tailwind CSS.
+Design tokens and styling are defined in frontend/app/globals.css.
+*/
+
+/*
+ * HEADLESS ARCHITECTURE NOTE
+ * ==========================
+ * This theme serves as a REST API backend only.
+ * All frontend styling is handled by the Next.js application.
+ *
+ * Design System Location: frontend/app/globals.css
+ * - Colors: OKLCH color space with CSS custom properties
+ * - Typography: DM Sans (body), Playfair Display (headings), JetBrains Mono (code)
+ * - Spacing/Layout: Tailwind CSS utility classes
+ *
+ * The minimal styles below are only for WordPress admin fallback display.
+ */
+
+/* Accessibility utility for screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

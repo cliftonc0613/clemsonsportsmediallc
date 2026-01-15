@@ -1,0 +1,71 @@
+{
+  "title": "Your Document Title",
+  "subtitle": "A Compelling Subtitle Goes Here",
+  "author": "Your Name or Company",
+  "date": "",
+  "copyright": "© 2025 Your Company. All rights reserved.",
+
+  "branding": {
+    "logo_path": "",
+    "logo_html": "",
+    "logo_html_small": "",
+    "website": "https://yourwebsite.com",
+    "email": "hello@yourwebsite.com"
+  },
+
+  "colors": {
+    "primary": "#2563eb",
+    "secondary": "#1e40af",
+    "accent": "#f59e0b",
+    "background": "#ffffff",
+    "text": "#1f2937",
+    "cover_title": "#ffffff",
+    "cover_subtitle": "#e0e7ff",
+    "cover_meta": "#c7d2fe",
+    "h1": "#1e3a8a",
+    "h2": "#1e40af",
+    "h3": "#1d4ed8",
+    "link": "#2563eb",
+    "link_hover": "#1d4ed8",
+    "header_border": "#e5e7eb",
+    "header_title": "#6b7280",
+    "footer_border": "#e5e7eb",
+    "footer_text": "#9ca3af",
+    "page_number": "#9ca3af",
+    "corner": "#ffffff",
+    "blockquote_bg": "#f3f4f6",
+    "code_bg": "#f8fafc",
+    "table_border": "#e5e7eb",
+    "table_header_bg": "#f9fafb",
+    "table_header_text": "#1f2937",
+    "table_hover": "#f9fafb"
+  },
+
+  "typography": {
+    "font_family_heading": "Inter, Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+    "font_family_body": "Georgia, Times New Roman, Times, serif",
+    "base_font_size": "11pt"
+  },
+
+  "layout": {
+    "page_margin": "0.75in",
+    "show_page_numbers": true,
+    "show_header": true,
+    "show_footer": true,
+    "start_page_number": 1
+  },
+
+  "content_options": {
+    "numbered_sections": false,
+    "include_toc": false,
+    "toc_title": "Table of Contents",
+    "section_icons": false,
+    "callout_boxes": true
+  },
+
+  "output": {
+    "format": "pdf",
+    "filename": "output.pdf",
+    "html_output": ""
+  }
+}

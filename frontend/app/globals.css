@@ -1,0 +1,1232 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Font variables from layout.tsx: DM Sans, Playfair Display, JetBrains Mono */
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* Fluid Typography Scale using calc() */
+  /* Formula: calc(min + (max - min) * ((100vw - 320px) / (1280 - 320))) */
+  --fluid-h1: calc(2.25rem + (4 - 2.25) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h2: calc(1.875rem + (3 - 1.875) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h3: calc(1.5rem + (2.25 - 1.5) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h4: calc(1.25rem + (1.75 - 1.25) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h5: calc(1.125rem + (1.375 - 1.125) * ((100vw - 20rem) / (80 - 20)));
+  --fluid-h6: calc(1rem + (1.125 - 1) * ((100vw - 20rem) / (80 - 20)));
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply overflow-x-hidden;
+  }
+  body {
+    @apply bg-background text-foreground overflow-x-hidden;
+  }
+
+  /* Fluid Typography for Headings */
+  h1 {
+    font-size: var(--fluid-h1);
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  h2 {
+    font-size: var(--fluid-h2);
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  h3 {
+    font-size: var(--fluid-h3);
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  h4 {
+    font-size: var(--fluid-h4);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  h5 {
+    font-size: var(--fluid-h5);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  h6 {
+    font-size: var(--fluid-h6);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+}
+
+/* Headroom.js Navigation Styles */
+.headroom {
+  will-change: transform;
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 300ms ease,
+              box-shadow 300ms ease,
+              backdrop-filter 300ms ease;
+
+  /* Header scroll state CSS custom properties */
+  --header-bg-opacity: 0.6;
+  --header-blur: 8px;
+  background-color: oklch(1 0 0 / var(--header-bg-opacity));
+  backdrop-filter: blur(var(--header-blur));
+}
+
+/* Hidden state - slide up */
+.headroom--unpinned {
+  transform: translateY(-100%);
+}
+
+/* Visible state */
+.headroom--pinned {
+  transform: translateY(0);
+}
+
+/* Compact mode after scroll */
+.headroom--not-top {
+  @apply shadow-sm;
+  --header-height: 3.5rem;
+  --header-bg-opacity: 0.95;
+  --header-blur: 12px;
+}
+
+/* At top - full size */
+.headroom--top {
+  --header-height: 4rem;
+  --header-bg-opacity: 0.6;
+  --header-blur: 8px;
+}
+
+/* Scroll indicator animation */
+@keyframes scroll-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.animate-scroll-down {
+  animation: scroll-down 1.5s ease-in-out infinite;
+}
+
+/* =============================================================================
+   View Transitions API
+   Smooth page transitions using the native browser API
+   @see https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API
+   ============================================================================= */
+
+/* Enable view transitions when supported */
+@supports (view-transition-name: none) {
+  .view-transitions-enabled {
+    view-transition-name: root;
+  }
+
+  /* Crossfade animation for page transitions */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 200ms;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(root) {
+    animation-name: fade-out;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: fade-in;
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+}
+
+/* StoryBrand Hero Background */
+.storybrand-hero-bg {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    var(--hero-bg-image, none);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Blog Single Content Spacing */
+div.prose h2,
+div.prose h3,
+div.prose h4,
+div.prose h5,
+div.prose h6 {
+  @apply mb-4 mt-8;
+}
+
+div.prose p {
+  @apply mb-6;
+}
+
+div.prose img {
+  @apply mb-8;
+}
+
+/* ==========================================================================
+   WordPress Block Editor Classes (Headless Compatible)
+   These classes style content that comes from WordPress REST API content.rendered
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Alignment Classes
+   Applied to images, embeds, and other blocks via the block editor
+   -------------------------------------------------------------------------- */
+.alignnone {
+  @apply my-6;
+}
+
+.alignleft {
+  @apply float-left mr-6 mb-4 max-w-[50%];
+}
+
+.alignright {
+  @apply float-right ml-6 mb-4 max-w-[50%];
+}
+
+.aligncenter {
+  @apply mx-auto my-6 block text-center;
+}
+
+.alignwide {
+  @apply mx-auto my-8 w-full max-w-4xl;
+}
+
+.alignfull {
+  @apply my-8 w-screen relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+/* Clear floats after aligned content */
+.alignleft + *,
+.alignright + * {
+  clear: both;
+}
+
+/* --------------------------------------------------------------------------
+   Image Block Classes
+   -------------------------------------------------------------------------- */
+.wp-block-image {
+  @apply my-6;
+}
+
+.wp-block-image img {
+  @apply max-w-full h-auto;
+}
+
+.wp-block-image figcaption,
+.wp-caption-text {
+  @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+.wp-block-image.is-style-rounded img {
+  @apply rounded-lg;
+}
+
+/* Legacy caption wrapper */
+.wp-caption {
+  @apply my-6 max-w-full;
+}
+
+.wp-caption img {
+  @apply block max-w-full h-auto;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery Block Classes
+   -------------------------------------------------------------------------- */
+.wp-block-gallery {
+  @apply my-6 grid gap-4;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.wp-block-gallery.columns-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.wp-block-gallery.columns-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.wp-block-gallery.columns-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.wp-block-gallery .wp-block-image {
+  @apply m-0;
+}
+
+.wp-block-gallery .wp-block-image img {
+  @apply w-full h-full object-cover;
+}
+
+.wp-block-gallery figcaption {
+  @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+/* Legacy gallery classes */
+.gallery {
+  @apply my-6 grid gap-4;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.gallery-item {
+  @apply relative overflow-hidden;
+}
+
+.gallery-item img {
+  @apply w-full h-auto;
+}
+
+.gallery-caption {
+  @apply text-sm text-muted-foreground mt-1;
+}
+
+/* --------------------------------------------------------------------------
+   Quote & Pullquote Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-quote {
+  @apply my-6 pl-6 border-l-4 border-primary italic;
+}
+
+.wp-block-quote p {
+  @apply mb-2;
+}
+
+.wp-block-quote cite {
+  @apply block text-sm text-muted-foreground not-italic mt-2;
+}
+
+.wp-block-quote.is-style-large {
+  @apply pl-0 border-l-0 text-xl;
+}
+
+.wp-block-pullquote {
+  @apply my-8 py-6 border-y-4 border-primary text-center;
+}
+
+.wp-block-pullquote blockquote {
+  @apply border-0 p-0;
+}
+
+.wp-block-pullquote p {
+  @apply text-xl font-medium mb-2;
+}
+
+.wp-block-pullquote cite {
+  @apply block text-sm text-muted-foreground;
+}
+
+/* --------------------------------------------------------------------------
+   Code & Preformatted Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-code {
+  @apply my-6 p-4 bg-muted rounded-lg overflow-x-auto;
+}
+
+.wp-block-code code {
+  @apply font-mono text-sm;
+}
+
+.wp-block-preformatted {
+  @apply my-6 p-4 bg-muted rounded-lg font-mono text-sm whitespace-pre-wrap overflow-x-auto;
+}
+
+.wp-block-verse {
+  @apply my-6 font-serif italic whitespace-pre-wrap;
+}
+
+/* --------------------------------------------------------------------------
+   Separator & Spacer Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-separator {
+  @apply my-8 border-t border-border;
+}
+
+.wp-block-separator.is-style-wide {
+  @apply w-full;
+}
+
+.wp-block-separator.is-style-dots {
+  @apply border-0 text-center;
+}
+
+.wp-block-separator.is-style-dots::before {
+  content: "···";
+  @apply text-2xl tracking-widest text-muted-foreground;
+}
+
+.wp-block-spacer {
+  @apply block;
+}
+
+/* --------------------------------------------------------------------------
+   Layout Blocks: Columns, Group, Cover
+   -------------------------------------------------------------------------- */
+.wp-block-columns {
+  @apply my-6 flex flex-wrap gap-6;
+}
+
+.wp-block-column {
+  @apply flex-1 min-w-0;
+}
+
+@media (max-width: 768px) {
+  .wp-block-columns {
+    @apply flex-col;
+  }
+
+  .wp-block-column {
+    @apply w-full;
+  }
+}
+
+.wp-block-group {
+  @apply my-6;
+}
+
+.wp-block-group.has-background {
+  @apply p-6 rounded-lg;
+}
+
+.wp-block-cover {
+  @apply my-6 relative flex items-center justify-center min-h-[300px] bg-cover bg-center;
+}
+
+.wp-block-cover__inner-container {
+  @apply relative z-10 text-center p-6;
+}
+
+.wp-block-cover.has-background-dim::before {
+  content: "";
+  @apply absolute inset-0 bg-black/50;
+}
+
+/* --------------------------------------------------------------------------
+   Button Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-buttons {
+  @apply my-6 flex flex-wrap gap-3;
+}
+
+.wp-block-button {
+  @apply inline-block;
+}
+
+.wp-block-button__link {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors;
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link {
+  @apply bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground;
+}
+
+/* --------------------------------------------------------------------------
+   Table Block
+   -------------------------------------------------------------------------- */
+.wp-block-table {
+  @apply my-6 w-full overflow-x-auto;
+}
+
+.wp-block-table table {
+  @apply w-full border-collapse;
+}
+
+.wp-block-table th,
+.wp-block-table td {
+  @apply p-3 border border-border text-left;
+}
+
+.wp-block-table th {
+  @apply bg-muted font-semibold;
+}
+
+.wp-block-table.is-style-stripes tbody tr:nth-child(odd) {
+  @apply bg-muted/50;
+}
+
+/* --------------------------------------------------------------------------
+   List Block
+   -------------------------------------------------------------------------- */
+.wp-block-list {
+  @apply my-6 pl-6;
+}
+
+ul.wp-block-list {
+  @apply list-disc;
+}
+
+ol.wp-block-list {
+  @apply list-decimal;
+}
+
+.wp-block-list li {
+  @apply mb-2;
+}
+
+/* --------------------------------------------------------------------------
+   Embed Blocks (YouTube, Twitter, etc.)
+   -------------------------------------------------------------------------- */
+.wp-block-embed {
+  @apply my-6;
+}
+
+.wp-block-embed__wrapper {
+  @apply relative;
+}
+
+/* Responsive embed container */
+.wp-block-embed.wp-embed-aspect-16-9 .wp-block-embed__wrapper {
+  @apply aspect-video;
+}
+
+.wp-block-embed.wp-embed-aspect-16-9 .wp-block-embed__wrapper iframe {
+  @apply absolute inset-0 w-full h-full;
+}
+
+.wp-block-embed.wp-embed-aspect-4-3 .wp-block-embed__wrapper {
+  aspect-ratio: 4/3;
+}
+
+.wp-block-embed.wp-embed-aspect-4-3 .wp-block-embed__wrapper iframe {
+  @apply absolute inset-0 w-full h-full;
+}
+
+.wp-block-embed figcaption {
+  @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+/* --------------------------------------------------------------------------
+   Media & Text Block
+   -------------------------------------------------------------------------- */
+.wp-block-media-text {
+  @apply my-6 grid gap-6 items-center;
+  grid-template-columns: 1fr 1fr;
+}
+
+.wp-block-media-text.has-media-on-the-right {
+  direction: rtl;
+}
+
+.wp-block-media-text.has-media-on-the-right > * {
+  direction: ltr;
+}
+
+.wp-block-media-text__media img {
+  @apply w-full h-auto;
+}
+
+.wp-block-media-text__content {
+  @apply p-4;
+}
+
+@media (max-width: 768px) {
+  .wp-block-media-text {
+    @apply grid-cols-1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   File Block (Download links)
+   -------------------------------------------------------------------------- */
+.wp-block-file {
+  @apply my-6 flex items-center gap-4 p-4 bg-muted rounded-lg;
+}
+
+.wp-block-file__content-wrapper {
+  @apply flex-1;
+}
+
+.wp-block-file a:not(.wp-block-file__button) {
+  @apply font-medium text-foreground hover:text-primary;
+}
+
+.wp-block-file__button {
+  @apply px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors;
+}
+
+/* --------------------------------------------------------------------------
+   Audio & Video Blocks
+   -------------------------------------------------------------------------- */
+.wp-block-audio {
+  @apply my-6;
+}
+
+.wp-block-audio audio {
+  @apply w-full;
+}
+
+.wp-block-video {
+  @apply my-6;
+}
+
+.wp-block-video video {
+  @apply w-full h-auto;
+}
+
+.wp-block-audio figcaption,
+.wp-block-video figcaption {
+  @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+/* --------------------------------------------------------------------------
+   WordPress Color Utility Classes (has-*-background-color, has-*-color)
+   These are dynamically generated by WordPress but we provide sensible defaults
+   -------------------------------------------------------------------------- */
+.has-background {
+  @apply p-4;
+}
+
+.has-text-align-left {
+  @apply text-left;
+}
+
+.has-text-align-center {
+  @apply text-center;
+}
+
+.has-text-align-right {
+  @apply text-right;
+}
+
+.has-small-font-size {
+  @apply text-sm;
+}
+
+.has-normal-font-size {
+  @apply text-base;
+}
+
+.has-medium-font-size {
+  @apply text-lg;
+}
+
+.has-large-font-size {
+  @apply text-xl;
+}
+
+.has-x-large-font-size {
+  @apply text-2xl;
+}
+
+.has-xx-large-font-size {
+  @apply text-3xl;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility: WordPress standard screen reader class
+   -------------------------------------------------------------------------- */
+.screen-reader-text {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* --------------------------------------------------------------------------
+   Video.js YouTube Player Styles
+   -------------------------------------------------------------------------- */
+
+/* Placeholder while video loads */
+.youtube-placeholder {
+  @apply bg-muted;
+  min-height: 200px;
+}
+
+/* YouTube player wrapper - ensures controls aren't covered */
+.youtube-player-wrapper,
+.youtube-player-inline {
+  @apply relative;
+  z-index: 1;
+  isolation: isolate;
+}
+
+.video-js {
+  @apply relative;
+  font-family: var(--font-sans);
+  z-index: 1;
+  border-radius: 0 !important;
+}
+
+/* Remove rounded corners from iframe */
+.video-js iframe {
+  border-radius: 0 !important;
+}
+
+/* YouTube tech wrapper */
+.video-js .vjs-tech {
+  border-radius: 0 !important;
+}
+
+/* Use default video.js styling for controls */
+
+.video-js .vjs-remaining-time {
+  display: none;
+}
+
+/* Responsive sizing */
+.vjs-16-9 {
+  aspect-ratio: 16/9;
+}
+
+.vjs-4-3 {
+  aspect-ratio: 4/3;
+}
+
+.vjs-1-1 {
+  aspect-ratio: 1/1;
+}
+
+/* Loading spinner */
+.video-js .vjs-loading-spinner {
+  border-color: var(--primary);
+}
+
+.video-js .vjs-loading-spinner::before,
+.video-js .vjs-loading-spinner::after {
+  border-top-color: var(--primary);
+}
+
+/* Dark mode - use default video.js styling */
+
+/* --------------------------------------------------------------------------
+   Video.js Captions/Subtitles Styles
+   -------------------------------------------------------------------------- */
+
+/* Caption display area */
+.video-js .vjs-text-track-display {
+  pointer-events: none;
+}
+
+.video-js .vjs-text-track-display > div {
+  font-family: var(--font-sans);
+  font-size: 1.25rem !important;
+  line-height: 1.4 !important;
+}
+
+/* Caption cue styling */
+.video-js .vjs-text-track-cue {
+  @apply rounded-md;
+  background-color: oklch(0 0 0 / 80%) !important;
+  padding: 0.25rem 0.75rem !important;
+}
+
+.video-js .vjs-text-track-cue > div {
+  @apply rounded-md;
+  background-color: oklch(0 0 0 / 80%) !important;
+  color: oklch(1 0 0) !important;
+  padding: 0.25rem 0.75rem !important;
+}
+
+/* Captions button in control bar */
+.video-js .vjs-subs-caps-button {
+  display: flex;
+}
+
+.video-js .vjs-subs-caps-button .vjs-icon-placeholder::before {
+  content: "\f10c";
+}
+
+/* Captions menu */
+.video-js .vjs-subs-caps-button .vjs-menu {
+  @apply rounded-lg;
+  background-color: oklch(0 0 0 / 90%);
+  border: 1px solid oklch(1 0 0 / 10%);
+  bottom: 3.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-content {
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-item {
+  @apply text-sm;
+  padding: 0.5rem 1rem;
+  text-transform: capitalize;
+  font-family: var(--font-sans);
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-item:hover,
+.video-js .vjs-subs-caps-button .vjs-menu-item:focus {
+  background-color: oklch(1 0 0 / 15%);
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-item.vjs-selected {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.video-js .vjs-subs-caps-button .vjs-menu-item.vjs-selected::before {
+  content: "✓ ";
+}
+
+/* Text track settings (accessibility options) */
+.video-js .vjs-texttrack-settings {
+  @apply rounded-lg;
+  background-color: oklch(0.15 0 0 / 95%);
+  padding: 1.5rem;
+  font-family: var(--font-sans);
+}
+
+.video-js .vjs-texttrack-settings fieldset {
+  @apply mb-4;
+  border: 1px solid oklch(1 0 0 / 20%);
+  @apply rounded-md p-4;
+}
+
+.video-js .vjs-texttrack-settings legend {
+  @apply text-sm font-semibold px-2;
+  color: oklch(1 0 0 / 80%);
+}
+
+.video-js .vjs-texttrack-settings select {
+  @apply rounded-md text-sm;
+  background-color: oklch(0.2 0 0);
+  border: 1px solid oklch(1 0 0 / 20%);
+  color: oklch(1 0 0);
+  padding: 0.5rem;
+  font-family: var(--font-sans);
+}
+
+.video-js .vjs-texttrack-settings select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.video-js .vjs-texttrack-settings .vjs-done-button,
+.video-js .vjs-texttrack-settings .vjs-default-button {
+  @apply rounded-md text-sm font-medium;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.video-js .vjs-texttrack-settings .vjs-done-button {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.video-js .vjs-texttrack-settings .vjs-done-button:hover {
+  opacity: 0.9;
+}
+
+.video-js .vjs-texttrack-settings .vjs-default-button {
+  background-color: oklch(1 0 0 / 20%);
+  color: oklch(1 0 0);
+}
+
+.video-js .vjs-texttrack-settings .vjs-default-button:hover {
+  background-color: oklch(1 0 0 / 30%);
+}
+
+/* Caption font size variations */
+.video-js .vjs-text-track-display.vjs-tt-font-small > div {
+  font-size: 1rem !important;
+}
+
+.video-js .vjs-text-track-display.vjs-tt-font-medium > div {
+  font-size: 1.25rem !important;
+}
+
+.video-js .vjs-text-track-display.vjs-tt-font-large > div {
+  font-size: 1.5rem !important;
+}
+
+.video-js .vjs-text-track-display.vjs-tt-font-xlarge > div {
+  font-size: 1.75rem !important;
+}
+
+/* Responsive caption sizing */
+@media (max-width: 640px) {
+  .video-js .vjs-text-track-display > div {
+    font-size: 0.875rem !important;
+  }
+
+  .video-js .vjs-text-track-cue > div {
+    padding: 0.125rem 0.5rem !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BlurImage Component - Medium-style blur-up loading effect
+   -------------------------------------------------------------------------- */
+.blur-image {
+  filter: blur(20px);
+  transition: filter 0.3s ease-out;
+}
+
+.blur-image--loaded {
+  filter: blur(0);
+}
+
+/* --------------------------------------------------------------------------
+   Search Command Modal Styles
+   -------------------------------------------------------------------------- */
+
+/* Modal overlay */
+[cmdk-dialog] {
+  @apply fixed inset-0 z-50;
+}
+
+[cmdk-overlay] {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
+}
+
+/* Input height */
+[cmdk-dialog] [cmdk-input] {
+  @apply h-12;
+}
+
+/* Keyboard shortcut indicator */
+.search-shortcut {
+  @apply hidden rounded border bg-muted px-1.5 py-0.5 text-xs font-mono text-muted-foreground md:inline-block;
+}
+
+/* --------------------------------------------------------------------------
+   PWA Loading Screen
+   Splash screen displayed when PWA launches in standalone mode
+   -------------------------------------------------------------------------- */
+.pwa-load-screen {
+  @apply fixed inset-0 z-[9999];
+  background-color: var(--background);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.pwa-load-screen--loaded {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pwa-load-screen__content {
+  @apply relative w-full h-full;
+}
+
+.pwa-load-screen__image {
+  @apply object-contain object-center;
+}
+
+.pwa-load-screen__overlay {
+  @apply absolute inset-0 flex items-end justify-center pb-24;
+  background: linear-gradient(
+    to top,
+    oklch(0 0 0 / 60%) 0%,
+    oklch(0 0 0 / 0%) 40%
+  );
+}
+
+.pwa-load-screen__spinner {
+  @apply w-10 h-10;
+}
+
+.pwa-load-screen__spinner-svg {
+  @apply w-full h-full;
+  animation: pwa-spinner-rotate 1.4s linear infinite;
+}
+
+.pwa-load-screen__spinner-circle {
+  stroke: oklch(1 0 0 / 90%);
+  stroke-linecap: round;
+  animation: pwa-spinner-dash 1.4s ease-in-out infinite;
+}
+
+@keyframes pwa-spinner-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pwa-spinner-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+/* Enhanced PWA Loading Screen - Progress Bar & Text */
+.pwa-load-screen__progress-container {
+  @apply w-48 h-1 rounded-full overflow-hidden mb-4;
+  background: oklch(1 0 0 / 20%);
+}
+
+.pwa-load-screen__progress-bar {
+  @apply h-full rounded-full;
+  background: oklch(1 0 0 / 90%);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pwa-load-screen__text {
+  @apply text-sm font-medium mb-6;
+  color: oklch(1 0 0 / 80%);
+  text-shadow: 0 1px 2px oklch(0 0 0 / 50%);
+}
+
+/* --------------------------------------------------------------------------
+   Skeleton Loading Components
+   Content placeholders for async data loading
+   -------------------------------------------------------------------------- */
+
+/* Base skeleton styles - applied to all skeleton elements */
+.skeleton,
+.skeleton-text,
+.skeleton-text-sm,
+.skeleton-text-lg,
+.skeleton-title,
+.skeleton-avatar,
+.skeleton-image,
+.skeleton-card {
+  @apply relative overflow-hidden rounded;
+  background: oklch(from var(--muted) l c h / 60%);
+}
+
+.skeleton::after,
+.skeleton-text::after,
+.skeleton-text-sm::after,
+.skeleton-text-lg::after,
+.skeleton-title::after,
+.skeleton-avatar::after,
+.skeleton-image::after,
+.skeleton-card::after {
+  content: "";
+  @apply absolute inset-0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(1 0 0 / 8%) 50%,
+    transparent 100%
+  );
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Skeleton variants - specific sizing */
+.skeleton-text {
+  @apply h-4 w-full;
+}
+
+.skeleton-text-sm {
+  @apply h-3 w-full;
+}
+
+.skeleton-text-lg {
+  @apply h-6 w-full;
+}
+
+.skeleton-title {
+  @apply h-8 w-3/4;
+}
+
+.skeleton-avatar {
+  @apply rounded-full;
+}
+
+.skeleton-image {
+  @apply aspect-video w-full;
+}
+
+.skeleton-card {
+  @apply rounded-lg p-4;
+}
+
+/* --------------------------------------------------------------------------
+   Route Transition Indicator
+   Top progress bar for page navigation
+   -------------------------------------------------------------------------- */
+.route-progress {
+  @apply fixed top-0 left-0 right-0 z-[9998] h-0.5;
+  pointer-events: none;
+}
+
+.route-progress__bar {
+  @apply h-full;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    oklch(from var(--primary) calc(l + 0.1) c h) 100%
+  );
+  transform-origin: left;
+  transition: transform 0.2s ease-out;
+}
+
+.route-progress--active .route-progress__bar {
+  animation: route-progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes route-progress-indeterminate {
+  0% {
+    transform: scaleX(0) translateX(0);
+  }
+  50% {
+    transform: scaleX(0.4) translateX(50%);
+  }
+  100% {
+    transform: scaleX(0) translateX(100%);
+  }
+}
