@@ -73,6 +73,23 @@ export interface ACFImage {
 }
 
 /**
+ * WordPress Author (embedded)
+ */
+export interface WPAuthor {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+  link: string;
+  slug: string;
+  avatar_urls?: {
+    '24'?: string;
+    '48'?: string;
+    '96'?: string;
+  };
+}
+
+/**
  * WordPress Post (Blog)
  */
 export interface WPPost {
@@ -103,6 +120,20 @@ export interface WPPost {
   categories: number[];
   tags: number[];
   acf?: Record<string, unknown>;
+  _embedded?: {
+    author?: WPAuthor[];
+    'wp:featuredmedia'?: Array<{
+      source_url: string;
+      alt_text: string;
+      media_details?: {
+        sizes?: {
+          thumbnail?: { source_url: string };
+          medium?: { source_url: string };
+          large?: { source_url: string };
+        };
+      };
+    }>;
+  };
 }
 
 /**
@@ -754,4 +785,42 @@ export function getDisplayCategoryName(
   }
 
   return "News";
+}
+
+/**
+ * Get author name from post's _embedded data
+ * Falls back to author_name field or "Staff" if not available
+ */
+export function getPostAuthorName(post: WPPost): string {
+  // Try _embedded author first (most reliable)
+  const embeddedAuthor = post._embedded?.author?.[0];
+  if (embeddedAuthor?.name) {
+    return embeddedAuthor.name;
+  }
+
+  // Fall back to author_name field
+  if (post.author_name) {
+    return post.author_name;
+  }
+
+  return "Staff";
+}
+
+/**
+ * Get author avatar URL from post's _embedded data
+ * Returns the 48px avatar by default, or null if not available
+ */
+export function getPostAuthorAvatar(post: WPPost): string | null {
+  const embeddedAuthor = post._embedded?.author?.[0];
+  if (!embeddedAuthor?.avatar_urls) {
+    return null;
+  }
+
+  // Prefer 48px, fall back to 96px or 24px
+  return (
+    embeddedAuthor.avatar_urls['48'] ||
+    embeddedAuthor.avatar_urls['96'] ||
+    embeddedAuthor.avatar_urls['24'] ||
+    null
+  );
 }
