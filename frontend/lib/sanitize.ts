@@ -67,7 +67,7 @@ const DOMPURIFY_CONFIG: Config = {
   ],
 
   // Restrict iframe sources to trusted domains
-  ALLOWED_URI_REGEXP: /^(?:(?:https?:)?\/\/(?:www\.)?(?:youtube\.com|youtube-nocookie\.com|youtu\.be|vimeo\.com|player\.vimeo\.com|twitter\.com|platform\.twitter\.com|spotify\.com|open\.spotify\.com|soundcloud\.com|w\.soundcloud\.com|codepen\.io|codesandbox\.io|jsfiddle\.net)\/|data:image\/|mailto:|tel:)/i,
+  ALLOWED_URI_REGEXP: /^(?:(?:https?:)?\/\/(?:www\.)?(?:youtube\.com|youtube-nocookie\.com|youtu\.be|vimeo\.com|player\.vimeo\.com|twitter\.com|platform\.twitter\.com|spotify\.com|open\.spotify\.com|soundcloud\.com|w\.soundcloud\.com|codepen\.io|codesandbox\.io|jsfiddle\.net|hudl\.com)\/|data:image\/|mailto:|tel:)/i,
 
   // Add target="_blank" rel="noopener noreferrer" to external links
   ADD_ATTR: ["target"],
