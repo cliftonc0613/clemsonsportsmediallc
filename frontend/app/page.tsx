@@ -8,7 +8,7 @@ import { BodyClass } from "@/components/BodyClass";
 import { MiniHero } from "@/components/MiniHero";
 import { HeroGrid } from "@/components/HeroGrid";
 import { BreakingNewsSection } from "@/components/BreakingNewsSection";
-import { CompactArticleList } from "@/components/CompactArticleList";
+import { ArticleListGrid } from "@/components/ArticleListGrid";
 import { SocialCTABar } from "@/components/SocialCTABar";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -22,7 +22,8 @@ export const revalidate = 5;
  *
  * A newspaper-style sports media homepage featuring:
  * - Hero Grid: 1 large featured article + 4 smaller grid articles
- * - Future phases will add: Breaking news, sport sections, etc.
+ * - Breaking News: 4 overlay cards with category badges
+ * - Article List: 4x2 grid with thumbnails
  */
 export default async function HomePage() {
   // Fetch data from WordPress with graceful fallback
@@ -34,7 +35,7 @@ export default async function HomePage() {
     try {
       // Fetch all data in parallel
       [posts, breakingNewsPosts, categories] = await Promise.all([
-        getPosts({ per_page: 15 }),
+        getPosts({ per_page: 20 }),
         getPostsByCategorySlug(BREAKING_NEWS_CATEGORY, { per_page: 4 }),
         getCategories({ per_page: 100 }),
       ]);
@@ -45,7 +46,7 @@ export default async function HomePage() {
 
   // Split posts for different sections
   const heroGridPosts = posts.slice(0, 5);
-  const latestPosts = posts.slice(5, 10);
+  const articleListPosts = posts.slice(5, 13);
 
   return (
     <>
@@ -67,49 +68,16 @@ export default async function HomePage() {
       {/* Hero Grid Section */}
       <HeroGrid posts={heroGridPosts} categories={categories} />
 
-      {/* Breaking News Section - 4 column grid */}
-      <BreakingNewsSection posts={breakingNewsPosts} categories={categories} />
-
       {/* Social CTA Bar */}
-      <SocialCTABar className="my-8" />
+      <SocialCTABar className="my-6" />
 
-      {/* Latest Articles Section */}
-      <section className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main content - Latest articles list */}
-          <div className="lg:col-span-2">
-            <CompactArticleList
-              posts={latestPosts}
-              categories={categories}
-              title="Latest"
-              viewAllLink="/blog"
-              viewAllText="VIEW ALL ARTICLES →"
-            />
-          </div>
+      {/* Breaking News Section - 4 overlay cards */}
+      <div className="container mx-auto px-4 pt-8">
+        <BreakingNewsSection posts={breakingNewsPosts} categories={categories} />
+      </div>
 
-          {/* Sidebar placeholder - will be populated in Phase 4 */}
-          <aside className="lg:col-span-1">
-            <div className="sticky top-24">
-              <div className="mb-4">
-                <div className="flex items-center gap-3">
-                  <h3 className="font-heading text-lg uppercase tracking-tight">
-                    Popular
-                  </h3>
-                  <div className="flex-1 h-0.5 bg-[var(--clemson-purple)]" />
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Popular articles section coming in Phase 4
-              </p>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      {/* Future sections will be added in subsequent phases:
-          - Phase 4: Per-Sport Category Sections
-          - Phase 7: Navigation & Search
-      */}
+      {/* Article List Grid - 4x2 grid */}
+      <ArticleListGrid posts={articleListPosts} categories={categories} />
     </>
   );
 }

@@ -7,22 +7,23 @@ interface SocialLink {
 
 interface SocialCTABarProps {
   links?: SocialLink[];
+  leftText?: string;
+  centerText?: string;
   className?: string;
 }
 
 const defaultLinks: SocialLink[] = [
-  { platform: "twitter", url: "https://twitter.com/clemsonsportsmedia" },
-  { platform: "instagram", url: "https://instagram.com/clemsonsportsmedia" },
   { platform: "facebook", url: "https://facebook.com/clemsonsportsmedia" },
-  { platform: "youtube", url: "https://youtube.com/@clemsonsportsmedia" },
+  { platform: "instagram", url: "https://instagram.com/clemsonsportsmedia" },
+  { platform: "twitter", url: "https://twitter.com/clemsonsportsmedia" },
 ];
 
 const socialIcons = {
   twitter: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="currentColor"
     >
@@ -32,8 +33,8 @@ const socialIcons = {
   instagram: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="currentColor"
     >
@@ -43,8 +44,8 @@ const socialIcons = {
   facebook: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="currentColor"
     >
@@ -54,8 +55,8 @@ const socialIcons = {
   youtube: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="currentColor"
     >
@@ -66,17 +67,25 @@ const socialIcons = {
 
 export function SocialCTABar({
   links = defaultLinks,
+  leftText = "Join Our Social Media",
+  centerText = "For even more exclusive content!",
   className = "",
 }: SocialCTABarProps) {
   return (
-    <div
-      className={`bg-[var(--clemson-dark-purple)] py-4 ${className}`}
-    >
+    <div className={`bg-gray-100 py-4 ${className}`}>
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center gap-6">
-          <span className="font-heading text-sm uppercase tracking-wider text-white">
-            Follow Us
+        <div className="flex items-center justify-between">
+          {/* Left Text */}
+          <span className="font-heading text-sm uppercase tracking-wider text-foreground">
+            {leftText}
           </span>
+
+          {/* Center Text */}
+          <span className="hidden md:block font-heading text-lg text-foreground">
+            {centerText}
+          </span>
+
+          {/* Social Icons */}
           <div className="flex items-center gap-4">
             {links.map((link) => (
               <Link
@@ -84,7 +93,7 @@ export function SocialCTABar({
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/70 hover:text-[var(--clemson-orange)] transition-colors duration-200"
+                className="text-gray-500 hover:text-[var(--clemson-orange)] transition-colors duration-200"
                 aria-label={`Follow us on ${link.platform}`}
               >
                 {socialIcons[link.platform]}

@@ -1,5 +1,6 @@
-import { WPPost, WPCategory, getDisplayCategoryName } from "@/lib/wordpress";
-import { ArticleCard } from "./ArticleCard";
+import Link from "next/link";
+import Image from "next/image";
+import { WPPost, WPCategory, getDisplayCategoryName, decodeHtmlEntities, rewriteImageUrl } from "@/lib/wordpress";
 
 interface BreakingNewsSectionProps {
   posts: WPPost[];
@@ -15,27 +16,58 @@ export function BreakingNewsSection({
   if (posts.length === 0) return null;
 
   return (
-    <section className={`container mx-auto px-4 py-8 ${className}`}>
-      {/* Section Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-4">
-          <h2 className="font-heading text-2xl md:text-3xl uppercase tracking-tight">
-            Breaking News
-          </h2>
-          <div className="flex-1 h-1 bg-[var(--clemson-orange)]" />
+    <section className={`relative ${className}`}>
+      {/* Breaking Ribbon Label */}
+      <div className="absolute -top-4 left-4 z-20">
+        <div className="bg-[var(--clemson-orange)] text-white font-heading text-lg uppercase px-4 py-2 tracking-wide">
+          Breaking
         </div>
       </div>
 
-      {/* 4-column grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {posts.slice(0, 4).map((post) => (
-          <ArticleCard
-            key={post.id}
-            post={post}
-            variant="vertical"
-            categoryName={getDisplayCategoryName(post, categories)}
-          />
-        ))}
+      {/* 4-column grid of overlay cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+        {posts.slice(0, 4).map((post) => {
+          const imageUrl = rewriteImageUrl(post.featured_image_url);
+          const title = decodeHtmlEntities(post.title.rendered);
+          const categoryName = getDisplayCategoryName(post, categories);
+
+          return (
+            <Link
+              key={post.id}
+              href={`/blog/${post.slug}`}
+              className="group relative block aspect-[3/4] overflow-hidden"
+            >
+              {/* Background Image */}
+              {imageUrl ? (
+                <Image
+                  src={imageUrl}
+                  alt={title}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-[var(--clemson-dark-purple)]" />
+              )}
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+              {/* Content */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+                {/* Category Badge */}
+                <span className="inline-block bg-[var(--clemson-orange)] text-white text-xs font-bold uppercase px-2 py-1 mb-3">
+                  {categoryName}
+                </span>
+
+                {/* Title */}
+                <h3 className="font-heading text-white text-lg leading-tight line-clamp-3">
+                  {title}
+                </h3>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
