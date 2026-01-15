@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { DM_Sans, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -32,24 +31,6 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
 };
-
-const dmSans = DM_Sans({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-heading",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrains = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -104,6 +85,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Adobe Fonts - Apotek (headlines) & Basic Sans (body) */}
+        <link rel="stylesheet" href="https://use.typekit.net/rlq1tnk.css" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -112,9 +95,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#0a0a0a" />
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body
-        className={`${dmSans.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
-      >
+      <body className="font-sans antialiased">
         <Providers>
           <PWALoadScreen />
           <RegisterPWA />

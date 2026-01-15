@@ -6,10 +6,14 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Font variables from layout.tsx: DM Sans, Playfair Display, JetBrains Mono */
-  --font-sans: var(--font-sans);
-  --font-heading: var(--font-heading);
-  --font-mono: var(--font-mono);
+  /* Adobe Fonts: Apotek (headlines), Basic Sans (body) */
+  --font-sans: "basic-sans", system-ui, sans-serif;
+  --font-heading: "apotek", "basic-sans", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
+  /* Clemson Sports Media Brand Colors */
+  --color-clemson-orange: var(--clemson-orange);
+  --color-clemson-purple: var(--clemson-purple);
+  --color-clemson-dark-purple: var(--clemson-dark-purple);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -50,6 +54,12 @@
 
 :root {
   --radius: 0.625rem;
+
+  /* Clemson Sports Media Brand Colors */
+  --clemson-orange: #F56600;
+  --clemson-purple: #522D80;
+  --clemson-dark-purple: #2E1A47;
+  --clemson-white: #FFFFFF;
 
   /* Fluid Typography Scale using calc() */
   /* Formula: calc(min + (max - min) * ((100vw - 320px) / (1280 - 320))) */
@@ -135,6 +145,12 @@
   }
   body {
     @apply bg-background text-foreground overflow-x-hidden;
+    font-family: var(--font-sans);
+  }
+
+  /* Headlines use Apotek font family */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
   }
 
   /* Fluid Typography for Headings */
