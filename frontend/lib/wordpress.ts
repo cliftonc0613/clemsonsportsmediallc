@@ -757,9 +757,12 @@ export async function search(params: {
 
       const wpResults = items.map(item => {
         const featuredMedia = item._embedded?.['wp:featuredmedia']?.[0];
-        const imageUrl = featuredMedia?.media_details?.sizes?.thumbnail?.source_url
-          || featuredMedia?.media_details?.sizes?.medium?.source_url
-          || featuredMedia?.source_url;
+        // Prefer full-size or large images for better quality display
+        const sizes = featuredMedia?.media_details?.sizes as Record<string, { source_url: string }> | undefined;
+        const imageUrl = featuredMedia?.source_url
+          || sizes?.large?.source_url
+          || sizes?.medium_large?.source_url
+          || sizes?.medium?.source_url;
 
         // Use excerpt if available, otherwise extract from content
         const excerptText = item.excerpt?.rendered
