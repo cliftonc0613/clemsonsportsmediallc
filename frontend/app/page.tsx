@@ -6,6 +6,7 @@ const BREAKING_NEWS_CATEGORY = "breaking-news";
 const SPORT_CATEGORIES = [
   { slug: "football", name: "Football", watermark: "CLEMSON" },
   { slug: "basketball", name: "Basketball", watermark: "TIGERS" },
+  { slug: "transfer-portal", name: "Transfer Portal", watermark: "PORTAL" },
   { slug: "baseball", name: "Baseball", watermark: "CLEMSON" },
   { slug: "softball", name: "Softball", watermark: "TIGERS" },
   { slug: "soccer", name: "Soccer", watermark: "CLEMSON" },
