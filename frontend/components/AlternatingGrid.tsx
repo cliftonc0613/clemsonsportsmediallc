@@ -37,7 +37,7 @@ export function AlternatingGrid({
 
   // First 4 posts go in the alternating top row
   const topRowPosts = posts.slice(0, 4);
-  const remainingPosts = posts.slice(4, 12);
+  const remainingPosts = posts.slice(4, 10);
 
   return (
     <div className={className}>
