@@ -36,3 +36,6 @@ Sentry.init({
   // Only initialize if DSN is provided
   enabled: !!process.env.NEXT_PUBLIC_SENTRY_DSN,
 })
+
+// Required for Sentry to instrument Next.js navigations
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart
