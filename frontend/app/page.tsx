@@ -1,5 +1,5 @@
-import { getPosts, getCategories, getPostsByCategorySlug, isWordPressConfigured } from "@/lib/wordpress";
-import type { WPPost, WPCategory } from "@/lib/wordpress";
+import { getPosts, getCategories, getTags, getPostsByCategorySlug, isWordPressConfigured } from "@/lib/wordpress";
+import type { WPPost, WPCategory, WPTag } from "@/lib/wordpress";
 
 // Category slug for Breaking News posts
 const BREAKING_NEWS_CATEGORY = "breaking-news";
@@ -30,14 +30,16 @@ export default async function HomePage() {
   let posts: WPPost[] = [];
   let breakingNewsPosts: WPPost[] = [];
   let categories: WPCategory[] = [];
+  let tags: WPTag[] = [];
 
   if (isWordPressConfigured()) {
     try {
       // Fetch all data in parallel
-      [posts, breakingNewsPosts, categories] = await Promise.all([
+      [posts, breakingNewsPosts, categories, tags] = await Promise.all([
         getPosts({ per_page: 20 }),
         getPostsByCategorySlug(BREAKING_NEWS_CATEGORY, { per_page: 4 }),
         getCategories({ per_page: 100 }),
+        getTags({ per_page: 100 }),
       ]);
     } catch (error) {
       console.error("Failed to fetch WordPress content:", error);
@@ -77,7 +79,7 @@ export default async function HomePage() {
       </div>
 
       {/* Article List Grid - 4x2 grid */}
-      <ArticleListGrid posts={articleListPosts} categories={categories} />
+      <ArticleListGrid posts={articleListPosts} categories={categories} tags={tags} />
     </>
   );
 }

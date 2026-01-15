@@ -1,17 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
-import { WPPost, WPCategory, getDisplayCategoryName, decodeHtmlEntities, rewriteImageUrl } from "@/lib/wordpress";
-import { ExclusiveBadge } from "./ExclusiveBadge";
+import { WPPost, WPCategory, WPTag, getDisplayCategoryName, decodeHtmlEntities, rewriteImageUrl, postHasTag } from "@/lib/wordpress";
 
 interface ArticleListGridProps {
   posts: WPPost[];
   categories?: WPCategory[];
+  tags?: WPTag[];
   className?: string;
 }
 
 export function ArticleListGrid({
   posts,
   categories = [],
+  tags = [],
   className = "",
 }: ArticleListGridProps) {
   if (posts.length === 0) return null;
@@ -20,12 +21,12 @@ export function ArticleListGrid({
     <section className={`container mx-auto px-4 py-8 ${className}`}>
       {/* 4-column grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-6">
-        {posts.slice(0, 8).map((post, index) => {
+        {posts.slice(0, 8).map((post) => {
           const imageUrl = rewriteImageUrl(post.featured_image_url);
           const title = decodeHtmlEntities(post.title.rendered);
           const categoryName = getDisplayCategoryName(post, categories);
-          // Show exclusive badge on some posts (e.g., every 3rd post for demo, or based on a field)
-          const isExclusive = index % 3 === 2;
+          // Show exclusive badge if post has "exclusive" tag
+          const isExclusive = postHasTag(post, tags, "exclusive");
 
           return (
             <Link

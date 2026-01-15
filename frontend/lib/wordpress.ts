@@ -474,6 +474,23 @@ export async function getTags(params?: {
 }
 
 /**
+ * Fetch a single tag by slug
+ */
+export async function getTagBySlug(slug: string): Promise<WPTag | null> {
+  const tags = await fetchAPI<WPTag[]>(`/tags?slug=${slug}`);
+  return tags.length > 0 ? tags[0] : null;
+}
+
+/**
+ * Check if a post has a specific tag by slug
+ */
+export function postHasTag(post: WPPost, tags: WPTag[], tagSlug: string): boolean {
+  const tag = tags.find((t) => t.slug === tagSlug);
+  if (!tag) return false;
+  return post.tags.includes(tag.id);
+}
+
+/**
  * Fetch a single category by slug
  */
 export async function getCategoryBySlug(slug: string): Promise<WPCategory | null> {
