@@ -53,9 +53,9 @@ export default async function HomePage() {
         getTags({ per_page: 100 }),
       ]);
 
-      // Fetch sport category posts in parallel
+      // Fetch sport category posts in parallel (8 posts: 4 top + 4 bottom)
       const sportPromises = SPORT_CATEGORIES.map(async (cat) => {
-        const catPosts = await getPostsByCategorySlug(cat.slug, { per_page: 7 });
+        const catPosts = await getPostsByCategorySlug(cat.slug, { per_page: 8 });
         return { slug: cat.slug, posts: catPosts };
       });
 
