@@ -70,6 +70,7 @@ export function TwitterEmbed({
     iframe.src = embedUrl;
     iframe.style.cssText = `
       width: 100%;
+      height: 500px;
       border: none;
       overflow: hidden;
       display: block;
@@ -213,8 +214,6 @@ export function TwitterEmbed({
         ref={containerRef}
         style={{
           display: isLoading || hasError ? "none" : "block",
-          height: height > 0 ? `${height}px` : "auto",
-          overflow: "hidden",
         }}
       />
     </div>
