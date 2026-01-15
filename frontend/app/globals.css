@@ -1251,3 +1251,55 @@ ol.wp-block-list {
     transform: scaleX(0) translateX(100%);
   }
 }
+
+/* --------------------------------------------------------------------------
+   Content Card Hover Utilities
+   Shared hover effects for article cards and content components
+   -------------------------------------------------------------------------- */
+
+/* Image zoom on hover - applied to card containers with group class */
+.card-image-zoom {
+  @apply overflow-hidden;
+}
+
+.card-image-zoom img {
+  @apply transition-transform duration-300 ease-out;
+}
+
+.group:hover .card-image-zoom img,
+.card-image-zoom:hover img {
+  @apply scale-105;
+}
+
+/* Title hover color transition */
+.card-title-hover {
+  @apply transition-colors duration-200;
+}
+
+.group:hover .card-title-hover {
+  color: var(--clemson-orange);
+}
+
+/* Subtle lift effect for card containers */
+.card-lift {
+  @apply transition-transform duration-200 ease-out;
+}
+
+.card-lift:hover {
+  @apply -translate-y-0.5;
+}
+
+/* Orange underline effect for links */
+.link-underline-orange {
+  @apply relative;
+}
+
+.link-underline-orange::after {
+  content: "";
+  @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-200;
+  background-color: var(--clemson-orange);
+}
+
+.link-underline-orange:hover::after {
+  @apply w-full;
+}
