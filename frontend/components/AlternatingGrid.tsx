@@ -123,7 +123,7 @@ function TextCard({
   );
 }
 
-// Image card with title and byline for bottom rows
+// Image card with title and byline for bottom rows (shorter aspect ratio)
 function ImageCardWithTitle({ post }: { post: WPPost }) {
   const imageUrl = rewriteImageUrl(post.featured_image_url);
   const title = decodeHtmlEntities(post.title.rendered);
@@ -133,7 +133,7 @@ function ImageCardWithTitle({ post }: { post: WPPost }) {
 
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden mb-3">
+      <div className="relative aspect-[4/3] overflow-hidden mb-3">
         {imageUrl ? (
           <Image
             src={imageUrl}
