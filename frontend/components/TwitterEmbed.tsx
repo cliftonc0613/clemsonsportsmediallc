@@ -70,9 +70,8 @@ export function TwitterEmbed({
     iframe.src = embedUrl;
     iframe.style.cssText = `
       width: 100%;
-      height: 500px;
+      min-height: 600px;
       border: none;
-      overflow: hidden;
       display: block;
     `;
     iframe.allowFullscreen = true;
