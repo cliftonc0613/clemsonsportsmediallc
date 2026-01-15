@@ -73,6 +73,23 @@ export interface ACFImage {
 }
 
 /**
+ * WordPress Author (embedded)
+ */
+export interface WPAuthor {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+  link: string;
+  slug: string;
+  avatar_urls?: {
+    '24'?: string;
+    '48'?: string;
+    '96'?: string;
+  };
+}
+
+/**
  * WordPress Post (Blog)
  */
 export interface WPPost {
@@ -103,6 +120,26 @@ export interface WPPost {
   categories: number[];
   tags: number[];
   acf?: Record<string, unknown>;
+  _embedded?: {
+    author?: WPAuthor[];
+    'wp:featuredmedia'?: Array<{
+      source_url: string;
+      alt_text: string;
+      media_details?: {
+        sizes?: {
+          thumbnail?: { source_url: string };
+          medium?: { source_url: string };
+          large?: { source_url: string };
+        };
+      };
+    }>;
+    'wp:term'?: Array<Array<{
+      id: number;
+      name: string;
+      slug: string;
+      taxonomy: string;
+    }>>;
+  };
 }
 
 /**
@@ -473,6 +510,191 @@ export async function getTags(params?: {
   return fetchAPI<WPTag[]>(`/tags${query}`);
 }
 
+/**
+ * Fetch a single tag by slug
+ */
+export async function getTagBySlug(slug: string): Promise<WPTag | null> {
+  const tags = await fetchAPI<WPTag[]>(`/tags?slug=${slug}`);
+  return tags.length > 0 ? tags[0] : null;
+}
+
+/**
+ * Check if a post has a specific tag by slug
+ */
+export function postHasTag(post: WPPost, tags: WPTag[], tagSlug: string): boolean {
+  const tag = tags.find((t) => t.slug === tagSlug);
+  if (!tag) return false;
+  return post.tags.includes(tag.id);
+}
+
+/**
+ * Fetch a single category by slug
+ */
+export async function getCategoryBySlug(slug: string): Promise<WPCategory | null> {
+  const categories = await fetchAPI<WPCategory[]>(`/categories?slug=${slug}`);
+  return categories.length > 0 ? categories[0] : null;
+}
+
+/**
+ * Fetch posts by category slug
+ * Convenience function that resolves category slug to ID and fetches posts
+ */
+export async function getPostsByCategorySlug(
+  categorySlug: string,
+  params?: {
+    per_page?: number;
+    page?: number;
+    orderby?: string;
+    order?: 'asc' | 'desc';
+  }
+): Promise<WPPost[]> {
+  const category = await getCategoryBySlug(categorySlug);
+  if (!category) {
+    console.warn(`Category "${categorySlug}" not found`);
+    return [];
+  }
+
+  return getPosts({
+    categories: [category.id],
+    ...params,
+  });
+}
+
+/**
+ * Pagination result interface
+ */
+export interface PaginatedResult<T> {
+  items: T[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+/**
+ * Fetch posts with pagination metadata
+ * Returns posts along with total count and page info from WordPress headers
+ */
+export async function getPostsWithPagination(params?: {
+  per_page?: number;
+  page?: number;
+  categories?: number[];
+  tags?: number[];
+  exclude?: number[];
+  orderby?: string;
+  order?: 'asc' | 'desc';
+}): Promise<PaginatedResult<WPPost>> {
+  const apiUrl = getApiUrl();
+  const queryParams = new URLSearchParams();
+
+  const perPage = params?.per_page || 12;
+  const page = params?.page || 1;
+
+  queryParams.set('per_page', perPage.toString());
+  queryParams.set('page', page.toString());
+  if (params?.categories?.length) queryParams.set('categories', params.categories.join(','));
+  if (params?.tags?.length) queryParams.set('tags', params.tags.join(','));
+  if (params?.exclude?.length) queryParams.set('exclude', params.exclude.join(','));
+  if (params?.orderby) queryParams.set('orderby', params.orderby);
+  if (params?.order) queryParams.set('order', params.order);
+  queryParams.set('_embed', 'true');
+
+  // Add cache-busting parameter
+  const separator = '&';
+  const url = `${apiUrl}/posts?${queryParams.toString()}${separator}_t=${Date.now()}`;
+
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const posts = await response.json() as WPPost[];
+
+  // Get pagination info from headers
+  const totalItems = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+  const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
+
+  return {
+    items: posts,
+    totalItems,
+    totalPages,
+    currentPage: page,
+  };
+}
+
+/**
+ * Fetch posts by category slug with pagination
+ */
+export async function getPostsByCategorySlugWithPagination(
+  categorySlug: string,
+  params?: {
+    per_page?: number;
+    page?: number;
+    orderby?: string;
+    order?: 'asc' | 'desc';
+  }
+): Promise<PaginatedResult<WPPost> & { category: WPCategory | null }> {
+  const category = await getCategoryBySlug(categorySlug);
+  if (!category) {
+    return {
+      items: [],
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 1,
+      category: null,
+    };
+  }
+
+  const result = await getPostsWithPagination({
+    categories: [category.id],
+    ...params,
+  });
+
+  return {
+    ...result,
+    category,
+  };
+}
+
+/**
+ * Fetch posts by tag slug with pagination
+ */
+export async function getPostsByTagSlugWithPagination(
+  tagSlug: string,
+  params?: {
+    per_page?: number;
+    page?: number;
+    orderby?: string;
+    order?: 'asc' | 'desc';
+  }
+): Promise<PaginatedResult<WPPost> & { tag: WPTag | null }> {
+  const tag = await getTagBySlug(tagSlug);
+  if (!tag) {
+    return {
+      items: [],
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 1,
+      tag: null,
+    };
+  }
+
+  const result = await getPostsWithPagination({
+    tags: [tag.id],
+    ...params,
+  });
+
+  return {
+    ...result,
+    tag,
+  };
+}
+
 // =============================================================================
 // Search
 // =============================================================================
@@ -535,9 +757,12 @@ export async function search(params: {
 
       const wpResults = items.map(item => {
         const featuredMedia = item._embedded?.['wp:featuredmedia']?.[0];
-        const imageUrl = featuredMedia?.media_details?.sizes?.thumbnail?.source_url
-          || featuredMedia?.media_details?.sizes?.medium?.source_url
-          || featuredMedia?.source_url;
+        // Prefer full-size or large images for better quality display
+        const sizes = featuredMedia?.media_details?.sizes as Record<string, { source_url: string }> | undefined;
+        const imageUrl = featuredMedia?.source_url
+          || sizes?.large?.source_url
+          || sizes?.medium_large?.source_url
+          || sizes?.medium?.source_url;
 
         // Use excerpt if available, otherwise extract from content
         const excerptText = item.excerpt?.rendered
@@ -683,4 +908,106 @@ export function getReadingTime(content: string): number {
   const wordsPerMinute = 200;
   const words = text.split(/\s+/).length;
   return Math.ceil(words / wordsPerMinute);
+}
+
+/**
+ * Get display category name for a post, skipping internal categories
+ * Skips categories like "breaking-news" that are used for filtering, not display
+ */
+export function getDisplayCategoryName(
+  post: WPPost,
+  categories: WPCategory[],
+  skipSlugs: string[] = ["breaking-news"]
+): string {
+  if (post.categories.length === 0) return "News";
+
+  for (const categoryId of post.categories) {
+    const category = categories.find((c) => c.id === categoryId);
+    if (category && !skipSlugs.includes(category.slug)) {
+      return category.name;
+    }
+  }
+
+  return "News";
+}
+
+/**
+ * Get author name from post's _embedded data
+ * Falls back to author_name field or "Staff" if not available
+ */
+export function getPostAuthorName(post: WPPost): string {
+  // Try _embedded author first (most reliable)
+  const embeddedAuthor = post._embedded?.author?.[0];
+  if (embeddedAuthor?.name) {
+    return embeddedAuthor.name;
+  }
+
+  // Fall back to author_name field
+  if (post.author_name) {
+    return post.author_name;
+  }
+
+  return "Staff";
+}
+
+/**
+ * Get author avatar URL from post's _embedded data
+ * Returns the 48px avatar by default, or null if not available
+ */
+export function getPostAuthorAvatar(post: WPPost): string | null {
+  const embeddedAuthor = post._embedded?.author?.[0];
+  if (!embeddedAuthor?.avatar_urls) {
+    return null;
+  }
+
+  // Prefer 48px, fall back to 96px or 24px
+  return (
+    embeddedAuthor.avatar_urls['48'] ||
+    embeddedAuthor.avatar_urls['96'] ||
+    embeddedAuthor.avatar_urls['24'] ||
+    null
+  );
+}
+
+/**
+ * Get author bio from post's _embedded data
+ * Returns the author description or empty string if not available
+ */
+export function getPostAuthorBio(post: WPPost): string {
+  const embeddedAuthor = post._embedded?.author?.[0];
+  return embeddedAuthor?.description || "";
+}
+
+/**
+ * Get embedded categories from post's _embedded data
+ * Returns array of category objects with id, name, and slug
+ */
+export function getPostCategories(post: WPPost): Array<{ id: number; name: string; slug: string }> {
+  const terms = post._embedded?.['wp:term'];
+  if (!terms) return [];
+
+  // wp:term is an array of arrays, first array is categories, second is tags
+  const categories = terms.flat().filter((term) => term.taxonomy === 'category');
+  return categories.map((cat) => ({
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+  }));
+}
+
+/**
+ * Get embedded tags from post's _embedded data
+ * Returns array of tag objects with id, name, and slug
+ */
+export function getPostTags(post: WPPost): Array<{ id: number; name: string; slug: string }> {
+  const terms = post._embedded?.['wp:term'];
+  if (!terms) return [];
+
+  // wp:term is an array of arrays, first array is categories, second is tags
+  const tags = terms.flat().filter((term) => term.taxonomy === 'post_tag');
+  return tags.map((tag) => ({
+    id: tag.id,
+    name: tag.name,
+    slug: tag.slug,
+  }));
 }
