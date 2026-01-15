@@ -1,14 +1,14 @@
 /*
-Theme Name: Starter WP Theme
-Theme URI: https://example.com/starter-wp-theme
-Author: Your Name
-Author URI: https://example.com
-Description: A headless WordPress starter theme for service-based businesses. Designed to work with a Next.js frontend via REST API.
-Version: 1.2.0
+Theme Name: Clemson Sports Media
+Theme URI: https://clemsonsportsmedia.com
+Author: Clemson Sports Media
+Author URI: https://clemsonsportsmedia.com
+Description: A headless WordPress theme for Clemson Sports Media. Designed to work with a Next.js frontend via REST API.
+Version: 1.0.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: starter-wp-theme
-Tags: headless, rest-api, starter, services, business
+Text Domain: clemson-sports-media
+Tags: headless, rest-api, sports, media, clemson
 
 This theme is designed for headless WordPress setups.
 Frontend rendering is handled by Next.js with Tailwind CSS.

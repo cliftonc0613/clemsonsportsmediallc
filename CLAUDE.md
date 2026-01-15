@@ -1,12 +1,12 @@
-# Starter WP Theme
+# Clemson Sports Media
 
-A starter theme for when starting a WordPress project.
+A headless WordPress theme for Clemson Sports Media.
 
-**Project Type:** Service-based business
+**Project Type:** Sports Media Website
 
 ## Project Overview
 
-This WordPress theme is set up with Claude Code automation for streamlined development and content management.
+This WordPress theme powers Clemson Sports Media with a Next.js frontend for Clemson athletics coverage and sports media content.
 
 ## Quick Start
 

@@ -15,14 +15,14 @@ import RouteProgress from "@/components/RouteProgress";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://clemsonsportsmedia.com";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
 
 const organizationSchema = generateOrganizationSchema({
   name: SITE_NAME,
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
-  description: "A headless WordPress starter theme built with Next.js and shadcn/ui. Perfect for service-based businesses.",
+  description: "Clemson Sports Media - Your source for Clemson athletics coverage and sports media content.",
 });
 
 export const viewport: Viewport = {
@@ -53,17 +53,17 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Starter WP Theme | Service-Based Business",
-    template: "%s | Starter WP Theme",
+    default: "Clemson Sports Media | Clemson Athletics Coverage",
+    template: "%s | Clemson Sports Media",
   },
   description:
-    "A headless WordPress starter theme built with Next.js and shadcn/ui. Perfect for service-based businesses.",
-  keywords: ["WordPress", "Next.js", "headless CMS", "shadcn/ui", "services"],
-  authors: [{ name: "Starter WP Theme" }],
+    "Clemson Sports Media - Your source for Clemson athletics coverage and sports media content.",
+  keywords: ["Clemson", "sports", "athletics", "Tigers", "football", "basketball", "media"],
+  authors: [{ name: "Clemson Sports Media" }],
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "Starter WP Theme",
+    siteName: "Clemson Sports Media",
   },
   twitter: {
     card: "summary_large_image",
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Starter WP Theme",
+    title: "Clemson Sports Media",
   },
   formatDetection: { telephone: false },
   icons: {
@@ -107,7 +107,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="StarterWP" />
+        <meta name="apple-mobile-web-app-title" content="CSM" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#0a0a0a" />
         <meta name="msapplication-tap-highlight" content="no" />

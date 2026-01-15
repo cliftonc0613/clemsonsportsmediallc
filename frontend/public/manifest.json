@@ -1,7 +1,7 @@
 {
-  "name": "Starter WP Theme",
-  "short_name": "StarterWP",
-  "description": "A headless WordPress starter theme built with Next.js and shadcn/ui. Perfect for service-based businesses.",
+  "name": "Clemson Sports Media",
+  "short_name": "CSM",
+  "description": "Clemson Sports Media - Your source for Clemson athletics coverage and sports media content.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
@@ -9,7 +9,7 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
-  "categories": ["business", "productivity"],
+  "categories": ["sports", "news", "media"],
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -78,14 +78,14 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Desktop view of Starter WP Theme"
+      "label": "Desktop view of Clemson Sports Media"
     },
     {
       "src": "/screenshots/mobile.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Mobile view of Starter WP Theme"
+      "label": "Mobile view of Clemson Sports Media"
     }
   ],
   "shortcuts": [

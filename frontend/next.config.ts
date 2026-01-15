@@ -35,28 +35,32 @@ const withPWA = withSerwistInit({
 const isLocalWordPress = process.env.WORDPRESS_API_URL?.includes('.local') ?? false;
 
 const nextConfig: NextConfig = {
+  // Fix workspace root detection - prevents Next.js from using ~/package-lock.json
+  outputFileTracingRoot: __dirname,
+
   images: {
     // Disable optimization only in development or when using local WordPress
     // In production with public WordPress domain, images will be optimized
     // Note: Next.js 14+ blocks image optimization for private IPs (SSRF protection)
     unoptimized: isDev || isLocalWordPress,
     remotePatterns: [
+      // Local WordPress domain
       {
         protocol: 'http',
-        hostname: 'websiteplayground.local',
+        hostname: 'wp.clemsonsportsmediacom.local',
         pathname: '/wp-content/uploads/**',
       },
       {
         protocol: 'https',
-        hostname: 'websiteplayground.local',
+        hostname: 'wp.clemsonsportsmediacom.local',
         pathname: '/wp-content/uploads/**',
       },
-      // Production WordPress domain
-      {
-        protocol: 'https',
-        hostname: 'wpstarter.mysites.io',
-        pathname: '/wp-content/uploads/**',
-      },
+      // Production WordPress domain (uncomment when deploying)
+      // {
+      //   protocol: 'https',
+      //   hostname: 'wpstarter.mysites.io',
+      //   pathname: '/wp-content/uploads/**',
+      // },
     ],
   },
 
