@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface TwitterEmbedProps {
   /** The tweet URL or tweet ID to embed */
@@ -13,25 +13,6 @@ interface TwitterEmbedProps {
   onLoad?: () => void;
   /** Callback on error */
   onError?: (error: Error) => void;
-}
-
-// Declare Twitter widgets type
-declare global {
-  interface Window {
-    twttr?: {
-      widgets: {
-        createTweet: (
-          tweetId: string,
-          container: HTMLElement,
-          options?: {
-            theme?: "light" | "dark";
-            dnt?: boolean;
-            conversation?: "none" | "all";
-          }
-        ) => Promise<HTMLElement | undefined>;
-      };
-    };
-  }
 }
 
 // Extract tweet ID from various URL formats
@@ -58,65 +39,6 @@ function extractTweetId(input: string): string {
   return input;
 }
 
-// Load Twitter widgets.js script with polling for readiness
-let twttrScriptLoadPromise: Promise<void> | null = null;
-
-function loadTwitterWidgets(): Promise<void> {
-  if (twttrScriptLoadPromise) return twttrScriptLoadPromise;
-
-  twttrScriptLoadPromise = new Promise((resolve, reject) => {
-    // If already loaded and ready
-    if (window.twttr?.widgets?.createTweet) {
-      resolve();
-      return;
-    }
-
-    // Poll function to check if twttr is ready
-    const pollForReady = () => {
-      const poll = setInterval(() => {
-        if (window.twttr?.widgets?.createTweet) {
-          clearInterval(poll);
-          resolve();
-        }
-      }, 50);
-
-      // Timeout after 10 seconds
-      setTimeout(() => {
-        clearInterval(poll);
-        if (!window.twttr?.widgets?.createTweet) {
-          reject(new Error("Twitter widgets.js load timeout"));
-        }
-      }, 10000);
-    };
-
-    // Check if script already exists but not ready yet
-    const existingScript = document.querySelector(
-      'script[src*="platform.twitter.com/widgets.js"]'
-    );
-    if (existingScript) {
-      pollForReady();
-      return;
-    }
-
-    // Load fresh script
-    const script = document.createElement("script");
-    script.src = "https://platform.twitter.com/widgets.js";
-    script.async = true;
-
-    script.onload = () => {
-      pollForReady();
-    };
-
-    script.onerror = () => {
-      reject(new Error("Failed to load Twitter widgets.js"));
-    };
-
-    document.head.appendChild(script);
-  });
-
-  return twttrScriptLoadPromise;
-}
-
 export function TwitterEmbed({
   tweetId,
   className = "",
@@ -125,78 +47,92 @@ export function TwitterEmbed({
   onError,
 }: TwitterEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [isClient, setIsClient] = useState(false);
 
   const id = extractTweetId(tweetId);
 
-  // Track client-side mounting
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    if (!containerRef.current) return;
 
-  const embedTweet = useCallback(async () => {
-    if (!containerRef.current || !isClient) return;
+    setIsLoading(true);
+    setHasError(false);
 
-    try {
-      setIsLoading(true);
-      setHasError(false);
+    // Use Twitter's publish embed endpoint
+    const embedUrl = `https://platform.twitter.com/embed/Tweet.html?id=${id}&theme=${theme}&dnt=true`;
 
-      // Clear container
-      containerRef.current.innerHTML = "";
+    // Create iframe
+    const iframe = document.createElement("iframe");
+    iframeRef.current = iframe;
+    iframe.src = embedUrl;
+    iframe.style.cssText = `
+      width: 100%;
+      height: 800px;
+      border: none;
+      display: block;
+      overflow: hidden;
+    `;
+    iframe.allowFullscreen = true;
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("frameborder", "0");
 
-      // Load Twitter widgets.js
-      await loadTwitterWidgets();
+    // Handle load
+    iframe.onload = () => {
+      setIsLoading(false);
+      onLoad?.();
+    };
 
-      // Create tweet using Twitter's official API
-      // This automatically handles height sizing
-      const element = await window.twttr?.widgets.createTweet(
-        id,
-        containerRef.current,
-        {
-          theme,
-          dnt: true,
-        }
-      );
-
-      if (element) {
-        setIsLoading(false);
-        onLoad?.();
-      } else {
-        // Tweet might not exist or be private
-        setIsLoading(false);
-        setHasError(true);
-        onError?.(new Error("Tweet not found or unavailable"));
-      }
-    } catch (error) {
+    iframe.onerror = () => {
       setIsLoading(false);
       setHasError(true);
-      onError?.(
-        error instanceof Error ? error : new Error("Failed to embed tweet")
-      );
-    }
-  }, [id, theme, isClient, onLoad, onError]);
+      onError?.(new Error("Failed to load tweet"));
+    };
 
-  useEffect(() => {
-    embedTweet();
-  }, [embedTweet]);
+    // Clear and append
+    containerRef.current.innerHTML = "";
+    containerRef.current.appendChild(iframe);
 
-  // Server-side placeholder
-  if (!isClient) {
-    return (
-      <div
-        className={`twitter-embed-placeholder ${className}`}
-        style={{
-          minHeight: "200px",
-          maxWidth: "550px",
-          backgroundColor: "var(--muted, #f5f5f5)",
-          borderRadius: "12px",
-          margin: "0 auto",
-        }}
-      />
-    );
-  }
+    // Listen for height messages from Twitter
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== "https://platform.twitter.com") return;
+
+      try {
+        const data =
+          typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+
+        // Twitter sends height in twttr.embed object
+        if (data["twttr.embed"]) {
+          const embedData = data["twttr.embed"];
+          if (embedData.height && iframeRef.current) {
+            const newHeight = parseInt(embedData.height, 10);
+            iframeRef.current.style.height = `${newHeight}px`;
+          }
+        }
+
+        // Also check for direct height property
+        if (data.height && iframeRef.current) {
+          const newHeight = parseInt(data.height, 10);
+          iframeRef.current.style.height = `${newHeight}px`;
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+
+    // Timeout fallback for loading state
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("message", handleMessage);
+      iframeRef.current = null;
+    };
+  }, [id, theme, onLoad, onError]);
 
   return (
     <div
