@@ -160,41 +160,29 @@ function parseTwitterEmbeds(html: string): { processedHtml: string; embeds: Twit
   let processedHtml = html;
   let embedIndex = 0;
 
-  // Pattern 1: WordPress Twitter embed blocks
-  // Matches: <figure class="wp-block-embed is-type-rich is-provider-twitter...">
-  const figurePattern = /<figure[^>]*class="[^"]*wp-block-embed[^"]*is-provider-twitter[^"]*"[^>]*>[\s\S]*?<a[^>]*href="([^"]*(?:twitter\.com|x\.com)[^"]*status[^"]*)"[^>]*>[\s\S]*?<\/figure>/gi;
+  // Pattern 1: Full WordPress Twitter embed block (figure > div > blockquote structure)
+  // This is the most common format from WordPress block editor
+  const wpBlockPattern = /<figure[^>]*class="[^"]*wp-block-embed[^"]*(?:is-provider-twitter|wp-block-embed-twitter)[^"]*"[^>]*>[\s\S]*?<\/figure>/gi;
 
-  processedHtml = processedHtml.replace(figurePattern, (match, url) => {
-    const id = `twitter-embed-${embedIndex++}`;
-    // Extract tweet ID from URL
-    const tweetIdMatch = url.match(/status\/(\d+)/);
-    if (tweetIdMatch) {
-      embeds.push({ id, tweetId: tweetIdMatch[1] });
-      return `<div data-twitter-placeholder="${id}" class="twitter-placeholder my-6"></div>`;
-    }
-    return match;
-  });
-
-  // Pattern 2: Blockquote Twitter embeds (native Twitter embed code)
-  const blockquotePattern = /<blockquote[^>]*class="[^"]*twitter-tweet[^"]*"[^>]*>[\s\S]*?<a[^>]*href="([^"]*(?:twitter\.com|x\.com)[^"]*status[^"]*)"[^>]*>[\s\S]*?<\/blockquote>/gi;
-
-  processedHtml = processedHtml.replace(blockquotePattern, (match, url) => {
-    const id = `twitter-embed-${embedIndex++}`;
-    const tweetIdMatch = url.match(/status\/(\d+)/);
-    if (tweetIdMatch) {
-      embeds.push({ id, tweetId: tweetIdMatch[1] });
-      return `<div data-twitter-placeholder="${id}" class="twitter-placeholder my-6"></div>`;
-    }
-    return match;
-  });
-
-  // Pattern 3: Plain Twitter/X links in WordPress embeds
-  const linkPattern = /<div[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?<a[^>]*href="([^"]*(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)[^"]*)"[^>]*>[\s\S]*?<\/div>/gi;
-
-  processedHtml = processedHtml.replace(linkPattern, (match, url, tweetId) => {
-    if (tweetId) {
+  processedHtml = processedHtml.replace(wpBlockPattern, (match) => {
+    // Extract tweet URL from the blockquote's anchor tag
+    const urlMatch = match.match(/href="([^"]*(?:twitter\.com|x\.com)[^"]*\/status\/(\d+)[^"]*)"/i);
+    if (urlMatch && urlMatch[2]) {
       const id = `twitter-embed-${embedIndex++}`;
-      embeds.push({ id, tweetId });
+      embeds.push({ id, tweetId: urlMatch[2] });
+      return `<div data-twitter-placeholder="${id}" class="twitter-placeholder my-6"></div>`;
+    }
+    return match;
+  });
+
+  // Pattern 2: Standalone blockquote Twitter embeds (native Twitter embed code without figure wrapper)
+  const blockquotePattern = /<blockquote[^>]*class="[^"]*twitter-tweet[^"]*"[^>]*>[\s\S]*?<\/blockquote>(?:\s*<script[^>]*twitter[^>]*>[\s\S]*?<\/script>)?/gi;
+
+  processedHtml = processedHtml.replace(blockquotePattern, (match) => {
+    const urlMatch = match.match(/href="([^"]*(?:twitter\.com|x\.com)[^"]*\/status\/(\d+)[^"]*)"/i);
+    if (urlMatch && urlMatch[2]) {
+      const id = `twitter-embed-${embedIndex++}`;
+      embeds.push({ id, tweetId: urlMatch[2] });
       return `<div data-twitter-placeholder="${id}" class="twitter-placeholder my-6"></div>`;
     }
     return match;
