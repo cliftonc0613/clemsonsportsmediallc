@@ -21,11 +21,10 @@ interface AlternatingGridProps {
 /**
  * Alternating Grid Layout
  *
- * Top Row: Image | Text | Image | Text (4 columns)
+ * Top Row: Image | Text | Image | Text pattern (fills available posts)
  * Bottom Rows: Image cards with titles (4 columns)
  *
- * Requires at least 4 posts for the alternating pattern.
- * If fewer than 4 posts, all are shown as image cards.
+ * Pattern: Position 0,2,4,6... = Image, Position 1,3,5,7... = Text
  */
 export function AlternatingGrid({
   posts,
@@ -34,25 +33,21 @@ export function AlternatingGrid({
 }: AlternatingGridProps) {
   if (posts.length === 0) return null;
 
-  // If fewer than 4 posts, show all as image cards with titles
-  // If 4+ posts, use Image|Text|Image|Text pattern for first 4
-  const useAlternatingLayout = posts.length >= 4;
-  const topRowPosts = useAlternatingLayout ? posts.slice(0, 4) : [];
-  const remainingPosts = useAlternatingLayout ? posts.slice(4) : posts;
+  // First 4 posts go in the alternating top row
+  const topRowPosts = posts.slice(0, 4);
+  const remainingPosts = posts.slice(4);
 
   return (
     <div className={className}>
-      {/* Top Row: Image | Text | Image | Text (only if 4+ posts) */}
-      {useAlternatingLayout && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          <ImageCard post={topRowPosts[0]} />
-          <TextCard post={topRowPosts[1]} tags={tags} showExclusive />
-          <ImageCard post={topRowPosts[2]} />
-          <TextCard post={topRowPosts[3]} tags={tags} />
-        </div>
-      )}
+      {/* Top Row: Image | Text | Image | Text pattern */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        {topRowPosts[0] && <ImageCard post={topRowPosts[0]} />}
+        {topRowPosts[1] && <TextCard post={topRowPosts[1]} tags={tags} showExclusive />}
+        {topRowPosts[2] && <ImageCard post={topRowPosts[2]} />}
+        {topRowPosts[3] && <TextCard post={topRowPosts[3]} tags={tags} />}
+      </div>
 
-      {/* Remaining Posts (or all posts if fewer than 4): Image cards with titles */}
+      {/* Remaining Posts: Image cards with titles */}
       {remainingPosts.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {remainingPosts.map((post) => (
