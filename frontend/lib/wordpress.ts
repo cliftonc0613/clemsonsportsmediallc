@@ -473,6 +473,39 @@ export async function getTags(params?: {
   return fetchAPI<WPTag[]>(`/tags${query}`);
 }
 
+/**
+ * Fetch a single category by slug
+ */
+export async function getCategoryBySlug(slug: string): Promise<WPCategory | null> {
+  const categories = await fetchAPI<WPCategory[]>(`/categories?slug=${slug}`);
+  return categories.length > 0 ? categories[0] : null;
+}
+
+/**
+ * Fetch posts by category slug
+ * Convenience function that resolves category slug to ID and fetches posts
+ */
+export async function getPostsByCategorySlug(
+  categorySlug: string,
+  params?: {
+    per_page?: number;
+    page?: number;
+    orderby?: string;
+    order?: 'asc' | 'desc';
+  }
+): Promise<WPPost[]> {
+  const category = await getCategoryBySlug(categorySlug);
+  if (!category) {
+    console.warn(`Category "${categorySlug}" not found`);
+    return [];
+  }
+
+  return getPosts({
+    categories: [category.id],
+    ...params,
+  });
+}
+
 // =============================================================================
 // Search
 // =============================================================================

@@ -1,5 +1,8 @@
-import { getPosts, getCategories, isWordPressConfigured } from "@/lib/wordpress";
+import { getPosts, getCategories, getPostsByCategorySlug, isWordPressConfigured } from "@/lib/wordpress";
 import type { WPPost, WPCategory } from "@/lib/wordpress";
+
+// Category slug for Breaking News posts
+const BREAKING_NEWS_CATEGORY = "breaking-news";
 import { OrganizationSchema } from "@/components/JsonLd";
 import { BodyClass } from "@/components/BodyClass";
 import { MiniHero } from "@/components/MiniHero";
@@ -24,12 +27,15 @@ export const revalidate = 5;
 export default async function HomePage() {
   // Fetch data from WordPress with graceful fallback
   let posts: WPPost[] = [];
+  let breakingNewsPosts: WPPost[] = [];
   let categories: WPCategory[] = [];
 
   if (isWordPressConfigured()) {
     try {
-      [posts, categories] = await Promise.all([
-        getPosts({ per_page: 20 }), // Fetch more posts for all sections
+      // Fetch all data in parallel
+      [posts, breakingNewsPosts, categories] = await Promise.all([
+        getPosts({ per_page: 15 }),
+        getPostsByCategorySlug(BREAKING_NEWS_CATEGORY, { per_page: 4 }),
         getCategories({ per_page: 100 }),
       ]);
     } catch (error) {
@@ -39,8 +45,7 @@ export default async function HomePage() {
 
   // Split posts for different sections
   const heroGridPosts = posts.slice(0, 5);
-  const breakingNewsPosts = posts.slice(5, 9);
-  const latestPosts = posts.slice(9, 14);
+  const latestPosts = posts.slice(5, 10);
 
   return (
     <>
