@@ -18,8 +18,8 @@ export function BreakingNewsSection({
   return (
     <section className={`relative ${className}`}>
       {/* Breaking Ribbon Label */}
-      <div className="absolute -top-4 left-4 z-20">
-        <div className="bg-[var(--clemson-orange)] text-white font-heading text-lg uppercase px-4 py-2 tracking-wide">
+      <div className="absolute -top-6 left-4 z-20">
+        <div className="bg-[var(--clemson-orange)] text-white font-heading text-2xl md:text-3xl uppercase px-6 py-3 tracking-wide">
           Breaking
         </div>
       </div>
