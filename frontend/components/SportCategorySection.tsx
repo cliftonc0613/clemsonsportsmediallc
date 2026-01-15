@@ -33,10 +33,11 @@ export function SportCategorySection({
 }: SportCategorySectionProps) {
   if (posts.length === 0) return null;
 
-  // Top row: Image | Text | Image | Text (posts 0-3)
-  // Remaining posts: All shown as image cards in 4-column grid
-  const topRowPosts = posts.slice(0, 4);
-  const remainingPosts = posts.slice(4);
+  // If fewer than 4 posts, show all as image cards with titles
+  // If 4+ posts, use Image|Text|Image|Text pattern for first 4
+  const useAlternatingLayout = posts.length >= 4;
+  const topRowPosts = useAlternatingLayout ? posts.slice(0, 4) : [];
+  const remainingPosts = useAlternatingLayout ? posts.slice(4) : posts;
 
   return (
     <section className={`bg-gray-100 py-8 ${className}`}>
@@ -47,23 +48,17 @@ export function SportCategorySection({
           watermarkText={watermarkText}
         />
 
-        {/* Top Row: Image | Text | Image | Text */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          {topRowPosts[0] && (
+        {/* Top Row: Image | Text | Image | Text (only if 4+ posts) */}
+        {useAlternatingLayout && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <TopImageCard post={topRowPosts[0]} />
-          )}
-          {topRowPosts[1] && (
             <TextArticleCard post={topRowPosts[1]} tags={tags} showExclusive />
-          )}
-          {topRowPosts[2] && (
             <TopImageCard post={topRowPosts[2]} />
-          )}
-          {topRowPosts[3] && (
             <TextArticleCard post={topRowPosts[3]} tags={tags} />
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Remaining Posts: All shown as image cards */}
+        {/* Remaining Posts (or all posts if fewer than 4): Image cards with titles */}
         {remainingPosts.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {remainingPosts.map((post) => (
