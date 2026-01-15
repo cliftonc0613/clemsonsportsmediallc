@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, Search, ChevronDown, X } from "lucide-react";
 import { SearchCommand } from "@/components/SearchCommand";
 import { Button } from "@/components/ui/button";
@@ -45,8 +45,12 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [sportsExpanded, setSportsExpanded] = useState(false);
+  const [searchExpanded, setSearchExpanded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const headerRef = useRef<HTMLElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   // Check if current page is a category page (for Sports active state)
   const isSportsActive = pathname.startsWith("/category/");
@@ -188,15 +192,68 @@ export function Header() {
 
         {/* Desktop Search */}
         <div className="hidden items-center gap-2 lg:flex">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSearchOpen(true)}
-            aria-label="Search"
-            className="text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/10"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchQuery.trim()) {
+                router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                setSearchQuery("");
+                setSearchExpanded(false);
+              }
+            }}
+            className="flex items-center"
           >
-            <Search className="h-5 w-5" />
-          </Button>
+            <div
+              className={`relative flex items-center transition-all duration-300 ${
+                searchExpanded ? "w-64" : "w-0"
+              }`}
+            >
+              <input
+                ref={searchInputRef}
+                type="search"
+                placeholder="Search articles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onBlur={() => {
+                  if (!searchQuery.trim()) {
+                    setSearchExpanded(false);
+                  }
+                }}
+                className={`w-full h-9 pl-3 pr-8 text-sm bg-white border-2 border-gray-200 rounded-full focus:outline-none focus:border-[var(--clemson-orange)] transition-all ${
+                  searchExpanded ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              {searchExpanded && searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    searchInputRef.current?.focus();
+                  }}
+                  className="absolute right-2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            <Button
+              type={searchExpanded && searchQuery ? "submit" : "button"}
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                if (!searchExpanded) {
+                  setSearchExpanded(true);
+                  setTimeout(() => searchInputRef.current?.focus(), 100);
+                } else if (!searchQuery.trim()) {
+                  setSearchOpen(true);
+                }
+              }}
+              aria-label="Search"
+              className="text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/10 ml-1"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+          </form>
         </div>
 
         {/* Mobile Search & Menu */}
