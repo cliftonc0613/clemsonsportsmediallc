@@ -144,7 +144,7 @@ Key deliverables:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: Lighthouse Performance Optimization (LCP, CLS, bundle size)
+- [x] 08-01: Lighthouse Performance Optimization (LCP, CLS, bundle size)
 - [ ] 08-02: Push Notifications & PWA Polish
 
 Key deliverables:
@@ -170,7 +170,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 5. Blog Post Template | 1/1 | Complete | 2026-01-15 |
 | 6. Archive Pages | 1/1 | Complete | 2026-01-15 |
 | 7. Navigation & Search | 2/2 | Complete | 2026-01-15 |
-| 8. PWA & Performance | 0/2 | Ready | - |
+| 8. PWA & Performance | 1/2 | In progress | - |
 
 ---
 

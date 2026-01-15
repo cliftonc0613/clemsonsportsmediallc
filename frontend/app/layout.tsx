@@ -85,8 +85,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Adobe Fonts - Apotek (headlines) & Basic Sans (body) */}
+        {/* Preconnect hints for critical third-party origins */}
+        <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
+
+        {/* Adobe Fonts - Apotek (headlines) & Basic Sans (body) with font-display:swap */}
         <link rel="stylesheet" href="https://use.typekit.net/rlq1tnk.css" />
+
+        {/* DNS prefetch for WordPress API (dynamic based on environment) */}
+        <link rel="dns-prefetch" href="//wp.clemsonsportsmediacom.local" />
+
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />

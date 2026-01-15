@@ -6,9 +6,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Adobe Fonts: Apotek (headlines), Basic Sans (body) */
-  --font-sans: "basic-sans", system-ui, sans-serif;
-  --font-heading: "apotek", "basic-sans", sans-serif;
+  /* Adobe Fonts: Apotek (headlines), Basic Sans (body)
+     System font fallbacks ensure text is visible while web fonts load (FOUT)
+     -apple-system and BlinkMacSystemFont provide similar metrics on Apple/Chrome */
+  --font-sans: "basic-sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "apotek", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
   /* Clemson Sports Media Brand Colors */
   --color-clemson-orange: var(--clemson-orange);

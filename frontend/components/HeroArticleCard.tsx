@@ -8,6 +8,8 @@ interface HeroArticleCardProps {
   variant: "large" | "small";
   categoryName?: string;
   className?: string;
+  /** Priority loading for LCP optimization - use for above-fold hero images */
+  priority?: boolean;
 }
 
 export function HeroArticleCard({
@@ -15,6 +17,7 @@ export function HeroArticleCard({
   variant,
   categoryName = "News",
   className = "",
+  priority = false,
 }: HeroArticleCardProps) {
   const imageUrl = rewriteImageUrl(post.featured_image_url);
   const title = decodeHtmlEntities(post.title.rendered);
@@ -34,6 +37,7 @@ export function HeroArticleCard({
           src={imageUrl}
           alt={title}
           fill
+          priority={priority}
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes={isLarge ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 1024px) 50vw, 25vw"}
         />

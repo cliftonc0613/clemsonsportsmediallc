@@ -24,6 +24,7 @@ export function HeroGrid({ posts, categories = [] }: HeroGridProps) {
             variant="large"
             categoryName={getDisplayCategoryName(featuredPost, categories)}
             className="aspect-[4/5] lg:aspect-auto h-full"
+            priority
           />
         </div>
 
