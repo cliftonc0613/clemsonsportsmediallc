@@ -11,6 +11,8 @@ import { Providers } from "./providers";
 import RegisterPWA from "@/components/RegisterPWA";
 import PWALoadScreen from "@/components/PWALoadScreen.enhanced";
 import RouteProgress from "@/components/RouteProgress";
+import { NotificationPrompt } from "@/components/NotificationPrompt";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
@@ -119,6 +121,8 @@ export default function RootLayout({
             <Footer />
           </div>
           <Toaster />
+          <NotificationPrompt />
+          <PWAInstallPrompt />
         </Providers>
       </body>
     </html>
