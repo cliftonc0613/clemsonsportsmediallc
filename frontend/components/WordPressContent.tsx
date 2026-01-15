@@ -12,10 +12,6 @@ const YouTubePlayer = dynamic(
   { ssr: false }
 );
 
-const TwitterEmbed = dynamic(
-  () => import("./TwitterEmbed").then((mod) => mod.TwitterEmbed),
-  { ssr: false }
-);
 
 const FacebookEmbed = dynamic(
   () => import("./FacebookEmbed").then((mod) => mod.FacebookEmbed),
@@ -40,11 +36,6 @@ interface YouTubeEmbed {
   captionLanguage: string;
 }
 
-interface TwitterEmbedData {
-  id: string;
-  tweetId: string;
-  theme?: "light" | "dark";
-}
 
 interface FacebookEmbedData {
   id: string;
@@ -153,42 +144,12 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
 }
 
 /**
- * Parse Twitter embeds from WordPress content
+ * Check if content has Twitter embeds
+ * We don't parse/replace Twitter embeds anymore - we let the HTML pass through
+ * and load widgets.js to process the blockquotes natively
  */
-function parseTwitterEmbeds(html: string): { processedHtml: string; embeds: TwitterEmbedData[] } {
-  const embeds: TwitterEmbedData[] = [];
-  let processedHtml = html;
-  let embedIndex = 0;
-
-  // Pattern 1: Full WordPress Twitter embed block (figure > div > blockquote structure)
-  // This is the most common format from WordPress block editor
-  const wpBlockPattern = /<figure[^>]*class="[^"]*wp-block-embed[^"]*(?:is-provider-twitter|wp-block-embed-twitter)[^"]*"[^>]*>[\s\S]*?<\/figure>/gi;
-
-  processedHtml = processedHtml.replace(wpBlockPattern, (match) => {
-    // Extract tweet URL from the blockquote's anchor tag
-    const urlMatch = match.match(/href="([^"]*(?:twitter\.com|x\.com)[^"]*\/status\/(\d+)[^"]*)"/i);
-    if (urlMatch && urlMatch[2]) {
-      const id = `twitter-embed-${embedIndex++}`;
-      embeds.push({ id, tweetId: urlMatch[2] });
-      return `<div data-twitter-placeholder="${id}" class="twitter-placeholder my-6"></div>`;
-    }
-    return match;
-  });
-
-  // Pattern 2: Standalone blockquote Twitter embeds (native Twitter embed code without figure wrapper)
-  const blockquotePattern = /<blockquote[^>]*class="[^"]*twitter-tweet[^"]*"[^>]*>[\s\S]*?<\/blockquote>(?:\s*<script[^>]*twitter[^>]*>[\s\S]*?<\/script>)?/gi;
-
-  processedHtml = processedHtml.replace(blockquotePattern, (match) => {
-    const urlMatch = match.match(/href="([^"]*(?:twitter\.com|x\.com)[^"]*\/status\/(\d+)[^"]*)"/i);
-    if (urlMatch && urlMatch[2]) {
-      const id = `twitter-embed-${embedIndex++}`;
-      embeds.push({ id, tweetId: urlMatch[2] });
-      return `<div data-twitter-placeholder="${id}" class="twitter-placeholder my-6"></div>`;
-    }
-    return match;
-  });
-
-  return { processedHtml, embeds };
+function hasTwitterContent(html: string): boolean {
+  return /twitter-tweet|is-provider-twitter|wp-block-embed-twitter/i.test(html);
 }
 
 /**
@@ -282,16 +243,19 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
 
   // Parse content: sanitize first, then embeds, then images
   // Order matters: sanitization happens first for security
-  const { processedHtml, youtubeEmbeds, twitterEmbeds, facebookEmbeds, instagramEmbeds, images } = useMemo(() => {
+  // Note: Twitter embeds are NOT parsed - they pass through and widgets.js processes them
+  const { processedHtml, youtubeEmbeds, hasTwitter, facebookEmbeds, instagramEmbeds, images } = useMemo(() => {
     // First sanitize the HTML to prevent XSS attacks
     const sanitizedHtml = sanitizeWordPressHtml(html);
 
     // Parse YouTube embeds
     const youtubeResult = parseYouTubeEmbeds(sanitizedHtml);
 
-    // Parse social embeds in sequence
-    const twitterResult = parseTwitterEmbeds(youtubeResult.processedHtml);
-    const facebookResult = parseFacebookEmbeds(twitterResult.processedHtml);
+    // Check for Twitter content (don't parse - let widgets.js handle it)
+    const hasTwitter = hasTwitterContent(youtubeResult.processedHtml);
+
+    // Parse other social embeds in sequence (skip Twitter)
+    const facebookResult = parseFacebookEmbeds(youtubeResult.processedHtml);
     const instagramResult = parseInstagramEmbeds(facebookResult.processedHtml);
 
     // Finally parse images from the fully processed HTML
@@ -300,7 +264,7 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
     return {
       processedHtml: imageResult.html,
       youtubeEmbeds: youtubeResult.embeds,
-      twitterEmbeds: twitterResult.embeds,
+      hasTwitter,
       facebookEmbeds: facebookResult.embeds,
       instagramEmbeds: instagramResult.embeds,
       images: imageResult.images,
@@ -311,6 +275,36 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Load Twitter widgets.js to process blockquotes natively
+  useEffect(() => {
+    if (!mounted || !hasTwitter || !containerRef.current) return;
+
+    // Check if widgets.js already loaded
+    const existingScript = document.querySelector('script[src*="platform.twitter.com/widgets.js"]');
+
+    const processTwitter = () => {
+      // @ts-expect-error - twttr is loaded by widgets.js
+      if (window.twttr?.widgets?.load) {
+        // @ts-expect-error - twttr is loaded by widgets.js
+        window.twttr.widgets.load(containerRef.current);
+      }
+    };
+
+    if (existingScript) {
+      // Script exists, just process
+      processTwitter();
+      return;
+    }
+
+    // Load widgets.js
+    const script = document.createElement("script");
+    script.src = "https://platform.twitter.com/widgets.js";
+    script.async = true;
+    script.charset = "utf-8";
+    script.onload = processTwitter;
+    document.head.appendChild(script);
+  }, [mounted, hasTwitter]);
 
   return (
     <div ref={containerRef} className={className}>
@@ -329,16 +323,7 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
         />
       ))}
 
-      {/* Render Twitter embeds via portals */}
-      {mounted && twitterEmbeds.map((embed) => (
-        <TwitterEmbedPortal
-          key={embed.id}
-          targetId={embed.id}
-          tweetId={embed.tweetId}
-          theme={embed.theme}
-          containerRef={containerRef}
-        />
-      ))}
+      {/* Twitter embeds are processed by widgets.js directly - no portal needed */}
 
       {/* Render Facebook embeds via portals */}
       {mounted && facebookEmbeds.map((embed) => (
@@ -456,42 +441,7 @@ function ContentImagePortal({ image, containerRef }: ContentImagePortalProps) {
   );
 }
 
-interface TwitterEmbedPortalProps {
-  targetId: string;
-  tweetId: string;
-  theme?: "light" | "dark";
-  containerRef: React.RefObject<HTMLDivElement | null>;
-}
-
-function TwitterEmbedPortal({
-  targetId,
-  tweetId,
-  theme,
-  containerRef,
-}: TwitterEmbedPortalProps) {
-  const [portalTarget, setPortalTarget] = useState<Element | null>(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const element = containerRef.current.querySelector(
-      `[data-twitter-placeholder="${targetId}"]`
-    );
-
-    if (element && !element.hasAttribute("data-portal-ready")) {
-      element.setAttribute("data-portal-ready", "true");
-      element.textContent = "";
-      setPortalTarget(element);
-    }
-  }, [containerRef, targetId]);
-
-  if (!portalTarget) return null;
-
-  return createPortal(
-    <TwitterEmbed tweetId={tweetId} theme={theme} />,
-    portalTarget
-  );
-}
+// TwitterEmbedPortal removed - Twitter blockquotes are now processed by widgets.js directly
 
 interface FacebookEmbedPortalProps {
   targetId: string;
