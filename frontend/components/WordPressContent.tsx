@@ -488,7 +488,7 @@ function TwitterEmbedPortal({
   if (!portalTarget) return null;
 
   return createPortal(
-    <TwitterEmbed tweetId={tweetId} theme={theme} align="center" />,
+    <TwitterEmbed tweetId={tweetId} theme={theme} />,
     portalTarget
   );
 }
