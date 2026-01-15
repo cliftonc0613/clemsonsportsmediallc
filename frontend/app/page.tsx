@@ -106,21 +106,32 @@ export default async function HomePage() {
       <ArticleListGrid posts={articleListPosts} categories={categories} tags={tags} />
 
       {/* Sport Category Sections */}
-      {SPORT_CATEGORIES.map((cat) => {
-        const catPosts = sportPosts[cat.slug] || [];
-        if (catPosts.length === 0) return null;
+      {(() => {
+        // Track which posts have been shown to avoid duplicates across sections
+        const shownPostIds = new Set<number>();
 
-        return (
-          <SportCategorySection
-            key={cat.slug}
-            posts={catPosts}
-            categories={categories}
-            tags={tags}
-            categoryName={cat.name}
-            watermarkText={cat.watermark}
-          />
-        );
-      })}
+        return SPORT_CATEGORIES.map((cat) => {
+          const catPosts = sportPosts[cat.slug] || [];
+          // Filter out posts already shown in previous sections
+          const uniquePosts = catPosts.filter((post) => !shownPostIds.has(post.id));
+
+          if (uniquePosts.length === 0) return null;
+
+          // Mark these posts as shown
+          uniquePosts.forEach((post) => shownPostIds.add(post.id));
+
+          return (
+            <SportCategorySection
+              key={cat.slug}
+              posts={uniquePosts}
+              categories={categories}
+              tags={tags}
+              categoryName={cat.name}
+              watermarkText={cat.watermark}
+            />
+          );
+        });
+      })()}
     </>
   );
 }
