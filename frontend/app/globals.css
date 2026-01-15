@@ -679,8 +679,21 @@ iframe[src*="hudl.com"] {
 /* --------------------------------------------------------------------------
    Twitter Embeds - Centered
    -------------------------------------------------------------------------- */
-.twitter-tweet.twitter-tweet-rendered {
-  margin: auto;
+.twitter-tweet {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.twitter-tweet-rendered {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* WordPress embed wrapper for Twitter */
+.wp-block-embed.is-provider-twitter .wp-block-embed__wrapper,
+.wp-block-embed-twitter .wp-block-embed__wrapper {
+  display: flex;
+  justify-content: center;
 }
 
 /* --------------------------------------------------------------------------
