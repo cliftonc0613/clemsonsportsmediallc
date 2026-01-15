@@ -72,16 +72,16 @@ export function SocialCTABar({
   className = "",
 }: SocialCTABarProps) {
   return (
-    <div className={`bg-gray-100 py-4 ${className}`}>
+    <div className={`bg-[var(--clemson-purple)] py-4 ${className}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Left Text */}
-          <span className="font-heading text-sm uppercase tracking-wider text-foreground">
+          <span className="font-heading text-base md:text-lg uppercase tracking-wider text-white">
             {leftText}
           </span>
 
           {/* Center Text */}
-          <span className="hidden md:block font-heading text-lg text-foreground">
+          <span className="hidden md:block font-heading text-xl text-white">
             {centerText}
           </span>
 
@@ -93,7 +93,7 @@ export function SocialCTABar({
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-[var(--clemson-orange)] transition-colors duration-200"
+                className="text-white hover:text-[var(--clemson-orange)] transition-colors duration-200"
                 aria-label={`Follow us on ${link.platform}`}
               >
                 {socialIcons[link.platform]}

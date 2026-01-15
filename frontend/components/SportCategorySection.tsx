@@ -7,6 +7,7 @@ interface SportCategorySectionProps {
   categories?: WPCategory[];
   tags?: WPTag[];
   categoryName: string;
+  categorySlug: string;
   watermarkText?: string;
   className?: string;
 }
@@ -16,6 +17,7 @@ export function SportCategorySection({
   categories = [],
   tags = [],
   categoryName,
+  categorySlug,
   watermarkText,
   className = "",
 }: SportCategorySectionProps) {
@@ -31,7 +33,7 @@ export function SportCategorySection({
         />
 
         {/* Alternating Grid Layout */}
-        <AlternatingGrid posts={posts} tags={tags} />
+        <AlternatingGrid posts={posts} tags={tags} categorySlug={categorySlug} />
       </div>
     </section>
   );

@@ -18,7 +18,7 @@ export function SportSectionHeader({
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none px-4"
         aria-hidden="true"
       >
-        <span className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] font-heading font-bold uppercase text-gray-200 tracking-widest text-center leading-none">
+        <span className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] font-heading font-bold uppercase text-[var(--clemson-orange)] opacity-20 tracking-widest text-center leading-none">
           {watermark}
         </span>
       </div>

@@ -6,7 +6,6 @@ const BREAKING_NEWS_CATEGORY = "breaking-news";
 const SPORT_CATEGORIES = [
   { slug: "football", name: "Football" },
   { slug: "basketball", name: "Basketball" },
-  { slug: "transfer-portal", name: "Transfer Portal" },
   { slug: "baseball", name: "Baseball" },
   { slug: "softball", name: "Softball" },
   { slug: "soccer", name: "Soccer" },
@@ -127,6 +126,7 @@ export default async function HomePage() {
               categories={categories}
               tags={tags}
               categoryName={cat.name}
+              categorySlug={cat.slug}
             />
           );
         });

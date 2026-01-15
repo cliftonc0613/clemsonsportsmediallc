@@ -15,6 +15,7 @@ import { AuthorByline } from "./AuthorByline";
 interface AlternatingGridProps {
   posts: WPPost[];
   tags?: WPTag[];
+  categorySlug?: string;
   className?: string;
 }
 
@@ -29,13 +30,14 @@ interface AlternatingGridProps {
 export function AlternatingGrid({
   posts,
   tags = [],
+  categorySlug,
   className = "",
 }: AlternatingGridProps) {
   if (posts.length === 0) return null;
 
   // First 4 posts go in the alternating top row
   const topRowPosts = posts.slice(0, 4);
-  const remainingPosts = posts.slice(4);
+  const remainingPosts = posts.slice(4, 12);
 
   return (
     <div className={className}>
@@ -53,6 +55,31 @@ export function AlternatingGrid({
           {remainingPosts.map((post) => (
             <ImageCardWithTitle key={post.id} post={post} />
           ))}
+        </div>
+      )}
+
+      {/* View More Button */}
+      {categorySlug && (
+        <div className="flex justify-center mt-8">
+          <Link
+            href={`/category/${categorySlug}`}
+            className="inline-flex items-center gap-2 bg-[var(--clemson-orange)] text-white font-heading font-bold uppercase px-6 py-3 hover:bg-[var(--clemson-purple)] transition-colors duration-200"
+          >
+            View More
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
       )}
     </div>
