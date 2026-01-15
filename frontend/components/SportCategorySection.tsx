@@ -34,9 +34,9 @@ export function SportCategorySection({
   if (posts.length === 0) return null;
 
   // Top row: Image | Text | Image | Text (posts 0-3)
-  // Bottom row: 4 image cards (posts 4-7)
+  // Remaining posts: All shown as image cards in 4-column grid
   const topRowPosts = posts.slice(0, 4);
-  const bottomPosts = posts.slice(4, 8);
+  const remainingPosts = posts.slice(4);
 
   return (
     <section className={`bg-gray-100 py-8 ${className}`}>
@@ -63,12 +63,14 @@ export function SportCategorySection({
           )}
         </div>
 
-        {/* Bottom Row: 4 image cards with titles below */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {bottomPosts.map((post) => (
-            <BottomImageCard key={post.id} post={post} />
-          ))}
-        </div>
+        {/* Remaining Posts: All shown as image cards */}
+        {remainingPosts.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {remainingPosts.map((post) => (
+              <BottomImageCard key={post.id} post={post} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
