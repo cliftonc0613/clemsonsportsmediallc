@@ -36,19 +36,19 @@ export function ArticleListGrid({
               {/* Text Content - Left */}
               <div className="flex-1 min-w-0">
                 {/* Title with optional Exclusive badge */}
-                <div className="mb-1">
+                <div className="mb-2">
                   {isExclusive && (
-                    <span className="inline-block bg-[var(--clemson-orange)] text-white text-[10px] font-bold uppercase px-1.5 py-0.5 mr-2">
+                    <span className="inline-block bg-[var(--clemson-orange)] text-white text-xs font-bold uppercase px-2 py-1 mr-2">
                       Exclusive
                     </span>
                   )}
-                  <h4 className="inline font-heading text-sm leading-tight group-hover:text-[var(--clemson-orange)] transition-colors">
+                  <h4 className="inline font-heading text-base leading-snug group-hover:text-[var(--clemson-orange)] transition-colors">
                     {title}
                   </h4>
                 </div>
 
                 {/* Category */}
-                <span className="text-xs font-semibold text-[var(--clemson-orange)] uppercase">
+                <span className="text-sm font-semibold text-[var(--clemson-orange)] uppercase">
                   {categoryName}
                 </span>
               </div>
