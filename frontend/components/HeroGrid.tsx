@@ -1,4 +1,4 @@
-import { WPPost, WPCategory } from "@/lib/wordpress";
+import { WPPost, WPCategory, getDisplayCategoryName } from "@/lib/wordpress";
 import { HeroArticleCard } from "./HeroArticleCard";
 
 interface HeroGridProps {
@@ -11,14 +11,6 @@ export function HeroGrid({ posts, categories = [] }: HeroGridProps) {
     return null;
   }
 
-  // Helper to get category name from category ID
-  const getCategoryName = (post: WPPost): string => {
-    if (post.categories.length === 0) return "News";
-    const categoryId = post.categories[0];
-    const category = categories.find((c) => c.id === categoryId);
-    return category?.name || "News";
-  };
-
   const featuredPost = posts[0];
   const gridPosts = posts.slice(1, 5);
 
@@ -30,7 +22,7 @@ export function HeroGrid({ posts, categories = [] }: HeroGridProps) {
           <HeroArticleCard
             post={featuredPost}
             variant="large"
-            categoryName={getCategoryName(featuredPost)}
+            categoryName={getDisplayCategoryName(featuredPost, categories)}
             className="aspect-[4/5] lg:aspect-auto h-full"
           />
         </div>
@@ -42,7 +34,7 @@ export function HeroGrid({ posts, categories = [] }: HeroGridProps) {
               key={post.id}
               post={post}
               variant="small"
-              categoryName={getCategoryName(post)}
+              categoryName={getDisplayCategoryName(post, categories)}
               className="aspect-[4/3] lg:aspect-auto h-full"
             />
           ))}

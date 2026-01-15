@@ -717,3 +717,24 @@ export function getReadingTime(content: string): number {
   const words = text.split(/\s+/).length;
   return Math.ceil(words / wordsPerMinute);
 }
+
+/**
+ * Get display category name for a post, skipping internal categories
+ * Skips categories like "breaking-news" that are used for filtering, not display
+ */
+export function getDisplayCategoryName(
+  post: WPPost,
+  categories: WPCategory[],
+  skipSlugs: string[] = ["breaking-news"]
+): string {
+  if (post.categories.length === 0) return "News";
+
+  for (const categoryId of post.categories) {
+    const category = categories.find((c) => c.id === categoryId);
+    if (category && !skipSlugs.includes(category.slug)) {
+      return category.name;
+    }
+  }
+
+  return "News";
+}

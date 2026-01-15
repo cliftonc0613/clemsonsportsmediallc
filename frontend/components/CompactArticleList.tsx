@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WPPost, WPCategory } from "@/lib/wordpress";
+import { WPPost, WPCategory, getDisplayCategoryName } from "@/lib/wordpress";
 import { ArticleCard } from "./ArticleCard";
 
 interface CompactArticleListProps {
@@ -21,13 +21,6 @@ export function CompactArticleList({
 }: CompactArticleListProps) {
   if (posts.length === 0) return null;
 
-  const getCategoryName = (post: WPPost): string => {
-    if (post.categories.length === 0) return "News";
-    const categoryId = post.categories[0];
-    const category = categories.find((c) => c.id === categoryId);
-    return category?.name || "News";
-  };
-
   return (
     <div className={className}>
       {/* Section Title with orange accent */}
@@ -47,7 +40,7 @@ export function CompactArticleList({
             key={post.id}
             post={post}
             variant="horizontal"
-            categoryName={getCategoryName(post)}
+            categoryName={getDisplayCategoryName(post, categories)}
           />
         ))}
       </div>
