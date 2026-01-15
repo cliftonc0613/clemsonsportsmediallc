@@ -22,13 +22,6 @@ export function MiniHero({
         }}
       />
 
-      {/* Optional background image overlay */}
-      <div
-        className="absolute inset-0 opacity-20 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/images/stadium-bg.jpg')"
-        }}
-      />
 
       {/* Logo centered */}
       <div className="relative z-10 h-full flex items-center justify-center">

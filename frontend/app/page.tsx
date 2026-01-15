@@ -4,13 +4,13 @@ import type { WPPost, WPCategory, WPTag } from "@/lib/wordpress";
 // Category slugs
 const BREAKING_NEWS_CATEGORY = "breaking-news";
 const SPORT_CATEGORIES = [
-  { slug: "football", name: "Football", watermark: "CLEMSON" },
-  { slug: "basketball", name: "Basketball", watermark: "TIGERS" },
-  { slug: "transfer-portal", name: "Transfer Portal", watermark: "PORTAL" },
-  { slug: "baseball", name: "Baseball", watermark: "CLEMSON" },
-  { slug: "softball", name: "Softball", watermark: "TIGERS" },
-  { slug: "soccer", name: "Soccer", watermark: "CLEMSON" },
-  { slug: "recruiting", name: "Recruiting", watermark: "RECRUITING" },
+  { slug: "football", name: "Football" },
+  { slug: "basketball", name: "Basketball" },
+  { slug: "transfer-portal", name: "Transfer Portal" },
+  { slug: "baseball", name: "Baseball" },
+  { slug: "softball", name: "Softball" },
+  { slug: "soccer", name: "Soccer" },
+  { slug: "recruiting", name: "Recruiting" },
 ];
 
 import { OrganizationSchema } from "@/components/JsonLd";
@@ -127,7 +127,6 @@ export default async function HomePage() {
               categories={categories}
               tags={tags}
               categoryName={cat.name}
-              watermarkText={cat.watermark}
             />
           );
         });
