@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, Search, ChevronDown } from "lucide-react";
@@ -90,9 +91,14 @@ export function Header() {
       <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <span className="font-heading text-xl md:text-2xl font-bold tracking-tight text-[var(--clemson-purple)]">
-            Clemson Sports Media
-          </span>
+          <Image
+            src="/images/clemson-sports-media-horz-orgpur-logo@3x.png"
+            alt="Clemson Sports Media"
+            width={280}
+            height={60}
+            className="h-10 md:h-12 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}
