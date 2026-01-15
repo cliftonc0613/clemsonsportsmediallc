@@ -160,29 +160,29 @@ function parseTwitterEmbeds(html: string): { processedHtml: string; embeds: Twit
   let processedHtml = html;
   let embedIndex = 0;
 
-  // Pattern 1: Full WordPress Twitter embed block (figure > div > blockquote structure)
-  // This is the most common format from WordPress block editor
-  const wpBlockPattern = /<figure[^>]*class="[^"]*wp-block-embed[^"]*(?:is-provider-twitter|wp-block-embed-twitter)[^"]*"[^>]*>[\s\S]*?<\/figure>/gi;
+  // Pattern 1: Full WordPress Twitter embed block (figure with twitter in class)
+  // Match any figure that contains twitter-related classes
+  const wpBlockPattern = /<figure[^>]*class="[^"]*(?:is-provider-twitter|wp-block-embed-twitter)[^"]*"[^>]*>[\s\S]*?<\/figure>/gi;
 
   processedHtml = processedHtml.replace(wpBlockPattern, (match) => {
     // Extract tweet URL from the blockquote's anchor tag
-    const urlMatch = match.match(/href="([^"]*(?:twitter\.com|x\.com)[^"]*\/status\/(\d+)[^"]*)"/i);
-    if (urlMatch && urlMatch[2]) {
+    const urlMatch = match.match(/twitter\.com\/\w+\/status\/(\d+)/i);
+    if (urlMatch && urlMatch[1]) {
       const id = `twitter-embed-${embedIndex++}`;
-      embeds.push({ id, tweetId: urlMatch[2] });
+      embeds.push({ id, tweetId: urlMatch[1] });
       return `<div data-twitter-placeholder="${id}" class="twitter-placeholder my-6"></div>`;
     }
     return match;
   });
 
   // Pattern 2: Standalone blockquote Twitter embeds (native Twitter embed code without figure wrapper)
-  const blockquotePattern = /<blockquote[^>]*class="[^"]*twitter-tweet[^"]*"[^>]*>[\s\S]*?<\/blockquote>(?:\s*<script[^>]*twitter[^>]*>[\s\S]*?<\/script>)?/gi;
+  const blockquotePattern = /<blockquote[^>]*class="[^"]*twitter-tweet[^"]*"[^>]*>[\s\S]*?<\/blockquote>(?:\s*<script[^>]*>[\s\S]*?<\/script>)?/gi;
 
   processedHtml = processedHtml.replace(blockquotePattern, (match) => {
-    const urlMatch = match.match(/href="([^"]*(?:twitter\.com|x\.com)[^"]*\/status\/(\d+)[^"]*)"/i);
-    if (urlMatch && urlMatch[2]) {
+    const urlMatch = match.match(/twitter\.com\/\w+\/status\/(\d+)/i);
+    if (urlMatch && urlMatch[1]) {
       const id = `twitter-embed-${embedIndex++}`;
-      embeds.push({ id, tweetId: urlMatch[2] });
+      embeds.push({ id, tweetId: urlMatch[1] });
       return `<div data-twitter-placeholder="${id}" class="twitter-placeholder my-6"></div>`;
     }
     return match;
