@@ -140,9 +140,12 @@ Key deliverables:
 ### Phase 8: PWA & Performance
 **Goal**: Achieve Lighthouse 95+ and enhance PWA capabilities
 **Depends on**: Phase 7
-**Research**: Likely (push notification setup, advanced caching strategies)
-**Research topics**: Web Push API, notification permissions, service worker caching strategies, Lighthouse optimization techniques
-**Plans**: TBD
+**Research**: Not needed (existing Serwist setup covers PWA infrastructure)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 08-01: Lighthouse Performance Optimization (LCP, CLS, bundle size)
+- [ ] 08-02: Push Notifications & PWA Polish
 
 Key deliverables:
 - Lighthouse Performance 95+
@@ -167,7 +170,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 5. Blog Post Template | 1/1 | Complete | 2026-01-15 |
 | 6. Archive Pages | 1/1 | Complete | 2026-01-15 |
 | 7. Navigation & Search | 2/2 | Complete | 2026-01-15 |
-| 8. PWA & Performance | 0/TBD | Not started | - |
+| 8. PWA & Performance | 0/2 | Ready | - |
 
 ---
 
