@@ -87,7 +87,7 @@ export function ReadingProgress() {
       aria-label="Reading progress"
     >
       <div
-        className="h-full bg-gradient-to-r from-neutral-900 to-neutral-700 transition-[width] duration-150 ease-out dark:from-neutral-100 dark:to-neutral-300"
+        className="h-full bg-[var(--clemson-orange)] transition-[width] duration-150 ease-out"
         style={{ width: `${progress}%` }}
       />
     </div>

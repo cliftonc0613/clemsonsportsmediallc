@@ -21,7 +21,7 @@ export function ArticleListGrid({
     <section className={`container mx-auto px-4 py-8 ${className}`}>
       {/* 4-column grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-6">
-        {posts.slice(0, 8).map((post) => {
+        {posts.slice(0, 8).map((post, index) => {
           const imageUrl = rewriteImageUrl(post.featured_image_url);
           const title = decodeHtmlEntities(post.title.rendered);
           const categoryName = getDisplayCategoryName(post, categories);
@@ -32,7 +32,7 @@ export function ArticleListGrid({
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
-              className="group flex gap-3"
+              className={`group flex gap-3 ${index >= 4 ? "hidden sm:flex" : ""}`}
             >
               {/* Text Content - Left */}
               <div className="flex-1 min-w-0">

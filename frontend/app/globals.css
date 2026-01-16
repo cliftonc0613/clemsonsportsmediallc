@@ -322,6 +322,58 @@ div.prose img {
 }
 
 /* ==========================================================================
+   Blog Post Typography - Matching WordPress (clemsonsportsmedia.com/test/)
+   Uses CSS clamp() for responsive scaling
+   ========================================================================== */
+
+/* Body/Paragraph: 16px → 19px */
+.prose {
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.1875rem);
+}
+
+/* H1: 24px → 32px, weight 600, line-height 1.1 */
+.prose :where(h1):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* H2: 20px → 26px, weight 600, line-height 1.2 */
+.prose :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* H3: 20px → 28px, weight 500, line-height 1.2 */
+.prose :where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* H4: 18px → 24px, weight 200, line-height 1.2 */
+.prose :where(h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+  font-weight: 200;
+  line-height: 1.2;
+}
+
+/* H5: 16px → 20px, weight 600, line-height 1.2 */
+.prose :where(h5):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* H6: 16px, weight 600, line-height 1.2 */
+.prose :where(h6):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
    WordPress Block Editor Classes (Headless Compatible)
    These classes style content that comes from WordPress REST API content.rendered
    ========================================================================== */

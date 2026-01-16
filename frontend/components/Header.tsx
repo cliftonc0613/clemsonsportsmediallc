@@ -87,7 +87,7 @@ export function Header() {
       ref={headerRef}
       className="fixed top-0 z-50 w-full border-b-4 border-[var(--clemson-purple)] bg-[var(--clemson-orange)]"
     >
-      <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
+      <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center px-4 transition-[height] duration-300 relative">
         {/* Logo - White version for orange background */}
         <Link href="/" className="flex items-center">
           <Image
@@ -100,8 +100,8 @@ export function Header() {
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <NavigationMenu className="hidden lg:flex">
+        {/* Desktop Navigation - Centered */}
+        <NavigationMenu className="hidden lg:flex absolute left-1/2 -translate-x-1/2">
           <NavigationMenuList className="gap-1">
             {/* Home Link */}
             <NavigationMenuItem>
@@ -161,7 +161,7 @@ export function Header() {
         </NavigationMenu>
 
         {/* Desktop Search */}
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex ml-auto">
           <Button
             variant="ghost"
             size="icon"
@@ -174,7 +174,7 @@ export function Header() {
         </div>
 
         {/* Mobile Search & Menu */}
-        <div className="flex items-center gap-1 lg:hidden">
+        <div className="flex items-center gap-1 lg:hidden ml-auto">
           <Button
             variant="ghost"
             size="icon"

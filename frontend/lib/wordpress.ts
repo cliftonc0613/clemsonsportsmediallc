@@ -316,6 +316,8 @@ export async function getPosts(params?: {
   exclude?: number[];
   orderby?: string;
   order?: 'asc' | 'desc';
+  before?: string;
+  after?: string;
 }): Promise<WPPost[]> {
   const queryParams = new URLSearchParams();
 
@@ -326,6 +328,8 @@ export async function getPosts(params?: {
   if (params?.exclude?.length) queryParams.set('exclude', params.exclude.join(','));
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
+  if (params?.before) queryParams.set('before', params.before);
+  if (params?.after) queryParams.set('after', params.after);
 
   // Always include _embed to get featured image data
   queryParams.set('_embed', 'true');
@@ -347,6 +351,39 @@ export async function getPost(slug: string): Promise<WPPost | null> {
  */
 export async function getPostById(id: number): Promise<WPPost> {
   return fetchAPI<WPPost>(`/posts/${id}?_embed=true`);
+}
+
+/**
+ * Get adjacent posts (previous and next) by date
+ * Previous = older post (published before current)
+ * Next = newer post (published after current)
+ */
+export async function getAdjacentPosts(currentPostDate: string, currentPostId: number): Promise<{
+  previous: WPPost | null;
+  next: WPPost | null;
+}> {
+  // Fetch previous post (older, before current date)
+  const previousPosts = await getPosts({
+    per_page: 1,
+    orderby: 'date',
+    order: 'desc',
+    before: currentPostDate,
+    exclude: [currentPostId],
+  });
+
+  // Fetch next post (newer, after current date)
+  const nextPosts = await getPosts({
+    per_page: 1,
+    orderby: 'date',
+    order: 'asc',
+    after: currentPostDate,
+    exclude: [currentPostId],
+  });
+
+  return {
+    previous: previousPosts[0] || null,
+    next: nextPosts[0] || null,
+  };
 }
 
 // =============================================================================
