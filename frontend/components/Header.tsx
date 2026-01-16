@@ -86,7 +86,7 @@ export function Header() {
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 z-50 w-full border-b-4 border-white/30 bg-[var(--clemson-orange)]"
+      className="fixed top-0 z-50 w-full border-b-4 border-[var(--clemson-purple)] bg-[var(--clemson-orange)]"
     >
       <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
         {/* Logo - White version for orange background */}
