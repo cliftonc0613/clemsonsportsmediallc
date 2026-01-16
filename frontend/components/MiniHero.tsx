@@ -8,7 +8,7 @@ export function MiniHero({
   className = ""
 }: MiniHeroProps) {
   return (
-    <section className={`relative h-[200px] overflow-hidden ${className}`}>
+    <section className={`relative h-[200px] overflow-hidden hidden lg:block ${className}`}>
       {/* Background image with gradient overlay */}
       <div
         className="absolute inset-0"
