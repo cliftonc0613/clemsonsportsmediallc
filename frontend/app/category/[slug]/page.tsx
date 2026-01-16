@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   getPostsByCategorySlugWithPagination,
   getCategories,
   isWordPressConfigured,
   decodeHtmlEntities,
+  rewriteImageUrl,
 } from "@/lib/wordpress";
 import { generateBreadcrumbSchema } from "@/lib/schema";
 import { BlogCard } from "@/components/BlogCard";
@@ -15,7 +17,7 @@ import { BodyClass } from "@/components/BodyClass";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
-const POSTS_PER_PAGE = 12;
+const POSTS_PER_PAGE = 13;
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
@@ -124,29 +126,29 @@ export default async function CategoryPage({
       <MultiStructuredData schemas={[breadcrumbSchema]} />
 
       {/* Category Header with Watermark */}
-      <section className="bg-gray-100 pt-32 pb-16 md:pt-48 md:pb-24 relative overflow-hidden">
+      <section className="bg-gray-100 pt-10 pb-4 md:pt-32 md:pb-16 relative overflow-hidden">
+        {/* Hero Background Image */}
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `url('/images/hero-${slug}.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
         <div className="container mx-auto px-4">
           {/* Watermark Background */}
           <div
             className="absolute inset-0 flex items-center justify-center pointer-events-none select-none px-4"
             aria-hidden="true"
           >
-            <span className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] font-heading font-bold uppercase text-[var(--clemson-orange)] opacity-20 tracking-widest text-center leading-none">
+            <span className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] font-heading font-bold uppercase text-[var(--clemson-orange)] opacity-75 tracking-widest text-center leading-none">
               {categoryName}
             </span>
           </div>
 
           {/* Header Content */}
           <div className="relative z-10 text-center">
-            {/* Breadcrumb */}
-            <nav className="mb-4 text-sm text-gray-500">
-              <Link href="/" className="hover:text-[var(--clemson-orange)]">
-                Home
-              </Link>
-              <span className="mx-2">/</span>
-              <span className="text-gray-800">{categoryName}</span>
-            </nav>
-
             <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               {categoryName}
             </h1>
@@ -154,12 +156,67 @@ export default async function CategoryPage({
             {/* Orange accent line */}
             <div className="w-24 h-1 bg-[var(--clemson-orange)] mx-auto mb-4" />
 
-            <p className="text-gray-600">
+            {/* Breadcrumb */}
+            <nav className="mb-2 text-base md:text-lg text-gray-500 uppercase">
+              <Link href="/" className="text-[var(--clemson-purple)] hover:text-[var(--clemson-orange)]">
+                Home
+              </Link>
+              <span className="mx-2">/</span>
+              <span className="text-gray-800">{categoryName}</span>
+            </nav>
+
+            <p className="text-lg md:text-xl text-gray-600">
               {totalItems} {totalItems === 1 ? "article" : "articles"}
             </p>
           </div>
         </div>
       </section>
+
+      {/* Featured Articles - First 4 */}
+      {posts.length >= 4 && (
+        <section className="py-8 md:py-12">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {posts.slice(0, 4).map((post) => {
+                const title = decodeHtmlEntities(post.title.rendered);
+                const imageUrl = rewriteImageUrl(post.featured_image_url);
+                return (
+                  <Link
+                    key={post.id}
+                    href={`/blog/${post.slug}`}
+                    className="group block"
+                  >
+                    <div className="relative aspect-[3/4] overflow-hidden">
+                      {imageUrl ? (
+                        <Image
+                          src={imageUrl}
+                          alt={title}
+                          fill
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gray-200" />
+                      )}
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      {/* Content overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <span className="inline-block bg-[var(--clemson-orange)] text-white text-xs font-bold uppercase px-3 py-1.5 mb-3">
+                          {categoryName}
+                        </span>
+                        <h3 className="font-heading text-2xl md:text-3xl font-bold leading-tight text-white line-clamp-3">
+                          {title}
+                        </h3>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Posts Grid */}
       <section className="py-12 md:py-16">
@@ -167,7 +224,7 @@ export default async function CategoryPage({
           {posts.length > 0 ? (
             <>
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {posts.map((post) => (
+                {posts.slice(4).map((post) => (
                   <BlogCard key={post.id} post={post} />
                 ))}
               </div>

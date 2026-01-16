@@ -137,7 +137,7 @@ function TextCard({
         </span>
       )}
 
-      <h3 className="font-heading text-lg md:text-xl lg:text-2xl font-bold leading-tight mb-3 group-hover:text-[var(--clemson-orange)] transition-colors">
+      <h3 className="font-heading text-lg md:text-xl lg:text-2xl font-bold leading-tight mb-3 group-hover:text-[var(--clemson-orange)] transition-colors line-clamp-3">
         {title}
       </h3>
 

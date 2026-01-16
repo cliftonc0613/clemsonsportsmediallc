@@ -197,15 +197,10 @@
 .headroom {
   will-change: transform;
   transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 300ms ease,
-              box-shadow 300ms ease,
-              backdrop-filter 300ms ease;
+              box-shadow 300ms ease;
 
-  /* Header scroll state CSS custom properties */
-  --header-bg-opacity: 0.6;
-  --header-blur: 8px;
-  background-color: oklch(1 0 0 / var(--header-bg-opacity));
-  backdrop-filter: blur(var(--header-blur));
+  /* Solid orange background - no transparency needed */
+  background-color: var(--clemson-orange);
 }
 
 /* Hidden state - slide up */
@@ -220,17 +215,13 @@
 
 /* Compact mode after scroll */
 .headroom--not-top {
-  @apply shadow-sm;
+  @apply shadow-md;
   --header-height: 3.5rem;
-  --header-bg-opacity: 0.95;
-  --header-blur: 12px;
 }
 
 /* At top - full size */
 .headroom--top {
   --header-height: 4rem;
-  --header-bg-opacity: 0.6;
-  --header-blur: 8px;
 }
 
 /* Scroll indicator animation */
@@ -328,6 +319,58 @@ div.prose p {
 
 div.prose img {
   @apply mb-8;
+}
+
+/* ==========================================================================
+   Blog Post Typography - Matching WordPress (clemsonsportsmedia.com/test/)
+   Uses CSS clamp() for responsive scaling
+   ========================================================================== */
+
+/* Body/Paragraph: 16px → 19px */
+.prose {
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.1875rem);
+}
+
+/* H1: 24px → 32px, weight 600, line-height 1.1 */
+.prose :where(h1):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* H2: 20px → 26px, weight 600, line-height 1.2 */
+.prose :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* H3: 20px → 28px, weight 500, line-height 1.2 */
+.prose :where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* H4: 18px → 24px, weight 200, line-height 1.2 */
+.prose :where(h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+  font-weight: 200;
+  line-height: 1.2;
+}
+
+/* H5: 16px → 20px, weight 600, line-height 1.2 */
+.prose :where(h5):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* H6: 16px, weight 600, line-height 1.2 */
+.prose :where(h6):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 /* ==========================================================================
@@ -665,6 +708,35 @@ ol.wp-block-list {
 
 .wp-block-embed figcaption {
   @apply text-sm text-muted-foreground mt-2 text-center;
+}
+
+/* --------------------------------------------------------------------------
+   Hudl Video Embeds - Responsive
+   -------------------------------------------------------------------------- */
+iframe[src*="hudl.com"] {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16/9;
+}
+
+/* --------------------------------------------------------------------------
+   Twitter Embeds - Centered
+   -------------------------------------------------------------------------- */
+.twitter-tweet {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.twitter-tweet-rendered {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* WordPress embed wrapper for Twitter */
+.wp-block-embed.is-provider-twitter .wp-block-embed__wrapper,
+.wp-block-embed-twitter .wp-block-embed__wrapper {
+  display: flex;
+  justify-content: center;
 }
 
 /* --------------------------------------------------------------------------

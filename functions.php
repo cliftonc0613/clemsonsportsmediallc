@@ -489,6 +489,48 @@ function starter_theme_register_youtube_pattern() {
 add_action('init', 'starter_theme_register_youtube_pattern');
 
 /**
+ * Register Photo Credit ACF Field Group
+ */
+function starter_theme_register_photo_credit_field() {
+    if (!function_exists('acf_add_local_field_group')) {
+        return;
+    }
+
+    acf_add_local_field_group(array(
+        'key' => 'group_photo_credit',
+        'title' => 'Photo Credit',
+        'fields' => array(
+            array(
+                'key' => 'field_photo_credit',
+                'label' => 'Photo Credit',
+                'name' => 'photo_credit',
+                'type' => 'text',
+                'instructions' => 'Credit for the featured image. Leave blank for default "Clemson Sports Media".',
+                'required' => 0,
+                'default_value' => '',
+                'placeholder' => 'e.g., Sean / Chelsea Weaver',
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'post',
+                ),
+            ),
+        ),
+        'menu_order' => 0,
+        'position' => 'side',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'active' => true,
+    ));
+}
+add_action('acf/init', 'starter_theme_register_photo_credit_field');
+
+/**
  * Include additional functionality files
  */
 // Uncomment when files are created:

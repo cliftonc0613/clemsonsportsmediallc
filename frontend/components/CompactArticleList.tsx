@@ -35,13 +35,14 @@ export function CompactArticleList({
 
       {/* Compact article list */}
       <div className="space-y-4">
-        {posts.map((post) => (
-          <ArticleCard
-            key={post.id}
-            post={post}
-            variant="horizontal"
-            categoryName={getDisplayCategoryName(post, categories)}
-          />
+        {posts.map((post, index) => (
+          <div key={post.id} className={index >= 4 ? "hidden lg:block" : ""}>
+            <ArticleCard
+              post={post}
+              variant="horizontal"
+              categoryName={getDisplayCategoryName(post, categories)}
+            />
+          </div>
         ))}
       </div>
 

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   getPost,
   getPosts,
+  getAdjacentPosts,
   stripHtml,
   decodeHtmlEntities,
   formatDate,
@@ -16,6 +17,7 @@ import {
   getPostCategories,
   getPostTags,
 } from "@/lib/wordpress";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getRankMathMeta, generateSeoMetadata } from "@/lib/seo";
 import { generateArticleSchema, generateBreadcrumbSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
@@ -137,6 +139,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Fetch related posts (latest 3 posts excluding current)
   const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id] });
 
+  // Fetch adjacent posts for navigation
+  const { previous: previousPost, next: nextPost } = await getAdjacentPosts(post.date, post.id);
+
   const postUrl = `${SITE_URL}/blog/${slug}`;
 
   // Dynamic body classes for CSS targeting
@@ -168,9 +173,47 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Structured Data */}
       <MultiStructuredData schemas={[articleSchema, breadcrumbSchema]} />
 
-      {/* Article Header - Clemson Sports Media Style */}
-      <section className="bg-gray-100 pb-16 pt-32 md:pb-24 md:pt-48">
+      {/* Hero with Faded Background */}
+      <section className="bg-gray-100 pt-16 pb-32 md:pt-24 md:pb-48 relative overflow-hidden">
+        {/* Faded Background Image */}
+        {featuredImageUrl && (
+          <div className="absolute inset-0">
+            <BlurImage
+              src={featuredImageUrl}
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover opacity-20"
+              priority
+            />
+          </div>
+        )}
+      </section>
+
+      {/* Hanging Featured Image + Title Section */}
+      <section className="relative -mt-24 md:-mt-40 pb-8">
         <div className="container mx-auto px-4">
+          {/* Featured Image - Hanging */}
+          {featuredImageUrl && (
+            <div className="mx-auto max-w-4xl mb-8">
+              <div className="relative aspect-video overflow-hidden">
+                <BlurImage
+                  src={featuredImageUrl}
+                  alt={title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 896px, 896px"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              {/* Photo Credit */}
+              <p className="text-xs uppercase tracking-wider text-gray-500 mt-2">
+                Photo Credit: {(post.acf?.photo_credit as string) || "Clemson Sports Media"}
+              </p>
+            </div>
+          )}
+
+          {/* Title & Meta Below Image */}
           <div className="mx-auto max-w-3xl text-center">
             {/* Category Badges */}
             {categories.length > 0 && (
@@ -188,12 +231,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
 
             {/* Title */}
-            <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+            <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 text-[var(--clemson-orange)]">
               {title}
             </h1>
 
             {/* Orange accent line */}
-            <div className="w-24 h-1 bg-[var(--clemson-orange)] mx-auto mb-6" />
+            <div className="w-24 h-1 bg-[var(--clemson-orange)] mx-auto mb-4" />
 
             {/* Meta */}
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
@@ -204,22 +247,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <span>By {authorName}</span>
             </div>
           </div>
-
-          {/* Featured Image */}
-          {featuredImageUrl && (
-            <div className="mx-auto mt-12 max-w-4xl">
-              <div className="relative aspect-video overflow-hidden">
-                <BlurImage
-                  src={featuredImageUrl}
-                  alt={title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 896px, 896px"
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
@@ -238,10 +265,68 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <PostMeta categories={categories} tags={tags} />
           </div>
 
+          {/* Site Blurb */}
+          <div className="mx-auto max-w-3xl mt-8 pt-8 border-t border-gray-200">
+            <p className="text-gray-600 leading-relaxed">
+              Stay up-to-date with all things Clemson sports by visiting Clemson Sports Media,
+              your one-stop website for everything Clemson. We provide post-game interviews,
+              in-depth analysis, and comprehensive coverage of all Clemson sports. Don&apos;t miss
+              out on the latest news and updates, visit{" "}
+              <Link href="/" className="text-[var(--clemson-orange)] font-semibold hover:underline">
+                Clemson Sports Media
+              </Link>{" "}
+              today.
+            </p>
+          </div>
+
+          {/* Previous/Next Navigation */}
+          {(previousPost || nextPost) && (
+            <div className="mx-auto max-w-3xl mt-8 pt-8 border-t border-gray-200">
+              <div className="flex items-stretch">
+                {/* Previous */}
+                <div className="flex-1 pr-4">
+                  {previousPost && (
+                    <Link href={`/blog/${previousPost.slug}`} className="group flex items-start gap-3">
+                      <ChevronLeft className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
+                      <div>
+                        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
+                          Previous
+                        </span>
+                        <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
+                          {decodeHtmlEntities(previousPost.title.rendered)}
+                        </h4>
+                      </div>
+                    </Link>
+                  )}
+                </div>
+
+                {/* Divider */}
+                <div className="w-px bg-gray-200" />
+
+                {/* Next */}
+                <div className="flex-1 pl-4 text-right">
+                  {nextPost && (
+                    <Link href={`/blog/${nextPost.slug}`} className="group flex items-start gap-3 justify-end">
+                      <div>
+                        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
+                          Next
+                        </span>
+                        <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
+                          {decodeHtmlEntities(nextPost.title.rendered)}
+                        </h4>
+                      </div>
+                      <ChevronRight className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Actions: Back to Blog, Save Offline & Share */}
           <div className="mx-auto max-w-3xl mt-8 flex flex-wrap items-center justify-between gap-4">
             <Button asChild variant="outline" className="border-[var(--clemson-purple)] text-[var(--clemson-purple)] hover:bg-[var(--clemson-purple)] hover:text-white">
-              <Link href="/blog">← Back to Blog</Link>
+              <Link href="/">← Back to Blog</Link>
             </Button>
             <div className="flex items-center gap-2">
               <SaveOfflineButton url={postUrl} title={title} />

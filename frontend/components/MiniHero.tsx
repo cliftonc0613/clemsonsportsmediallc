@@ -8,17 +8,19 @@ export function MiniHero({
   className = ""
 }: MiniHeroProps) {
   return (
-    <section className={`relative h-[200px] overflow-hidden ${className}`}>
-      {/* Gradient background */}
+    <section className={`relative h-[200px] overflow-hidden hidden lg:block ${className}`}>
+      {/* Background image with gradient overlay */}
       <div
         className="absolute inset-0"
         style={{
           background: `linear-gradient(
             to bottom,
-            var(--clemson-orange) 0%,
-            var(--clemson-purple) 50%,
-            var(--clemson-dark-purple) 100%
-          )`
+            rgba(245, 102, 0, 0.5) 0%,
+            rgba(82, 45, 128, 0.5) 50%,
+            rgba(46, 26, 71, 0.5) 100%
+          ), url('/images/home-hero.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
         }}
       />
 

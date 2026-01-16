@@ -29,7 +29,7 @@ export function HeroGrid({ posts, categories = [] }: HeroGridProps) {
         </div>
 
         {/* 2x2 grid - right side */}
-        <div className="lg:w-1/2 grid grid-cols-2 gap-1">
+        <div className="lg:w-1/2 grid grid-cols-1 lg:grid-cols-2 gap-1">
           {gridPosts.map((post) => (
             <HeroArticleCard
               key={post.id}

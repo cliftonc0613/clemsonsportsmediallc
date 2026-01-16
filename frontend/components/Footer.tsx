@@ -10,7 +10,6 @@ const footerLinks = {
   ],
   company: [
     { href: "/", label: "Home" },
-    { href: "/blog", label: "News" },
     { href: "/contact", label: "Contact" },
   ],
   legal: [
@@ -29,11 +28,11 @@ export function Footer() {
           <div className="md:col-span-2">
             <Link href="/" className="inline-block">
               <Image
-                src="/images/clemson-sports-media-horz-orgpur-logo@3x.png"
+                src="/images/clemson-sports-media-horz-white-logo@3x.png"
                 alt="Clemson Sports Media"
                 width={280}
                 height={60}
-                className="h-12 w-auto brightness-0 invert"
+                className="h-20 w-auto"
               />
             </Link>
             <p className="mt-4 max-w-md text-gray-300">
