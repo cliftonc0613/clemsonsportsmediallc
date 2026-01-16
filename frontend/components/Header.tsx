@@ -86,13 +86,13 @@ export function Header() {
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 z-50 w-full border-b-4 border-[var(--clemson-orange)] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90"
+      className="fixed top-0 z-50 w-full border-b-4 border-white/30 bg-[var(--clemson-orange)]"
     >
       <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
-        {/* Logo */}
+        {/* Logo - White version for orange background */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/images/clemson-sports-media-horz-orgpur-logo@3x.png"
+            src="/images/clemson-sports-media-horz-white-logo@3x.png"
             alt="Clemson Sports Media"
             width={280}
             height={60}
@@ -109,12 +109,8 @@ export function Header() {
               <NavigationMenuLink asChild>
                 <Link
                   href="/"
-                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative
-                    ${isActive("/")
-                      ? "text-[var(--clemson-orange)]"
-                      : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)]"
-                    }
-                    ${isActive("/") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-[var(--clemson-orange)]" : ""}
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
                   `}
                 >
                   Home
@@ -125,12 +121,7 @@ export function Header() {
             {/* Sports Dropdown */}
             <NavigationMenuItem>
               <NavigationMenuTrigger
-                className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent
-                  ${isSportsActive
-                    ? "text-[var(--clemson-orange)]"
-                    : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)]"
-                  }
-                `}
+                className="font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent text-white hover:text-white/80"
               >
                 Sports
               </NavigationMenuTrigger>
@@ -142,8 +133,8 @@ export function Header() {
                       href={`/category/${sport.slug}`}
                       className={`block px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors rounded
                         ${pathname === `/category/${sport.slug}`
-                          ? "bg-[var(--clemson-orange)] text-white"
-                          : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-orange)]/10 hover:text-[var(--clemson-orange)]"
+                          ? "bg-[var(--clemson-dark-purple)] text-white"
+                          : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-purple)]/10 hover:text-[var(--clemson-purple)]"
                         }
                       `}
                     >
@@ -159,12 +150,8 @@ export function Header() {
               <NavigationMenuLink asChild>
                 <Link
                   href="/blog"
-                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative
-                    ${isActive("/blog")
-                      ? "text-[var(--clemson-orange)]"
-                      : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)]"
-                    }
-                    ${isActive("/blog") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-[var(--clemson-orange)]" : ""}
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/blog") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
                   `}
                 >
                   News
@@ -177,12 +164,8 @@ export function Header() {
               <NavigationMenuLink asChild>
                 <Link
                   href="/video"
-                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative
-                    ${isActive("/video")
-                      ? "text-[var(--clemson-orange)]"
-                      : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)]"
-                    }
-                    ${isActive("/video") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-[var(--clemson-orange)]" : ""}
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/video") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
                   `}
                 >
                   Video
@@ -199,7 +182,7 @@ export function Header() {
             size="icon"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
-            className="text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/10"
+            className="text-white hover:text-white/80 hover:bg-white/20"
           >
             <Search className="h-5 w-5" />
           </Button>
@@ -212,7 +195,7 @@ export function Header() {
             size="icon"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
-            className="text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/10"
+            className="text-white hover:text-white/80 hover:bg-white/20"
           >
             <Search className="h-5 w-5" />
           </Button>
@@ -222,14 +205,14 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 aria-label="Toggle menu"
-                className="text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/10"
+                className="text-white hover:text-white/80 hover:bg-white/20"
               >
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="flex w-[320px] flex-col overflow-y-auto sm:w-[400px] bg-white">
-              <SheetHeader className="border-b-2 border-[var(--clemson-orange)] pb-4">
-                <SheetTitle className="text-left font-heading text-xl font-bold text-[var(--clemson-purple)]">
+            <SheetContent side="right" className="flex w-[320px] flex-col overflow-y-auto sm:w-[400px] bg-[var(--clemson-orange)] border-l-0">
+              <SheetHeader className="border-b-2 border-white/30 pb-4">
+                <SheetTitle className="text-left font-heading text-xl font-bold text-white">
                   Menu
                 </SheetTitle>
               </SheetHeader>
@@ -240,10 +223,10 @@ export function Header() {
                 <Link
                   href="/"
                   onClick={() => setIsOpen(false)}
-                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
                     ${isActive("/")
-                      ? "text-[var(--clemson-orange)] bg-[var(--clemson-orange)]/10 border-l-4 border-[var(--clemson-orange)]"
-                      : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/5"
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
                     }
                   `}
                 >
@@ -254,10 +237,10 @@ export function Header() {
                 <div>
                   <button
                     onClick={() => setSportsExpanded(!sportsExpanded)}
-                    className={`w-full flex items-center justify-between py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors
+                    className={`w-full flex items-center justify-between py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
                       ${isSportsActive
-                        ? "text-[var(--clemson-orange)] bg-[var(--clemson-orange)]/10 border-l-4 border-[var(--clemson-orange)]"
-                        : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/5"
+                        ? "bg-white/20 border-l-4 border-white"
+                        : "hover:bg-white/10"
                       }
                     `}
                   >
@@ -267,16 +250,16 @@ export function Header() {
                     />
                   </button>
                   {sportsExpanded && (
-                    <div className="bg-gray-50 py-2">
+                    <div className="bg-white/10 py-2">
                       {sportCategories.map((sport) => (
                         <Link
                           key={sport.slug}
                           href={`/category/${sport.slug}`}
                           onClick={() => setIsOpen(false)}
-                          className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors
+                          className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors text-white
                             ${pathname === `/category/${sport.slug}`
-                              ? "text-[var(--clemson-orange)]"
-                              : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)]"
+                              ? "bg-white/20"
+                              : "hover:bg-white/10"
                             }
                           `}
                         >
@@ -291,10 +274,10 @@ export function Header() {
                 <Link
                   href="/blog"
                   onClick={() => setIsOpen(false)}
-                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
                     ${isActive("/blog")
-                      ? "text-[var(--clemson-orange)] bg-[var(--clemson-orange)]/10 border-l-4 border-[var(--clemson-orange)]"
-                      : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/5"
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
                     }
                   `}
                 >
@@ -305,10 +288,10 @@ export function Header() {
                 <Link
                   href="/video"
                   onClick={() => setIsOpen(false)}
-                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
                     ${isActive("/video")
-                      ? "text-[var(--clemson-orange)] bg-[var(--clemson-orange)]/10 border-l-4 border-[var(--clemson-orange)]"
-                      : "text-[var(--clemson-dark-purple)] hover:text-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/5"
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
                     }
                   `}
                 >
@@ -317,13 +300,13 @@ export function Header() {
               </nav>
 
               {/* Mobile Search CTA */}
-              <div className="mt-auto border-t pt-6 px-4 pb-8">
+              <div className="mt-auto border-t border-white/30 pt-6 px-4 pb-8">
                 <Button
                   onClick={() => {
                     setIsOpen(false);
                     setSearchOpen(true);
                   }}
-                  className="w-full bg-[var(--clemson-orange)] hover:bg-[var(--clemson-purple)] text-white font-heading font-bold uppercase tracking-wider"
+                  className="w-full bg-white hover:bg-white/90 text-[var(--clemson-orange)] font-heading font-bold uppercase tracking-wider"
                 >
                   <Search className="h-4 w-4 mr-2" />
                   Search

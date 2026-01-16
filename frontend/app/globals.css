@@ -197,15 +197,10 @@
 .headroom {
   will-change: transform;
   transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 300ms ease,
-              box-shadow 300ms ease,
-              backdrop-filter 300ms ease;
+              box-shadow 300ms ease;
 
-  /* Header scroll state CSS custom properties */
-  --header-bg-opacity: 0.6;
-  --header-blur: 8px;
-  background-color: oklch(1 0 0 / var(--header-bg-opacity));
-  backdrop-filter: blur(var(--header-blur));
+  /* Solid orange background - no transparency needed */
+  background-color: var(--clemson-orange);
 }
 
 /* Hidden state - slide up */
@@ -220,17 +215,13 @@
 
 /* Compact mode after scroll */
 .headroom--not-top {
-  @apply shadow-sm;
+  @apply shadow-md;
   --header-height: 3.5rem;
-  --header-bg-opacity: 0.95;
-  --header-blur: 12px;
 }
 
 /* At top - full size */
 .headroom--top {
   --header-height: 4rem;
-  --header-bg-opacity: 0.6;
-  --header-blur: 8px;
 }
 
 /* Scroll indicator animation */
