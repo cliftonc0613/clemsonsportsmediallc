@@ -7,18 +7,18 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
 const PLAYLIST_ID = process.env.YOUTUBE_PLAYLIST_ID || "";
 
 export const metadata: Metadata = {
-  title: `Video | ${SITE_NAME}`,
-  description: `Watch the latest Clemson Tigers videos, podcasts, and exclusive content from ${SITE_NAME}.`,
+  title: `ATP Podcast | ${SITE_NAME}`,
+  description: `Listen to the Around The Paw podcast - Clemson Tigers sports coverage and exclusive content from ${SITE_NAME}.`,
   openGraph: {
-    title: `Video | ${SITE_NAME}`,
-    description: `Watch the latest Clemson Tigers videos, podcasts, and exclusive content.`,
+    title: `ATP Podcast | ${SITE_NAME}`,
+    description: `Listen to the Around The Paw podcast - Clemson Tigers sports coverage and exclusive content.`,
     type: "website",
-    url: `${SITE_URL}/video`,
+    url: `${SITE_URL}/atp-podcast`,
   },
   twitter: {
     card: "summary",
-    title: `Video | ${SITE_NAME}`,
-    description: `Watch the latest Clemson Tigers videos, podcasts, and exclusive content.`,
+    title: `ATP Podcast | ${SITE_NAME}`,
+    description: `Listen to the Around The Paw podcast - Clemson Tigers sports coverage and exclusive content.`,
   },
 };
 
@@ -45,22 +45,22 @@ export default async function VideoPage() {
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none px-4"
           aria-hidden="true"
         >
-          <span className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] font-heading font-bold uppercase text-[var(--clemson-orange)] opacity-75 tracking-widest text-center leading-none">
-            VIDEO
+          <span className="text-[3rem] sm:text-[4rem] md:text-[6rem] lg:text-[8rem] font-heading font-bold uppercase text-[var(--clemson-orange)] opacity-75 tracking-widest text-center leading-none">
+            ATP PODCAST
           </span>
         </div>
 
         {/* Header Content */}
         <div className="relative z-10 text-center">
           <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Video
+            ATP Podcast
           </h1>
 
           {/* Orange accent line */}
           <div className="w-24 h-1 bg-[var(--clemson-orange)] mx-auto mb-4" />
 
           <p className="text-lg md:text-xl text-gray-600">
-            {videos.length} {videos.length === 1 ? "video" : "videos"}
+            {videos.length} {videos.length === 1 ? "episode" : "episodes"}
           </p>
         </div>
       </section>
@@ -72,7 +72,7 @@ export default async function VideoPage() {
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4 text-center">
             <p className="text-lg text-gray-600">
-              No videos available at this time.
+              No episodes available at this time.
             </p>
           </div>
         </section>
