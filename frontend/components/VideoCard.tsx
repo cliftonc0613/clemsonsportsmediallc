@@ -30,7 +30,7 @@ export function VideoCard({ video, onPlay, featured = false }: VideoCardProps) {
         />
         {/* Duration badge */}
         {video.duration && (
-          <span className="absolute bottom-2 right-2 bg-black/80 text-white text-xs font-semibold px-1.5 py-0.5 rounded">
+          <span className="absolute bottom-2 right-2 bg-[var(--clemson-orange)] text-white text-xs font-semibold px-1.5 py-0.5 rounded">
             {video.duration}
           </span>
         )}
