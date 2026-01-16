@@ -38,8 +38,7 @@ const sportCategories = [
 // Main navigation items (without Sports dropdown)
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/blog", label: "News" },
-  { href: "/video", label: "Video" },
+  { href: "/atp-podcast", label: "ATP Podcast" },
 ];
 
 export function Header() {
@@ -145,30 +144,16 @@ export function Header() {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
-            {/* News Link */}
+            {/* ATP Podcast Link */}
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
                 <Link
-                  href="/blog"
+                  href="/atp-podcast"
                   className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
-                    ${isActive("/blog") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
+                    ${isActive("/atp-podcast") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
                   `}
                 >
-                  News
-                </Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-
-            {/* Video Link */}
-            <NavigationMenuItem>
-              <NavigationMenuLink asChild>
-                <Link
-                  href="/video"
-                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
-                    ${isActive("/video") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
-                  `}
-                >
-                  Video
+                  ATP Podcast
                 </Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
@@ -270,32 +255,18 @@ export function Header() {
                   )}
                 </div>
 
-                {/* News */}
+                {/* ATP Podcast */}
                 <Link
-                  href="/blog"
+                  href="/atp-podcast"
                   onClick={() => setIsOpen(false)}
                   className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
-                    ${isActive("/blog")
+                    ${isActive("/atp-podcast")
                       ? "bg-white/20 border-l-4 border-white"
                       : "hover:bg-white/10"
                     }
                   `}
                 >
-                  News
-                </Link>
-
-                {/* Video */}
-                <Link
-                  href="/video"
-                  onClick={() => setIsOpen(false)}
-                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
-                    ${isActive("/video")
-                      ? "bg-white/20 border-l-4 border-white"
-                      : "hover:bg-white/10"
-                    }
-                  `}
-                >
-                  Video
+                  ATP Podcast
                 </Link>
               </nav>
 
