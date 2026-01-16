@@ -33,7 +33,7 @@ export function Footer() {
                 alt="Clemson Sports Media"
                 width={280}
                 height={60}
-                className="h-12 w-auto"
+                className="h-16 w-auto"
               />
             </Link>
             <p className="mt-4 max-w-md text-gray-300">
