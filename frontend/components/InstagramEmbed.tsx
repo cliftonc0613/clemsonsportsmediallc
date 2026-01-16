@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface InstagramEmbedProps {
   /** The Instagram post URL to embed */
@@ -48,9 +48,35 @@ export function InstagramEmbed({
 }: InstagramEmbedProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [height, setHeight] = useState(700); // Default height, will be updated
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const shortcode = extractInstagramShortcode(url);
   const embedPath = getInstagramEmbedPath(url);
+
+  // Listen for Instagram's postMessage to get correct height
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Instagram sends resize messages from instagram.com
+      if (!event.origin.includes("instagram.com")) return;
+
+      try {
+        const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+
+        // Instagram sends height in various formats
+        if (data.type === "MEASURE" && data.details?.height) {
+          setHeight(data.details.height);
+        } else if (data.height) {
+          setHeight(data.height);
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   if (!shortcode) {
     return (
@@ -101,7 +127,7 @@ export function InstagramEmbed({
         <div
           className="instagram-embed-loading"
           style={{
-            minHeight: "500px",
+            height: `${height}px`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -174,14 +200,16 @@ export function InstagramEmbed({
 
       <div style={{ position: "relative", display: hasError ? "none" : "block" }}>
         <iframe
+          ref={iframeRef}
           src={embedUrl}
           style={{
             width: "100%",
-            minHeight: "500px",
+            height: `${height}px`,
             border: "none",
             overflow: "hidden",
             borderRadius: "3px",
             background: "#fff",
+            transition: "height 0.2s ease",
           }}
           allowFullScreen
           scrolling="no"
