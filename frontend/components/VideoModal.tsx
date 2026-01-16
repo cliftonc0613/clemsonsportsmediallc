@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
 import type { YouTubeVideo } from "@/lib/youtube";
 
@@ -19,6 +19,9 @@ export function VideoModal({ video, open, onOpenChange }: VideoModalProps) {
         className="max-w-4xl w-full p-0 bg-black border-none overflow-hidden"
         showCloseButton={false}
       >
+        {/* Visually hidden title for accessibility */}
+        <DialogTitle className="sr-only">{video.title}</DialogTitle>
+
         {/* Close button - custom positioned for video */}
         <button
           onClick={() => onOpenChange(false)}
