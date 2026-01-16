@@ -16,7 +16,7 @@ export function VideoModal({ video, open, onOpenChange }: VideoModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-4xl w-full p-0 bg-black border-none overflow-hidden"
+        className="max-w-[85vw] w-full p-0 bg-black border-none overflow-hidden"
         showCloseButton={false}
       >
         {/* Visually hidden title for accessibility */}
