@@ -349,6 +349,20 @@ export async function getClemsonGameById(
       }
     }
 
+    // If Clemson's record is still missing, fetch directly from team endpoint
+    const clemsonIsHome = game.homeTeam.id === CLEMSON_TEAM_ID;
+    const clemsonTeam = clemsonIsHome ? game.homeTeam : game.awayTeam;
+    if (!clemsonTeam.record) {
+      const clemsonInfo = await getSimpleTeamInfo(sport);
+      if (clemsonInfo?.record) {
+        if (clemsonIsHome) {
+          game.homeTeam.record = clemsonInfo.record;
+        } else {
+          game.awayTeam.record = clemsonInfo.record;
+        }
+      }
+    }
+
     return game;
   }
 
