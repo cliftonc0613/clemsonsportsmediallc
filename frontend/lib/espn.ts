@@ -312,19 +312,23 @@ export async function getClemsonGameById(
     const currentGame = await getClemsonGame(sport);
     if (currentGame) return currentGame;
 
-    // Fall back to most recent from schedule
+    // Fall back to next upcoming game from schedule
     const schedule = await getScheduleWithSeason(sport, season);
     if (!schedule?.events?.length) return null;
 
     const now = new Date();
-    const pastGames = schedule.events.filter(
-      (event) => new Date(event.date) <= now
-    );
-    const latestEvent = pastGames.length > 0
-      ? pastGames[pastGames.length - 1]
-      : schedule.events[0];
 
-    return transformToSimpleGameFromSchedule(latestEvent);
+    // Find the next upcoming game (first game in the future)
+    const upcomingGames = schedule.events.filter(
+      (event) => new Date(event.date) > now
+    );
+
+    // If there's an upcoming game, use it; otherwise fall back to most recent past game
+    const targetEvent = upcomingGames.length > 0
+      ? upcomingGames[0]  // Next upcoming game
+      : schedule.events[schedule.events.length - 1];  // Most recent if no upcoming
+
+    return transformToSimpleGameFromSchedule(targetEvent);
   }
 
   // Fetch schedule to find the specific game
