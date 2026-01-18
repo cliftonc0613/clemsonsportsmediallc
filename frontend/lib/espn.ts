@@ -658,7 +658,14 @@ export async function getACCStandings(sport: SportType): Promise<SimpleStanding[
     return [];
   }
 
-  return accGroup.standings.entries.map((entry, index) =>
+  // Sort entries by playoffSeed (ESPN's official ranking - lower = better)
+  const sortedEntries = [...accGroup.standings.entries].sort((a, b) => {
+    const seedA = a.stats.find((s) => s.name === 'playoffSeed')?.value ?? 999;
+    const seedB = b.stats.find((s) => s.name === 'playoffSeed')?.value ?? 999;
+    return seedA - seedB;
+  });
+
+  return sortedEntries.map((entry, index) =>
     transformToSimpleStanding(entry, index + 1)
   );
 }
@@ -1032,6 +1039,59 @@ function transformToSimpleStanding(
     return stat?.value ?? 0;
   };
 
+  const getStatDisplay = (name: string): string | undefined => {
+    const stat = entry.stats.find((s) => s.name === name);
+    return stat?.displayValue;
+  };
+
+  // Parse conference record from various stat names ESPN might use
+  // Try multiple stat name variations
+  const confRecordVariations = [
+    'vs. Conf.',
+    'vsConf',
+    'confRecord',
+    'conferenceRecord',
+    'CONF',
+    'conf',
+  ];
+
+  let conferenceWins = 0;
+  let conferenceLosses = 0;
+
+  // Try to find conference record in displayValue format (e.g., "6-0")
+  for (const statName of confRecordVariations) {
+    const confRecord = getStatDisplay(statName);
+    if (confRecord && confRecord.includes('-')) {
+      const parts = confRecord.split('-');
+      if (parts.length === 2) {
+        conferenceWins = parseInt(parts[0], 10) || 0;
+        conferenceLosses = parseInt(parts[1], 10) || 0;
+        if (conferenceWins > 0 || conferenceLosses > 0) break;
+      }
+    }
+  }
+
+  // Fall back to explicit numeric stats if displayValue not found
+  if (conferenceWins === 0 && conferenceLosses === 0) {
+    conferenceWins = getStat('conferenceWins') || getStat('divisionWins') || getStat('confWins');
+    conferenceLosses = getStat('conferenceLosses') || getStat('divisionLosses') || getStat('confLosses');
+  }
+
+  // Also try to find any stat that looks like a conference record by searching all stats
+  if (conferenceWins === 0 && conferenceLosses === 0) {
+    const confStat = entry.stats.find((s) =>
+      s.name?.toLowerCase().includes('conf') &&
+      s.displayValue?.includes('-')
+    );
+    if (confStat?.displayValue) {
+      const parts = confStat.displayValue.split('-');
+      if (parts.length === 2) {
+        conferenceWins = parseInt(parts[0], 10) || 0;
+        conferenceLosses = parseInt(parts[1], 10) || 0;
+      }
+    }
+  }
+
   const logo = entry.team.logos?.find((l) => l.rel.includes('default'))?.href;
 
   return {
@@ -1046,10 +1106,10 @@ function transformToSimpleStanding(
     },
     wins: getStat('wins'),
     losses: getStat('losses'),
-    conferenceWins: getStat('conferenceWins') || getStat('divisionWins'),
-    conferenceLosses: getStat('conferenceLosses') || getStat('divisionLosses'),
+    conferenceWins,
+    conferenceLosses,
     winPct: getStat('winPercent') || getStat('gamesBehind'),
-    streak: entry.stats.find((s) => s.name === 'streak')?.displayValue,
+    streak: getStatDisplay('streak'),
     isClemson: entry.team.id === CLEMSON_TEAM_ID,
   };
 }
