@@ -9,3 +9,6 @@ export { TeamColumn } from "./TeamColumn";
 export { GameInfoColumn } from "./GameInfoColumn";
 export { QuarterIndicator } from "./QuarterIndicator";
 export { ESPNScoreEmbed } from "./ESPNScoreEmbed";
+export { ScheduleWidget } from "./ScheduleWidget";
+export { StandingsWidget } from "./StandingsWidget";
+export { LiveScore } from "./LiveScore";
