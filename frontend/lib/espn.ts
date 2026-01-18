@@ -126,7 +126,10 @@ async function fetchESPN<T>(
     });
 
     if (!response.ok) {
-      console.error(`ESPN API error: ${response.status} for ${url.toString()}`);
+      // Don't log 400 errors - these are expected for out-of-season sports
+      if (response.status !== 400) {
+        console.error(`ESPN API error: ${response.status} for ${url.toString()}`);
+      }
       return null;
     }
 
