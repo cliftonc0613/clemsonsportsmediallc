@@ -38,10 +38,36 @@ export function CompactScoreCard({
     return `[${record.replace(/, /g, ", ")}]`;
   };
 
+  // Format date as M.DD.YY (e.g., 1.10.26)
+  const formatGameDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate().toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2);
+    return `${month}.${day}.${year}`;
+  };
+
+  // Format time as "7pm" or "7:30pm"
+  const formatGameTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "pm" : "am";
+    const hour12 = hours % 12 || 12;
+    if (minutes === 0) {
+      return `${hour12}${ampm}`;
+    }
+    return `${hour12}:${minutes.toString().padStart(2, "0")}${ampm}`;
+  };
+
+  // Get Clemson's record
+  const clemsonTeam = awayIsClemson ? game.awayTeam : game.homeTeam;
+  const clemsonRecord = clemsonTeam.record;
+
   // Get status display text
   const getStatusText = () => {
     if (isPreGame) {
-      return game.status.detail || "Upcoming";
+      return `${formatGameDate(game.date)} - ${formatGameTime(game.date)}`;
     }
     if (isLive) {
       return game.status.detail || "LIVE";
@@ -111,7 +137,13 @@ export function CompactScoreCard({
         {/* Center Status */}
         <div className="flex items-center gap-3 px-4">
           <span className="text-gray-600 text-2xl md:text-3xl font-light">]</span>
-          <div className="text-center">
+          <div className="text-center min-w-[120px]">
+            {/* Clemson Record for pre-game */}
+            {isPreGame && clemsonRecord && (
+              <div className="text-[var(--clemson-orange)] text-xs font-bold mb-1">
+                {clemsonRecord}
+              </div>
+            )}
             <span
               className={cn(
                 "text-xs md:text-sm font-bold uppercase tracking-widest",
