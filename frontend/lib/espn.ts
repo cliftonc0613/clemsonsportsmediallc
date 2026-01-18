@@ -1109,38 +1109,14 @@ export async function getTeamLeaders(
     };
 
     // Fetch all leaders in parallel
-    const [
-      points,
-      rebounds,
-      assists,
-      steals,
-      blocks,
-      fieldGoalPct,
-      threePointMade,
-      defensiveRebounds,
-      offensiveRebounds,
-      playerEfficiency,
-      minutesPerGame,
-      doubleDoubles,
-      foulsPerGame,
-    ] = await Promise.all([
-      // Core stats
+    const [points, rebounds, assists, steals, blocks, threePointers, minutes] = await Promise.all([
       getLeader(['pointsPerGame', 'points', 'avgPoints', 'PTS']),
       getLeader(['reboundsPerGame', 'rebounds', 'avgRebounds', 'REB']),
       getLeader(['assistsPerGame', 'assists', 'avgAssists', 'AST']),
       getLeader(['stealsPerGame', 'steals', 'avgSteals', 'STL']),
       getLeader(['blocksPerGame', 'blocks', 'avgBlocks', 'BLK']),
-      // Shooting stats
-      getLeader(['fieldGoalPercentage', 'FG%']),
       getLeader(['3PointMadePerGame', '3PM', 'threePointMade']),
-      // Rebound breakdown
-      getLeader(['defensiveReboundsPerGame', 'DRPG']),
-      getLeader(['offensiveReboundsPerGame', 'ORPG']),
-      // Advanced/Other
-      getLeader(['PER', 'playerEfficiency']),
       getLeader(['minutesPerGame', 'MPG']),
-      getLeader(['doubleDouble', 'DBLDBL']),
-      getLeader(['foulsPerGame', 'PFPG']),
     ]);
 
     return {
@@ -1150,14 +1126,8 @@ export async function getTeamLeaders(
       assists,
       steals,
       blocks,
-      fieldGoalPct,
-      threePointMade,
-      defensiveRebounds,
-      offensiveRebounds,
-      playerEfficiency,
-      minutesPerGame,
-      doubleDoubles,
-      foulsPerGame,
+      threePointers,
+      minutes,
     };
   } catch (error) {
     console.error(`Failed to fetch team leaders for ${teamId}:`, error);

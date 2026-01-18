@@ -651,21 +651,11 @@ export interface SimpleTeamLeader {
 
 export interface SimpleTeamLeaders {
   team: SimpleTeam;
-  // Core stats
   points?: SimpleTeamLeader;
   rebounds?: SimpleTeamLeader;
   assists?: SimpleTeamLeader;
   steals?: SimpleTeamLeader;
   blocks?: SimpleTeamLeader;
-  // Shooting stats
-  fieldGoalPct?: SimpleTeamLeader;
-  threePointMade?: SimpleTeamLeader;
-  // Rebound breakdown
-  defensiveRebounds?: SimpleTeamLeader;
-  offensiveRebounds?: SimpleTeamLeader;
-  // Advanced/Other
-  playerEfficiency?: SimpleTeamLeader;
-  minutesPerGame?: SimpleTeamLeader;
-  doubleDoubles?: SimpleTeamLeader;
-  foulsPerGame?: SimpleTeamLeader;
+  threePointers?: SimpleTeamLeader;
+  minutes?: SimpleTeamLeader;
 }
