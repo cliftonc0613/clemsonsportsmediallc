@@ -328,7 +328,28 @@ export async function getClemsonGameById(
       ? upcomingGames[0]  // Next upcoming game
       : schedule.events[schedule.events.length - 1];  // Most recent if no upcoming
 
-    return transformToSimpleGameFromSchedule(targetEvent);
+    const game = transformToSimpleGameFromSchedule(targetEvent);
+
+    // Schedule endpoint doesn't include team records - fetch from scoreboard
+    if (!game.homeTeam.record || !game.awayTeam.record) {
+      const currentRecords = await getCurrentTeamRecords(sport);
+      if (currentRecords) {
+        if (!game.homeTeam.record && currentRecords[game.homeTeam.id]) {
+          game.homeTeam.record = currentRecords[game.homeTeam.id].record;
+          if (!game.homeTeam.rank) {
+            game.homeTeam.rank = currentRecords[game.homeTeam.id].rank;
+          }
+        }
+        if (!game.awayTeam.record && currentRecords[game.awayTeam.id]) {
+          game.awayTeam.record = currentRecords[game.awayTeam.id].record;
+          if (!game.awayTeam.rank) {
+            game.awayTeam.rank = currentRecords[game.awayTeam.id].rank;
+          }
+        }
+      }
+    }
+
+    return game;
   }
 
   // Fetch schedule to find the specific game
