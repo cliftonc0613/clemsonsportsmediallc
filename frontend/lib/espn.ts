@@ -30,6 +30,7 @@ import type {
 // =============================================================================
 
 const ESPN_BASE_URL = 'https://site.api.espn.com/apis/site/v2/sports';
+const ESPN_V2_URL = 'https://site.api.espn.com/apis/v2/sports';
 const ESPN_CORE_URL = 'https://sports.core.api.espn.com/v2/sports';
 
 /** Clemson Tigers team ID (same across all sports) */
@@ -626,14 +627,14 @@ function extractBroadcasts(competition?: ESPNCompetition, event?: any): string[]
 
 /**
  * Get conference standings
+ * Note: Standings endpoint uses /apis/v2/ path (not /apis/site/v2/)
  */
 export async function getStandings(sport: SportType): Promise<ESPNStandingsResponse | null> {
   const sportPath = SPORT_PATHS[sport];
   return fetchESPN<ESPNStandingsResponse>(
-    `${ESPN_BASE_URL}/${sportPath}/standings`,
+    `${ESPN_V2_URL}/${sportPath}/standings`,
     {
       cache: CACHE_TIMES.standings,
-      params: { group: ACC_CONFERENCE_ID },
     }
   );
 }
@@ -645,9 +646,11 @@ export async function getACCStandings(sport: SportType): Promise<SimpleStanding[
   const data = await getStandings(sport);
   if (!data) return [];
 
-  // Find ACC standings in the response
+  // Find ACC standings in the response (case-insensitive match)
   const accGroup = data.children?.find(
-    (group) => group.abbreviation === 'ACC' || group.name?.includes('ACC')
+    (group) =>
+      group.abbreviation?.toLowerCase() === 'acc' ||
+      group.name?.toLowerCase().includes('acc')
   );
 
   if (!accGroup?.standings?.entries) {
