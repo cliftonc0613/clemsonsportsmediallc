@@ -35,6 +35,23 @@ const sportCategories = [
   { slug: "recruiting", label: "Recruiting" },
 ];
 
+// Roster categories for navigation
+const rosterCategories = [
+  { slug: "football", label: "Football" },
+  { slug: "mens-basketball", label: "Men's Basketball" },
+  { slug: "mens-soccer", label: "Men's Soccer" },
+  { slug: "womens-soccer", label: "Women's Soccer" },
+  { slug: "baseball", label: "Baseball" },
+  { slug: "softball", label: "Softball" },
+];
+
+// Schedule categories for navigation
+const scheduleCategories = [
+  { slug: "football", label: "Football" },
+  { slug: "mens-basketball", label: "Men's Basketball" },
+  { slug: "mens-soccer", label: "Men's Soccer" },
+];
+
 // Main navigation items (without Sports dropdown)
 const navItems = [
   { href: "/", label: "Home" },
@@ -45,11 +62,15 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [sportsExpanded, setSportsExpanded] = useState(false);
+  const [rostersExpanded, setRostersExpanded] = useState(false);
+  const [schedulesExpanded, setSchedulesExpanded] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
 
   // Check if current page is a category page (for Sports active state)
   const isSportsActive = pathname.startsWith("/category/");
+  const isRostersActive = pathname.startsWith("/roster/");
+  const isSchedulesActive = pathname.startsWith("/schedule/");
 
   // Check if a nav item is active
   const isActive = (href: string) => {
@@ -138,6 +159,60 @@ export function Header() {
                       `}
                     >
                       {sport.label}
+                    </Link>
+                  ))}
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            {/* Rosters Dropdown */}
+            <NavigationMenuItem>
+              <NavigationMenuTrigger
+                className="font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent text-white hover:text-white/80"
+              >
+                Rosters
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="grid w-[400px] grid-cols-2 gap-2 p-4 bg-white shadow-lg">
+                  {rosterCategories.map((roster) => (
+                    <Link
+                      key={roster.slug}
+                      href={`/roster/${roster.slug}`}
+                      className={`block px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors rounded
+                        ${pathname === `/roster/${roster.slug}` || pathname.includes(`/roster/2025/${roster.slug}`)
+                          ? "bg-[var(--clemson-dark-purple)] text-white"
+                          : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-purple)]/10 hover:text-[var(--clemson-purple)]"
+                        }
+                      `}
+                    >
+                      {roster.label}
+                    </Link>
+                  ))}
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            {/* Schedules Dropdown */}
+            <NavigationMenuItem>
+              <NavigationMenuTrigger
+                className="font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent text-white hover:text-white/80"
+              >
+                Schedules
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="grid w-[300px] grid-cols-1 gap-2 p-4 bg-white shadow-lg">
+                  {scheduleCategories.map((schedule) => (
+                    <Link
+                      key={schedule.slug}
+                      href={`/schedule/${schedule.slug}`}
+                      className={`block px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors rounded
+                        ${pathname === `/schedule/${schedule.slug}`
+                          ? "bg-[var(--clemson-dark-purple)] text-white"
+                          : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-purple)]/10 hover:text-[var(--clemson-purple)]"
+                        }
+                      `}
+                    >
+                      {schedule.label}
                     </Link>
                   ))}
                 </div>
@@ -249,6 +324,80 @@ export function Header() {
                           `}
                         >
                           {sport.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Rosters Collapsible */}
+                <div>
+                  <button
+                    onClick={() => setRostersExpanded(!rostersExpanded)}
+                    className={`w-full flex items-center justify-between py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                      ${isRostersActive
+                        ? "bg-white/20 border-l-4 border-white"
+                        : "hover:bg-white/10"
+                      }
+                    `}
+                  >
+                    <span>Rosters</span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${rostersExpanded ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {rostersExpanded && (
+                    <div className="bg-white/10 py-2">
+                      {rosterCategories.map((roster) => (
+                        <Link
+                          key={roster.slug}
+                          href={`/roster/${roster.slug}`}
+                          onClick={() => setIsOpen(false)}
+                          className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors text-white
+                            ${pathname === `/roster/${roster.slug}` || pathname.includes(`/roster/2025/${roster.slug}`)
+                              ? "bg-white/20"
+                              : "hover:bg-white/10"
+                            }
+                          `}
+                        >
+                          {roster.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Schedules Collapsible */}
+                <div>
+                  <button
+                    onClick={() => setSchedulesExpanded(!schedulesExpanded)}
+                    className={`w-full flex items-center justify-between py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                      ${isSchedulesActive
+                        ? "bg-white/20 border-l-4 border-white"
+                        : "hover:bg-white/10"
+                      }
+                    `}
+                  >
+                    <span>Schedules</span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${schedulesExpanded ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {schedulesExpanded && (
+                    <div className="bg-white/10 py-2">
+                      {scheduleCategories.map((schedule) => (
+                        <Link
+                          key={schedule.slug}
+                          href={`/schedule/${schedule.slug}`}
+                          onClick={() => setIsOpen(false)}
+                          className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors text-white
+                            ${pathname === `/schedule/${schedule.slug}`
+                              ? "bg-white/20"
+                              : "hover:bg-white/10"
+                            }
+                          `}
+                        >
+                          {schedule.label}
                         </Link>
                       ))}
                     </div>

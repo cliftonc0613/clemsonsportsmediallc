@@ -1,5 +1,8 @@
 import { getPosts, getCategories, getTags, getPostsByCategorySlug, isWordPressConfigured } from "@/lib/wordpress";
 import type { WPPost, WPCategory, WPTag } from "@/lib/wordpress";
+import { getClemsonGame } from "@/lib/espn";
+import type { SimpleGame } from "@/lib/espn-types";
+import { CompactScoreCard } from "@/components/espn";
 
 // Category slugs
 const BREAKING_NEWS_CATEGORY = "breaking-news";
@@ -42,6 +45,14 @@ export default async function HomePage() {
   let categories: WPCategory[] = [];
   let tags: WPTag[] = [];
   let sportPosts: Record<string, WPPost[]> = {};
+  let mensBasketballGame: SimpleGame | null = null;
+
+  // Fetch basketball game data
+  try {
+    mensBasketballGame = await getClemsonGame("mensBasketball");
+  } catch (error) {
+    console.error("Failed to fetch men's basketball game:", error);
+  }
 
   if (isWordPressConfigured()) {
     try {
@@ -119,6 +130,9 @@ export default async function HomePage() {
           // Mark these posts as shown
           uniquePosts.forEach((post) => shownPostIds.add(post.id));
 
+          // Render scoreboard for basketball section
+          const isBasketball = cat.slug === "basketball";
+
           return (
             <SportCategorySection
               key={cat.slug}
@@ -127,7 +141,16 @@ export default async function HomePage() {
               tags={tags}
               categoryName={cat.name}
               categorySlug={cat.slug}
-            />
+            >
+              {isBasketball && mensBasketballGame && (
+                <div className="mb-8">
+                  <CompactScoreCard
+                    game={mensBasketballGame}
+                    sport="mensBasketball"
+                  />
+                </div>
+              )}
+            </SportCategorySection>
           );
         });
       })()}

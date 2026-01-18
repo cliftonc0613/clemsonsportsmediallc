@@ -22,6 +22,7 @@ None
 - [x] **Phase 6: Archive Pages** - Category and tag archive pages with pagination
 - [x] **Phase 7: Navigation & Search** - Header navigation, mobile menu, search functionality
 - [x] **Phase 8: PWA & Performance** - Lighthouse 95+, offline reading, push notifications
+- [ ] **Phase 9: ESPN API Integration** - Live scores, schedules, standings from ESPN public API
 
 ## Phase Details
 
@@ -156,10 +157,29 @@ Key deliverables:
 - Image optimization audit
 - Bundle size optimization
 
+### Phase 9: ESPN API Integration
+**Goal**: Integrate ESPN public API for live sports data
+**Depends on**: Phase 8
+**Research**: Complete (API documentation reviewed)
+**Plans**: 1 plan
+
+Plans:
+- [ ] 09-01: ESPN API Service Layer & Components
+
+Key deliverables:
+- ESPN API service layer with caching
+- TypeScript interfaces for ESPN data
+- ScoreCard component for game scores
+- ScheduleWidget for upcoming games
+- StandingsWidget for ACC standings
+- LiveScore component with auto-refresh
+- Homepage and category page integration
+- Error handling and fallbacks
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -171,6 +191,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 6. Archive Pages | 1/1 | Complete | 2026-01-15 |
 | 7. Navigation & Search | 2/2 | Complete | 2026-01-15 |
 | 8. PWA & Performance | 2/2 | Complete | 2026-01-15 |
+| 9. ESPN API Integration | 0/1 | In Progress | - |
 
 ---
 

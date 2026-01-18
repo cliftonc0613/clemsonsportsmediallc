@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getRosterByGroup, getSimpleRoster } from "@/lib/espn";
-import type { SportType, SimpleRosterPlayer } from "@/lib/espn-types";
+import { getRosterByGroup, getSimpleRoster } from "@/lib/roster";
+import type { RosterSportSlug, SimpleRosterPlayer } from "@/lib/roster-types";
 import { BodyClass } from "@/components/BodyClass";
 import { BreadcrumbSchema } from "@/components/JsonLd";
 
@@ -11,13 +11,16 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
 
 // Available years for roster selection
-const AVAILABLE_YEARS = ["2024", "2025", "2026"];
+const AVAILABLE_YEARS = ["2025", "2026"];
 
-// Sport slug to SportType mapping
-const SPORT_SLUG_MAP: Record<string, SportType> = {
+// Sport slug to RosterSportSlug mapping
+const SPORT_SLUG_MAP: Record<string, RosterSportSlug> = {
   football: "football",
-  "mens-basketball": "mensBasketball",
+  "mens-basketball": "mens-basketball",
+  "mens-soccer": "mens-soccer",
+  "womens-soccer": "womens-soccer",
   baseball: "baseball",
+  softball: "softball",
 };
 
 // Sport display names and configurations
@@ -31,6 +34,7 @@ const SPORT_CONFIG: Record<
     useGroups: boolean;
     positionGroupOrder: string[];
     positionGroupNames: Record<string, string>;
+    hasBatsThrows?: boolean;
   }
 > = {
   football: {
@@ -39,12 +43,11 @@ const SPORT_CONFIG: Record<
     heroImage: "/images/hero-football.jpg",
     watermark: "Football",
     useGroups: true,
-    positionGroupOrder: ["offense", "defense", "specialTeam", "special teams"],
+    positionGroupOrder: ["offense", "defense", "special teams"],
     positionGroupNames: {
-      offense: "Offense",
-      defense: "Defense",
-      specialTeam: "Special Teams",
-      "special teams": "Special Teams",
+      Offense: "Offense",
+      Defense: "Defense",
+      "Special Teams": "Special Teams",
     },
   },
   "mens-basketball": {
@@ -56,26 +59,59 @@ const SPORT_CONFIG: Record<
     positionGroupOrder: [],
     positionGroupNames: {},
   },
+  "mens-soccer": {
+    displayName: "Men's Soccer",
+    shortName: "Men's Soccer",
+    heroImage: "/images/hero-soccer.jpg",
+    watermark: "Soccer",
+    useGroups: false,
+    positionGroupOrder: [],
+    positionGroupNames: {},
+  },
+  "womens-soccer": {
+    displayName: "Women's Soccer",
+    shortName: "Women's Soccer",
+    heroImage: "/images/hero-soccer.jpg",
+    watermark: "Soccer",
+    useGroups: true,
+    positionGroupOrder: ["goalkeepers", "defenders", "midfielders", "forwards"],
+    positionGroupNames: {
+      Goalkeepers: "Goalkeepers",
+      Defenders: "Defenders",
+      Midfielders: "Midfielders",
+      Forwards: "Forwards",
+    },
+  },
   baseball: {
     displayName: "Baseball",
     shortName: "Baseball",
     heroImage: "/images/hero-baseball.jpg",
     watermark: "Baseball",
     useGroups: true,
-    positionGroupOrder: [
-      "pitchers",
-      "catchers",
-      "infielders",
-      "outfielders",
-      "designated hitters",
-    ],
+    positionGroupOrder: ["pitchers", "catchers", "infielders", "outfielders"],
     positionGroupNames: {
-      pitchers: "Pitchers",
-      catchers: "Catchers",
-      infielders: "Infielders",
-      outfielders: "Outfielders",
-      "designated hitters": "Designated Hitters",
+      Pitchers: "Pitchers",
+      Catchers: "Catchers",
+      Infielders: "Infielders",
+      Outfielders: "Outfielders",
     },
+    hasBatsThrows: true,
+  },
+  softball: {
+    displayName: "Softball",
+    shortName: "Softball",
+    heroImage: "/images/hero-softball.jpg",
+    watermark: "Softball",
+    useGroups: true,
+    positionGroupOrder: ["pitchers", "catchers", "infielders", "outfielders", "utility"],
+    positionGroupNames: {
+      Pitchers: "Pitchers",
+      Catchers: "Catchers",
+      Infielders: "Infielders",
+      Outfielders: "Outfielders",
+      Utility: "Utility",
+    },
+    hasBatsThrows: true,
   },
 };
 
@@ -140,16 +176,14 @@ export default async function RosterPage({
     notFound();
   }
 
-  const seasonYear = parseInt(year, 10);
-
   let rosterGroups: Record<string, SimpleRosterPlayer[]> = {};
   let players: SimpleRosterPlayer[] = [];
 
   try {
     if (config.useGroups) {
-      rosterGroups = await getRosterByGroup(sportType, seasonYear);
+      rosterGroups = await getRosterByGroup(sportType, year);
     } else {
-      players = await getSimpleRoster(sportType, seasonYear);
+      players = await getSimpleRoster(sportType, year);
     }
   } catch (error) {
     console.error(`Failed to fetch ${sport} roster for ${year}:`, error);
@@ -223,6 +257,9 @@ export default async function RosterPage({
 
             {/* Year Selector */}
             <YearSelector currentYear={year} sport={sport} />
+
+            {/* Sport Selector */}
+            <SportSelector currentSport={sport} year={year} />
 
             {/* Breadcrumb */}
             <nav className="text-base md:text-lg text-gray-300 uppercase mt-4">
@@ -298,7 +335,7 @@ export default async function RosterPage({
       <section className="pb-8 bg-gray-100">
         <div className="mx-auto px-4 max-w-[1200px]">
           <p className="text-center text-xs text-gray-400">
-            Roster provided by ESPN. Data refreshes every hour.
+            Roster data from clemsontigers.com. Last updated for {year} season.
           </p>
         </div>
       </section>
@@ -338,7 +375,53 @@ function YearSelector({
   );
 }
 
+function SportSelector({
+  currentSport,
+  year,
+}: {
+  currentSport: string;
+  year: string;
+}) {
+  const sports = Object.keys(SPORT_SLUG_MAP);
+  return (
+    <div className="flex flex-wrap justify-center gap-2 mt-2">
+      {sports.map((sport) => {
+        const config = SPORT_CONFIG[sport];
+        if (!config) return null;
+        const isActive = sport === currentSport;
+        return (
+          <Link
+            key={sport}
+            href={`/roster/${year}/${sport}`}
+            className={`
+              px-3 py-1 rounded text-xs font-medium transition-all duration-200
+              ${
+                isActive
+                  ? "bg-white text-[var(--clemson-purple)]"
+                  : "bg-white/10 text-white hover:bg-white/20"
+              }
+            `}
+          >
+            {config.shortName}
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
 function PlayerCard({ player }: { player: SimpleRosterPlayer }) {
+  // Build stats line: height, weight, experience, and B/T for baseball/softball
+  const statsItems: string[] = [];
+  if (player.height) statsItems.push(player.height);
+  if (player.weight) statsItems.push(player.weight);
+  if (player.experience) statsItems.push(player.experience);
+
+  // Add bats/throws for baseball and softball
+  if (player.bats && player.throws) {
+    statsItems.push(`B/T: ${player.bats}/${player.throws}`);
+  }
+
   return (
     <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
       <div className="flex items-center p-4 gap-4">
@@ -376,9 +459,7 @@ function PlayerCard({ player }: { player: SimpleRosterPlayer }) {
             {player.position}
           </p>
           <p className="text-xs text-gray-500">
-            {[player.height, player.weight, player.experience]
-              .filter(Boolean)
-              .join(" • ")}
+            {statsItems.join(" • ")}
           </p>
         </div>
       </div>
