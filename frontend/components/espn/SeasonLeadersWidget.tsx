@@ -16,13 +16,13 @@ interface SeasonLeadersWidgetProps {
 }
 
 /**
- * Season Leaders Widget - Compact design showing top players per stat category
+ * Season Leaders Widget - Balanced compact design
  *
  * Features:
- * - Compact row-based layout
- * - Small headshots with team colors
- * - 5 stat categories: Points, Rebounds, Assists, Steals, Blocks
- * - Scroll-triggered stagger animation
+ * - Medium-sized headshots (48px) for good visibility
+ * - Player info with secondary stats
+ * - Centered stat display with category label
+ * - 5 stat categories with staggered animation
  * - Responsive design
  */
 export function SeasonLeadersWidget({
@@ -34,7 +34,6 @@ export function SeasonLeadersWidget({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Trigger animation when component comes into view
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -56,13 +55,12 @@ export function SeasonLeadersWidget({
   const categories: Array<{
     key: keyof Pick<SimpleTeamLeaders, "points" | "rebounds" | "assists" | "steals" | "blocks">;
     label: string;
-    abbr: string;
   }> = [
-    { key: "points", label: "Points", abbr: "PTS" },
-    { key: "rebounds", label: "Rebounds", abbr: "REB" },
-    { key: "assists", label: "Assists", abbr: "AST" },
-    { key: "steals", label: "Steals", abbr: "STL" },
-    { key: "blocks", label: "Blocks", abbr: "BLK" },
+    { key: "points", label: "Points" },
+    { key: "rebounds", label: "Rebounds" },
+    { key: "assists", label: "Assists" },
+    { key: "steals", label: "Steals" },
+    { key: "blocks", label: "Blocks" },
   ];
 
   return (
@@ -70,13 +68,20 @@ export function SeasonLeadersWidget({
       ref={containerRef}
       className={cn("bg-white rounded-lg shadow-sm overflow-hidden", className)}
     >
-      {/* Header with team logos */}
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-        <div className="flex items-center justify-between">
+      {/* Title */}
+      <div className="px-5 py-4 border-b border-gray-100">
+        <h3 className="font-heading text-base font-bold text-gray-900 tracking-wide">
+          {title}
+        </h3>
+      </div>
+
+      {/* Team Header Row */}
+      <div className="px-5 py-3 bg-gray-50/70 border-b border-gray-100">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center">
           {/* Away Team */}
           <div className="flex items-center gap-2">
             {awayLeaders.team.logo && (
-              <div className="relative w-7 h-7 flex-shrink-0">
+              <div className="relative w-8 h-8 flex-shrink-0">
                 <Image
                   src={awayLeaders.team.logo}
                   alt={awayLeaders.team.name}
@@ -85,23 +90,23 @@ export function SeasonLeadersWidget({
                 />
               </div>
             )}
-            <span className="font-bold text-xs text-gray-900 uppercase">
+            <span className="font-bold text-sm text-gray-900">
               {awayLeaders.team.abbreviation}
             </span>
           </div>
 
-          {/* Title */}
-          <h3 className="font-heading text-xs font-bold text-gray-500 tracking-wide uppercase">
-            {title}
-          </h3>
+          {/* Center Label */}
+          <span className="text-xs text-gray-400 font-medium px-4">
+            Avg. Per Game
+          </span>
 
           {/* Home Team */}
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-xs text-gray-900 uppercase">
+          <div className="flex items-center gap-2 justify-end">
+            <span className="font-bold text-sm text-gray-900">
               {homeLeaders.team.abbreviation}
             </span>
             {homeLeaders.team.logo && (
-              <div className="relative w-7 h-7 flex-shrink-0">
+              <div className="relative w-8 h-8 flex-shrink-0">
                 <Image
                   src={homeLeaders.team.logo}
                   alt={homeLeaders.team.name}
@@ -114,19 +119,18 @@ export function SeasonLeadersWidget({
         </div>
       </div>
 
-      {/* Compact Stat Rows */}
+      {/* Stat Rows */}
       <div className="divide-y divide-gray-100">
         {categories.map((category, index) => (
-          <CompactStatRow
+          <LeaderRow
             key={category.key}
             label={category.label}
-            abbr={category.abbr}
             awayLeader={awayLeaders[category.key]}
             homeLeader={homeLeaders[category.key]}
             awayTeam={awayLeaders.team}
             homeTeam={homeLeaders.team}
             isVisible={isVisible}
-            delay={index * 80}
+            delay={index * 100}
           />
         ))}
       </div>
@@ -134,9 +138,8 @@ export function SeasonLeadersWidget({
   );
 }
 
-interface CompactStatRowProps {
+interface LeaderRowProps {
   label: string;
-  abbr: string;
   awayLeader?: SimpleTeamLeader;
   homeLeader?: SimpleTeamLeader;
   awayTeam: SimpleTeam;
@@ -145,16 +148,15 @@ interface CompactStatRowProps {
   delay: number;
 }
 
-function CompactStatRow({
+function LeaderRow({
   label,
-  abbr,
   awayLeader,
   homeLeader,
   awayTeam,
   homeTeam,
   isVisible,
   delay,
-}: CompactStatRowProps) {
+}: LeaderRowProps) {
   const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
@@ -169,27 +171,43 @@ function CompactStatRow({
   return (
     <div
       className={cn(
-        "grid grid-cols-[1fr_auto_1fr] items-center px-3 py-2 transition-all duration-400",
-        animated ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+        "grid grid-cols-[1fr_auto_1fr] items-center px-5 py-4 transition-all duration-500",
+        animated ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
       )}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {/* Away Player */}
-      <CompactPlayerCell
+      <PlayerInfo
         leader={awayLeader}
         team={awayTeam}
         align="left"
       />
 
-      {/* Category Label */}
-      <div className="px-3 text-center min-w-[60px]">
-        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-          {abbr}
+      {/* Center Stats */}
+      <div className="flex items-center justify-center gap-3 px-4 min-w-[140px]">
+        <span
+          className="text-xl font-bold tabular-nums"
+          style={{
+            color: awayLeader && awayTeam.color ? `#${awayTeam.color}` : "#6b7280",
+          }}
+        >
+          {awayLeader?.stat.displayValue || "—"}
+        </span>
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide min-w-[70px] text-center">
+          {label}
+        </span>
+        <span
+          className="text-xl font-bold tabular-nums"
+          style={{
+            color: homeLeader && homeTeam.color ? `#${homeTeam.color}` : "#6b7280",
+          }}
+        >
+          {homeLeader?.stat.displayValue || "—"}
         </span>
       </div>
 
       {/* Home Player */}
-      <CompactPlayerCell
+      <PlayerInfo
         leader={homeLeader}
         team={homeTeam}
         align="right"
@@ -198,20 +216,25 @@ function CompactStatRow({
   );
 }
 
-interface CompactPlayerCellProps {
+interface PlayerInfoProps {
   leader?: SimpleTeamLeader;
   team: SimpleTeam;
   align: "left" | "right";
 }
 
-function CompactPlayerCell({ leader, team, align }: CompactPlayerCellProps) {
+function PlayerInfo({ leader, team, align }: PlayerInfoProps) {
   if (!leader) {
     return (
-      <div className={cn("flex items-center gap-2", align === "right" && "flex-row-reverse justify-start")}>
-        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-          <span className="text-gray-300 text-[10px]">—</span>
+      <div className={cn(
+        "flex items-center gap-3",
+        align === "right" && "flex-row-reverse"
+      )}>
+        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <span className="text-gray-300 text-xs">—</span>
         </div>
-        <span className="text-xs text-gray-300">N/A</span>
+        <div className={cn("flex flex-col", align === "right" && "items-end")}>
+          <span className="text-sm text-gray-300">No data</span>
+        </div>
       </div>
     );
   }
@@ -227,13 +250,18 @@ function CompactPlayerCell({ leader, team, align }: CompactPlayerCellProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-2",
+        "flex items-center gap-3",
         align === "right" && "flex-row-reverse"
       )}
     >
       {/* Player Headshot */}
       {leader.athlete.headshot ? (
-        <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
+        <div
+          className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2"
+          style={{
+            borderColor: team.color ? `#${team.color}40` : "#e5e7eb",
+          }}
+        >
           <Image
             src={leader.athlete.headshot}
             alt={leader.athlete.name}
@@ -243,14 +271,14 @@ function CompactPlayerCell({ leader, team, align }: CompactPlayerCellProps) {
         </div>
       ) : (
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border"
+          className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-2"
           style={{
-            backgroundColor: team.color ? `#${team.color}15` : "#f3f4f6",
-            borderColor: team.color ? `#${team.color}30` : "#d1d5db",
+            backgroundColor: team.color ? `#${team.color}10` : "#f3f4f6",
+            borderColor: team.color ? `#${team.color}40` : "#e5e7eb",
           }}
         >
           <span
-            className="text-[10px] font-bold"
+            className="text-sm font-bold"
             style={{ color: team.color ? `#${team.color}` : "#6b7280" }}
           >
             {initials}
@@ -258,23 +286,34 @@ function CompactPlayerCell({ leader, team, align }: CompactPlayerCellProps) {
         </div>
       )}
 
-      {/* Player Info */}
+      {/* Player Details */}
       <div className={cn("flex flex-col min-w-0", align === "right" && "items-end")}>
-        <span className="text-xs font-medium text-gray-900 truncate max-w-[100px]">
-          {leader.athlete.shortName}
-        </span>
-        <div className={cn("flex items-center gap-1", align === "right" && "flex-row-reverse")}>
-          <span
-            className="text-sm font-bold"
-            style={{
-              color: team.color ? `#${team.color}` : "var(--clemson-orange)",
-            }}
-          >
-            {leader.stat.displayValue}
+        {/* Name & Number */}
+        <div className={cn("flex items-center gap-1.5", align === "right" && "flex-row-reverse")}>
+          <span className="text-sm font-semibold text-gray-900 truncate">
+            {leader.athlete.shortName}
           </span>
-          <span className="text-[10px] text-gray-400">
+          <span className="text-xs text-gray-400 font-medium">
             #{leader.athlete.jersey || "—"}
           </span>
+        </div>
+
+        {/* Position & Secondary Stats */}
+        <div className={cn("flex items-center gap-1 text-xs text-gray-500", align === "right" && "flex-row-reverse")}>
+          {leader.athlete.position && (
+            <>
+              <span className="font-medium">{leader.athlete.position}</span>
+              {leader.secondaryStats && leader.secondaryStats.length > 0 && (
+                <span className="text-gray-300">•</span>
+              )}
+            </>
+          )}
+          {leader.secondaryStats && leader.secondaryStats.slice(0, 2).map((stat, idx) => (
+            <span key={idx} className="whitespace-nowrap">
+              {stat.value} {stat.label}
+              {idx === 0 && leader.secondaryStats && leader.secondaryStats.length > 1 && ", "}
+            </span>
+          ))}
         </div>
       </div>
     </div>
