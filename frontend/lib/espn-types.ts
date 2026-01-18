@@ -627,3 +627,33 @@ export interface SimpleRosterPlayer {
   headshot?: string;
   group?: string;
 }
+
+// =============================================================================
+// Team Leaders Types
+// =============================================================================
+
+export interface SimpleTeamLeader {
+  athlete: {
+    id: string;
+    name: string;
+    shortName: string;
+    jersey?: string;
+    headshot?: string;
+    position: string;
+  };
+  stat: {
+    value: number;
+    displayValue: string;
+    abbreviation: string;
+  };
+  secondaryStats?: Array<{ label: string; value: string }>;
+}
+
+export interface SimpleTeamLeaders {
+  team: SimpleTeam;
+  points?: SimpleTeamLeader;
+  rebounds?: SimpleTeamLeader;
+  assists?: SimpleTeamLeader;
+  steals?: SimpleTeamLeader;
+  blocks?: SimpleTeamLeader;
+}

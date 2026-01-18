@@ -23,6 +23,8 @@ import type {
   SimpleStanding,
   SimpleScheduleGame,
   SimpleRosterPlayer,
+  SimpleTeamLeader,
+  SimpleTeamLeaders,
 } from './espn-types';
 
 // =============================================================================
@@ -741,6 +743,121 @@ export async function getNews(
 }
 
 // =============================================================================
+// Team Statistics Data
+// =============================================================================
+
+/** Team statistics response from ESPN (actual API structure) */
+export interface ESPNTeamStatisticsResponse {
+  status?: string;
+  results?: {
+    stats?: {
+      id?: string;
+      name?: string;
+      categories?: ESPNStatCategory[];
+    };
+  };
+  // Alternative structure (some endpoints)
+  statistics?: ESPNStatCategory[];
+}
+
+export interface ESPNStatCategory {
+  name: string;
+  displayName: string;
+  abbreviation?: string;
+  stats: ESPNStatItem[];
+}
+
+export interface ESPNStatItem {
+  name: string;
+  displayName: string;
+  shortDisplayName?: string;
+  description?: string;
+  abbreviation: string;
+  value: number;
+  displayValue: string;
+  rankDisplayValue?: string;
+  perGameDisplayValue?: string;
+}
+
+/** Simplified team statistics for comparison widget */
+export interface SimpleTeamStats {
+  team: SimpleTeam;
+  stats: Record<string, number>;
+  perGameStats: Record<string, number>;
+}
+
+/**
+ * Get team statistics from ESPN
+ */
+export async function getTeamStatistics(
+  sport: SportType,
+  teamId: string = CLEMSON_TEAM_ID
+): Promise<ESPNTeamStatisticsResponse | null> {
+  const sportPath = SPORT_PATHS[sport];
+  return fetchESPN<ESPNTeamStatisticsResponse>(
+    `${ESPN_BASE_URL}/${sportPath}/teams/${teamId}/statistics`,
+    { cache: CACHE_TIMES.standings } // Use same cache as standings (15 min)
+  );
+}
+
+/**
+ * Get simplified team stats for comparison widgets
+ */
+export async function getSimpleTeamStats(
+  sport: SportType,
+  teamId: string = CLEMSON_TEAM_ID
+): Promise<SimpleTeamStats | null> {
+  const [statsData, teamData] = await Promise.all([
+    getTeamStatistics(sport, teamId),
+    getSimpleTeamInfoById(sport, teamId),
+  ]);
+
+  // Handle different ESPN response structures
+  const categories = statsData?.results?.stats?.categories || statsData?.statistics;
+
+  if (!categories || !teamData) return null;
+
+  const stats: Record<string, number> = {};
+  const perGameStats: Record<string, number> = {};
+
+  // Flatten all stat categories into a simple key-value map
+  for (const category of categories) {
+    for (const stat of category.stats) {
+      stats[stat.name] = stat.value;
+      // Extract per-game value if available
+      if (stat.perGameDisplayValue) {
+        const perGame = parseFloat(stat.perGameDisplayValue);
+        if (!isNaN(perGame)) {
+          perGameStats[stat.name] = perGame;
+        }
+      }
+    }
+  }
+
+  return {
+    team: teamData,
+    stats,
+    perGameStats,
+  };
+}
+
+/**
+ * Basketball-specific stat names for comparison
+ */
+export const BASKETBALL_STAT_KEYS = {
+  points: 'avgPoints',
+  pointsAgainst: 'avgPointsAgainst',
+  fieldGoalPct: 'fieldGoalPct',
+  rebounds: 'avgRebounds',
+  assists: 'avgAssists',
+  blocks: 'avgBlocks',
+  steals: 'avgSteals',
+  turnovers: 'avgTurnovers',
+  threePointPct: 'threePointFieldGoalPct',
+  freeThrowPct: 'freeThrowPct',
+} as const;
+
+// =============================================================================
 // Roster Data
 // =============================================================================
 
@@ -870,6 +987,148 @@ export async function getRosterByGroup(
   }
 
   return groups;
+}
+
+// =============================================================================
+// Team Leaders Data
+// =============================================================================
+
+/** ESPN Core API Team Leaders Response */
+interface ESPNCoreLeadersResponse {
+  categories?: Array<{
+    name: string;
+    displayName: string;
+    shortDisplayName?: string;
+    abbreviation: string;
+    leaders: Array<{
+      displayValue: string;
+      value?: number;
+      athlete: {
+        $ref: string;
+      };
+    }>;
+  }>;
+}
+
+/** ESPN Core API Athlete Response */
+interface ESPNCoreAthleteResponse {
+  id: string;
+  fullName: string;
+  displayName: string;
+  shortName?: string;
+  jersey?: string;
+  position?: {
+    abbreviation: string;
+    name?: string;
+  };
+  headshot?: {
+    href: string;
+  };
+}
+
+/** Get league path for core API */
+const LEAGUE_PATHS: Record<SportType, string> = {
+  football: 'football/leagues/college-football',
+  mensBasketball: 'basketball/leagues/mens-college-basketball',
+  womensBasketball: 'basketball/leagues/womens-college-basketball',
+  baseball: 'baseball/leagues/college-baseball',
+} as const;
+
+/**
+ * Get team leaders (top players per stat category) for a team
+ * Uses ESPN Core API which has season-level statistical leaders
+ * @param sport - Sport type
+ * @param teamId - Team ID (defaults to Clemson)
+ */
+export async function getTeamLeaders(
+  sport: SportType,
+  teamId: string = CLEMSON_TEAM_ID
+): Promise<SimpleTeamLeaders | null> {
+  try {
+    // Get team info first for logo/colors
+    const teamInfo = await getSimpleTeamInfoById(sport, teamId);
+    if (!teamInfo) return null;
+
+    // Get current season year (use current year, ESPN uses calendar year for season)
+    const currentYear = new Date().getFullYear();
+    const leaguePath = LEAGUE_PATHS[sport];
+
+    // Fetch leaders from core API
+    // types/2 = regular season
+    const leadersData = await fetchESPN<ESPNCoreLeadersResponse>(
+      `${ESPN_CORE_URL}/${leaguePath}/seasons/${currentYear}/types/2/teams/${teamId}/leaders`,
+      { cache: CACHE_TIMES.standings }
+    );
+
+    if (!leadersData?.categories) return null;
+
+    // Helper to find and fetch a leader by category
+    const getLeader = async (categoryNames: string[]): Promise<SimpleTeamLeader | undefined> => {
+      // Find the category
+      const category = leadersData.categories?.find((c) =>
+        categoryNames.some(
+          (name) =>
+            c.name?.toLowerCase() === name.toLowerCase() ||
+            c.displayName?.toLowerCase().includes(name.toLowerCase())
+        )
+      );
+
+      if (!category?.leaders?.[0]) return undefined;
+
+      const leader = category.leaders[0];
+
+      // Extract athlete ID from $ref URL
+      const athleteRefMatch = leader.athlete.$ref.match(/athletes\/(\d+)/);
+      if (!athleteRefMatch) return undefined;
+
+      const athleteId = athleteRefMatch[1];
+
+      // Fetch athlete details
+      const athleteData = await fetchESPN<ESPNCoreAthleteResponse>(
+        `${ESPN_CORE_URL}/${leaguePath}/seasons/${currentYear}/athletes/${athleteId}`,
+        { cache: CACHE_TIMES.roster }
+      );
+
+      if (!athleteData) return undefined;
+
+      return {
+        athlete: {
+          id: athleteData.id,
+          name: athleteData.displayName || athleteData.fullName,
+          shortName: athleteData.shortName || athleteData.displayName || athleteData.fullName,
+          jersey: athleteData.jersey,
+          headshot: athleteData.headshot?.href,
+          position: athleteData.position?.abbreviation || athleteData.position?.name || '',
+        },
+        stat: {
+          value: leader.value || parseFloat(leader.displayValue) || 0,
+          displayValue: leader.displayValue,
+          abbreviation: category.abbreviation,
+        },
+      };
+    };
+
+    // Fetch all leaders in parallel
+    const [points, rebounds, assists, steals, blocks] = await Promise.all([
+      getLeader(['pointsPerGame', 'points', 'avgPoints', 'PTS']),
+      getLeader(['reboundsPerGame', 'rebounds', 'avgRebounds', 'REB']),
+      getLeader(['assistsPerGame', 'assists', 'avgAssists', 'AST']),
+      getLeader(['stealsPerGame', 'steals', 'avgSteals', 'STL']),
+      getLeader(['blocksPerGame', 'blocks', 'avgBlocks', 'BLK']),
+    ]);
+
+    return {
+      team: teamInfo,
+      points,
+      rebounds,
+      assists,
+      steals,
+      blocks,
+    };
+  } catch (error) {
+    console.error(`Failed to fetch team leaders for ${teamId}:`, error);
+    return null;
+  }
 }
 
 // =============================================================================
