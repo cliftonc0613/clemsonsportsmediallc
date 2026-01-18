@@ -153,10 +153,43 @@ export async function getTeamInfo(sport: SportType): Promise<ESPNTeamResponse | 
 }
 
 /**
+ * Get any team's information by ID
+ */
+export async function getTeamInfoById(sport: SportType, teamId: string): Promise<ESPNTeamResponse | null> {
+  const sportPath = SPORT_PATHS[sport];
+  return fetchESPN<ESPNTeamResponse>(
+    `${ESPN_BASE_URL}/${sportPath}/teams/${teamId}`,
+    { cache: CACHE_TIMES.teamInfo }
+  );
+}
+
+/**
  * Get simplified team data with logo and record
  */
 export async function getSimpleTeamInfo(sport: SportType): Promise<SimpleTeam | null> {
   const data = await getTeamInfo(sport);
+  if (!data?.team) return null;
+
+  const { team } = data;
+  const logo = team.logos?.find((l) => l.rel.includes('default'))?.href;
+  const record = team.record?.items?.find((r) => r.type === 'total')?.summary;
+
+  return {
+    id: team.id,
+    name: team.name,
+    abbreviation: team.abbreviation,
+    displayName: team.displayName,
+    logo,
+    color: team.color,
+    record,
+  };
+}
+
+/**
+ * Get simplified team data by ID
+ */
+export async function getSimpleTeamInfoById(sport: SportType, teamId: string): Promise<SimpleTeam | null> {
+  const data = await getTeamInfoById(sport, teamId);
   if (!data?.team) return null;
 
   const { team } = data;
@@ -349,17 +382,30 @@ export async function getClemsonGameById(
       }
     }
 
-    // If Clemson's record is still missing, fetch directly from team endpoint
+    // If records are still missing, fetch directly from team endpoints
     const clemsonIsHome = game.homeTeam.id === CLEMSON_TEAM_ID;
     const clemsonTeam = clemsonIsHome ? game.homeTeam : game.awayTeam;
-    if (!clemsonTeam.record) {
-      const clemsonInfo = await getSimpleTeamInfo(sport);
-      if (clemsonInfo?.record) {
-        if (clemsonIsHome) {
-          game.homeTeam.record = clemsonInfo.record;
-        } else {
-          game.awayTeam.record = clemsonInfo.record;
-        }
+    const opponentTeam = clemsonIsHome ? game.awayTeam : game.homeTeam;
+
+    // Fetch both team records in parallel if needed
+    const [clemsonInfo, opponentInfo] = await Promise.all([
+      !clemsonTeam.record ? getSimpleTeamInfo(sport) : Promise.resolve(null),
+      !opponentTeam.record ? getSimpleTeamInfoById(sport, opponentTeam.id) : Promise.resolve(null),
+    ]);
+
+    if (clemsonInfo?.record) {
+      if (clemsonIsHome) {
+        game.homeTeam.record = clemsonInfo.record;
+      } else {
+        game.awayTeam.record = clemsonInfo.record;
+      }
+    }
+
+    if (opponentInfo?.record) {
+      if (clemsonIsHome) {
+        game.awayTeam.record = opponentInfo.record;
+      } else {
+        game.homeTeam.record = opponentInfo.record;
       }
     }
 

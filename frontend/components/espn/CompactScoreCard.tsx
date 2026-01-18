@@ -138,12 +138,6 @@ export function CompactScoreCard({
         <div className="flex items-center gap-3 px-4">
           <span className="text-gray-600 text-2xl md:text-3xl font-light">]</span>
           <div className="text-center min-w-[120px]">
-            {/* Clemson Record for pre-game */}
-            {isPreGame && clemsonRecord && (
-              <div className="text-[var(--clemson-orange)] text-xs font-bold mb-1">
-                {clemsonRecord}
-              </div>
-            )}
             <span
               className={cn(
                 "text-xs md:text-sm font-bold uppercase tracking-widest",
