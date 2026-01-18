@@ -3,6 +3,14 @@ import Image from "next/image";
 import { formatGameDate, formatGameTime, SPORT_NAMES } from "@/lib/espn";
 import type { SimpleScheduleGame, SportType } from "@/lib/espn-types";
 
+/** Map sport types to URL slugs */
+const SPORT_URL_SLUGS: Record<SportType, string> = {
+  football: "football",
+  mensBasketball: "mens-basketball",
+  womensBasketball: "womens-basketball",
+  baseball: "baseball",
+};
+
 interface ScheduleWidgetProps {
   games: SimpleScheduleGame[];
   sport: SportType;
@@ -59,7 +67,7 @@ export function ScheduleWidget({
       {/* View Full Schedule Link */}
       <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
         <a
-          href={`/schedule/${sport}`}
+          href={`/schedule/${SPORT_URL_SLUGS[sport]}`}
           className="text-sm text-[var(--clemson-orange)] hover:underline font-medium"
         >
           View Full Schedule →

@@ -3,6 +3,14 @@ import Image from "next/image";
 import { SPORT_NAMES, CLEMSON_TEAM_ID } from "@/lib/espn";
 import type { SimpleStanding, SportType } from "@/lib/espn-types";
 
+/** Map sport types to URL slugs */
+const SPORT_URL_SLUGS: Record<SportType, string> = {
+  football: "football",
+  mensBasketball: "mens-basketball",
+  womensBasketball: "womens-basketball",
+  baseball: "baseball",
+};
+
 interface StandingsWidgetProps {
   standings: SimpleStanding[];
   sport: SportType;
@@ -99,7 +107,7 @@ export function StandingsWidget({
       {/* View Full Standings Link */}
       <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
         <a
-          href={`/standings/${sport}`}
+          href={`/standings/${SPORT_URL_SLUGS[sport]}`}
           className="text-sm text-[var(--clemson-orange)] hover:underline font-medium"
         >
           View Full Standings →
