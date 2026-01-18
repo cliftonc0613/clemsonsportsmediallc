@@ -1,6 +1,6 @@
 import { getPosts, getCategories, getTags, getPostsByCategorySlug, isWordPressConfigured } from "@/lib/wordpress";
 import type { WPPost, WPCategory, WPTag } from "@/lib/wordpress";
-import { getClemsonGame } from "@/lib/espn";
+import { getClemsonGameById } from "@/lib/espn";
 import type { SimpleGame } from "@/lib/espn-types";
 import { CompactScoreCard } from "@/components/espn";
 
@@ -47,9 +47,9 @@ export default async function HomePage() {
   let sportPosts: Record<string, WPPost[]> = {};
   let mensBasketballGame: SimpleGame | null = null;
 
-  // Fetch basketball game data
+  // Fetch basketball game data (current game or next upcoming game)
   try {
-    mensBasketballGame = await getClemsonGame("mensBasketball");
+    mensBasketballGame = await getClemsonGameById("mensBasketball", "latest");
   } catch (error) {
     console.error("Failed to fetch men's basketball game:", error);
   }
