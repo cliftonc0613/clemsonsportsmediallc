@@ -255,7 +255,8 @@ export async function getRecentResults(
   return data.events
     .filter((event) => {
       const gameDate = new Date(event.date);
-      return gameDate < now && event.status.type.completed;
+      const isCompleted = event.status?.type?.completed ?? false;
+      return gameDate < now && isCompleted;
     })
     .slice(-limit)
     .reverse()
@@ -313,7 +314,7 @@ export async function getLiveScores(sport: SportType): Promise<SimpleGame[]> {
   if (!data?.events) return [];
 
   return data.events
-    .filter((event) => event.status.type.state === 'in')
+    .filter((event) => event.status?.type?.state === 'in')
     .map((event) => transformToSimpleGame(event));
 }
 
@@ -876,11 +877,11 @@ function transformToSimpleGame(event: ESPNEvent): SimpleGame {
     name: event.name,
     shortName: event.shortName,
     status: {
-      state: event.status.type.state,
-      detail: event.status.type.detail,
-      displayClock: event.status.displayClock,
-      period: event.status.period,
-      completed: event.status.type.completed,
+      state: event.status?.type?.state ?? 'pre',
+      detail: event.status?.type?.detail ?? '',
+      displayClock: event.status?.displayClock,
+      period: event.status?.period,
+      completed: event.status?.type?.completed ?? false,
     },
     homeTeam: transformCompetitorToSimpleTeam(homeCompetitor),
     awayTeam: transformCompetitorToSimpleTeam(awayCompetitor),
@@ -991,7 +992,8 @@ function transformToSimpleScheduleGame(event: ESPNEvent): SimpleScheduleGame {
     : undefined;
 
   let result: SimpleScheduleGame['result'];
-  if (event.status.type.completed && clemsonScore !== undefined && opponentScore !== undefined) {
+  const isCompleted = event.status?.type?.completed ?? false;
+  if (isCompleted && clemsonScore !== undefined && opponentScore !== undefined) {
     result = {
       win: clemsonScore > opponentScore,
       score: isHome
