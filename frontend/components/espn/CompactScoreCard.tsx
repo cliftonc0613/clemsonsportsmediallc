@@ -104,7 +104,7 @@ export function CompactScoreCard({
                 {game.awayTeam.abbreviation || game.awayTeam.name}
               </span>
             </div>
-            <div className="text-gray-500 text-xs md:text-sm font-mono">
+            <div className="text-white text-xs md:text-sm font-mono">
               {formatRecord(game.awayTeam.record)}
             </div>
           </div>
@@ -197,7 +197,7 @@ export function CompactScoreCard({
                 </span>
               )}
             </div>
-            <div className="text-gray-500 text-xs md:text-sm font-mono">
+            <div className="text-white text-xs md:text-sm font-mono">
               {formatRecord(game.homeTeam.record)}
             </div>
           </div>
