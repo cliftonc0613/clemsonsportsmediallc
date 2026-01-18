@@ -53,14 +53,27 @@ export function SeasonLeadersWidget({
   }, []);
 
   const categories: Array<{
-    key: keyof Pick<SimpleTeamLeaders, "points" | "rebounds" | "assists" | "steals" | "blocks">;
+    key: keyof Omit<SimpleTeamLeaders, "team">;
     label: string;
+    group?: string;
   }> = [
-    { key: "points", label: "Points" },
-    { key: "rebounds", label: "Rebounds" },
-    { key: "assists", label: "Assists" },
-    { key: "steals", label: "Steals" },
-    { key: "blocks", label: "Blocks" },
+    // Core stats
+    { key: "points", label: "Points", group: "core" },
+    { key: "rebounds", label: "Rebounds", group: "core" },
+    { key: "assists", label: "Assists", group: "core" },
+    { key: "steals", label: "Steals", group: "core" },
+    { key: "blocks", label: "Blocks", group: "core" },
+    // Shooting
+    { key: "fieldGoalPct", label: "FG%", group: "shooting" },
+    { key: "threePointMade", label: "3PM/G", group: "shooting" },
+    // Rebounds breakdown
+    { key: "offensiveRebounds", label: "Off. Reb", group: "rebounds" },
+    { key: "defensiveRebounds", label: "Def. Reb", group: "rebounds" },
+    // Advanced/Other
+    { key: "playerEfficiency", label: "PER", group: "advanced" },
+    { key: "minutesPerGame", label: "Minutes", group: "advanced" },
+    { key: "doubleDoubles", label: "Dbl-Dbl", group: "advanced" },
+    { key: "foulsPerGame", label: "Fouls", group: "advanced" },
   ];
 
   return (
