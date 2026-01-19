@@ -355,8 +355,8 @@ export default async function MensBasketballStatsPage() {
               )}
             </div>
 
-            {/* Season Leaders - 40% width */}
-            <div className="lg:col-span-2">
+            {/* Season Leaders + Quick Links - 40% width */}
+            <div className="lg:col-span-2 space-y-6">
               {clemsonLeaders && opponentLeaders ? (
                 <SeasonLeadersWidget
                   awayLeaders={opponentLeaders}
@@ -364,7 +364,7 @@ export default async function MensBasketballStatsPage() {
                   title="SEASON LEADERS"
                 />
               ) : (
-                <div className="bg-white rounded-lg shadow-sm p-8 text-center h-full">
+                <div className="bg-white rounded-lg shadow-sm p-8 text-center">
                   <h2 className="font-heading text-xl text-[var(--clemson-purple)] mb-4">
                     Season Leaders
                   </h2>
@@ -373,13 +373,40 @@ export default async function MensBasketballStatsPage() {
                   </p>
                 </div>
               )}
+
+              {/* Quick Links */}
+              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-[var(--clemson-purple)] px-4 py-3">
+                  <h3 className="font-heading text-white text-lg">Quick Links</h3>
+                </div>
+                <div className="p-4 space-y-2">
+                  <Link
+                    href="/schedule/mens-basketball"
+                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--clemson-orange)] transition-colors"
+                  >
+                    View Schedule →
+                  </Link>
+                  <Link
+                    href="/roster/2025/mens-basketball"
+                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--clemson-orange)] transition-colors"
+                  >
+                    View Roster →
+                  </Link>
+                  <Link
+                    href="/category/mens-basketball"
+                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--clemson-orange)] transition-colors"
+                  >
+                    Latest News →
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Row 3: Secondary Widgets (Averages ~40% + Standings ~40% + Quick Links ~20%) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            {/* Clemson Season Averages - 40% width */}
-            <div className="lg:col-span-2">
+          {/* Row 3: Secondary Widgets (Averages 50% + Standings 50%) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Clemson Season Averages */}
+            <div>
               {clemsonStats ? (
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden h-full">
                   <div className="bg-[var(--clemson-purple)] px-4 py-3">
@@ -413,8 +440,8 @@ export default async function MensBasketballStatsPage() {
               )}
             </div>
 
-            {/* ACC Standings - 40% width */}
-            <div className="lg:col-span-2">
+            {/* ACC Standings */}
+            <div>
               <StandingsWidget
                 standings={standings}
                 sport="mensBasketball"
@@ -422,35 +449,6 @@ export default async function MensBasketballStatsPage() {
                 limit={10}
                 alwaysShowClemson
               />
-            </div>
-
-            {/* Quick Links - 20% width */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden h-full">
-                <div className="bg-[var(--clemson-purple)] px-4 py-3">
-                  <h3 className="font-heading text-white text-lg">Quick Links</h3>
-                </div>
-                <div className="p-4 space-y-2">
-                  <Link
-                    href="/schedule/mens-basketball"
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--clemson-orange)] transition-colors"
-                  >
-                    View Schedule →
-                  </Link>
-                  <Link
-                    href="/roster/2025/mens-basketball"
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--clemson-orange)] transition-colors"
-                  >
-                    View Roster →
-                  </Link>
-                  <Link
-                    href="/category/mens-basketball"
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--clemson-orange)] transition-colors"
-                  >
-                    Latest News →
-                  </Link>
-                </div>
-              </div>
             </div>
           </div>
         </div>
