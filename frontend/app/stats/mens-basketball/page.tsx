@@ -393,7 +393,7 @@ export default async function MensBasketballStatsPage() {
                     View Roster →
                   </Link>
                   <Link
-                    href="/category/mens-basketball"
+                    href="/category/basketball"
                     className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--clemson-orange)] transition-colors"
                   >
                     Latest News →
