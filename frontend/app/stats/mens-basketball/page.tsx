@@ -474,6 +474,7 @@ export default async function MensBasketballStatsPage() {
                 <PlayerToWatchWidget
                   player={playerToWatch}
                   title="PLAYER TO WATCH"
+                  variant="watermark"
                 />
               )}
             </div>
