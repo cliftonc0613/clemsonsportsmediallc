@@ -60,7 +60,6 @@ export function SeasonLeadersWidget({
     { key: "rebounds", label: "Rebounds" },
     { key: "assists", label: "Assists" },
     { key: "steals", label: "Steals" },
-    { key: "blocks", label: "Blocks" },
     { key: "threePointers", label: "3PT Made" },
     { key: "minutes", label: "Minutes" },
   ];
