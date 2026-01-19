@@ -607,9 +607,14 @@ export interface PaginatedResult<T> {
   currentPage: number;
 }
 
+// SECURITY: Maximum items per page to prevent resource exhaustion
+const MAX_PER_PAGE = 100;
+
 /**
  * Fetch posts with pagination metadata
  * Returns posts along with total count and page info from WordPress headers
+ *
+ * SECURITY: per_page is clamped to MAX_PER_PAGE to prevent DoS
  */
 export async function getPostsWithPagination(params?: {
   per_page?: number;
@@ -623,8 +628,9 @@ export async function getPostsWithPagination(params?: {
   const apiUrl = getApiUrl();
   const queryParams = new URLSearchParams();
 
-  const perPage = params?.per_page || 12;
-  const page = params?.page || 1;
+  // SECURITY: Clamp per_page to prevent resource exhaustion
+  const perPage = Math.min(params?.per_page || 12, MAX_PER_PAGE);
+  const page = Math.max(params?.page || 1, 1);
 
   queryParams.set('per_page', perPage.toString());
   queryParams.set('page', page.toString());

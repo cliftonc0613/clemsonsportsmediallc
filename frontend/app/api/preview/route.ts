@@ -14,13 +14,23 @@ import { draftMode } from "next/headers";
  * - slug: The post/page slug to preview
  * - id: The WordPress post ID
  * - type: The post type (post, page, services, testimonials)
+ *
+ * SECURITY: Slug is validated to prevent path traversal attacks
  */
+
+// SECURITY: Valid slug pattern - alphanumeric, hyphens, underscores only
+const VALID_SLUG_PATTERN = /^[a-z0-9_-]+$/i;
+// SECURITY: Maximum slug length to prevent abuse
+const MAX_SLUG_LENGTH = 200;
+// SECURITY: Allowed post types whitelist
+const ALLOWED_TYPES = ["post", "page", "services", "testimonials"];
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
   const slug = searchParams.get("slug");
   const id = searchParams.get("id");
-  const type = searchParams.get("type") || "post";
+  const typeParam = searchParams.get("type") || "post";
 
   // Validate secret
   const expectedSecret = process.env.PREVIEW_SECRET;
@@ -31,7 +41,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Validate slug
+  // Validate slug exists
   if (!slug) {
     return NextResponse.json(
       { error: "Missing slug parameter" },
@@ -39,11 +49,23 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  // SECURITY: Validate slug format to prevent path traversal
+  if (!VALID_SLUG_PATTERN.test(slug) || slug.length > MAX_SLUG_LENGTH) {
+    return NextResponse.json(
+      { error: "Invalid slug format" },
+      { status: 400 }
+    );
+  }
+
+  // SECURITY: Validate type against whitelist
+  const type = ALLOWED_TYPES.includes(typeParam) ? typeParam : "post";
+
   // Enable Draft Mode
   const draft = await draftMode();
   draft.enable();
 
   // Determine the redirect path based on post type
+  // SECURITY: type is already validated against ALLOWED_TYPES whitelist
   const pathMap: Record<string, string> = {
     post: `/blog/${slug}`,
     page: `/${slug}`,

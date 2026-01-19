@@ -171,6 +171,49 @@ function stripRelatedPostsHtml(html: string): string {
 }
 
 /**
+ * Server-side HTML sanitization (regex-based fallback)
+ *
+ * SECURITY: This is a defense-in-depth measure for SSR.
+ * Client-side will re-sanitize with full DOMPurify on hydration.
+ *
+ * @param html - HTML string to sanitize
+ * @returns Sanitized HTML with dangerous elements removed
+ */
+function serverSideSanitize(html: string): string {
+  let result = html;
+
+  // Remove script tags (including nested content)
+  result = result.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+
+  // Remove noscript, style, template tags
+  result = result.replace(/<noscript\b[^<]*(?:(?!<\/noscript>)<[^<]*)*<\/noscript>/gi, "");
+  result = result.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
+  result = result.replace(/<template\b[^<]*(?:(?!<\/template>)<[^<]*)*<\/template>/gi, "");
+
+  // Remove all event handlers (on* attributes) - multiple patterns for robustness
+  result = result.replace(/\son\w+\s*=\s*["'][^"']*["']/gi, "");
+  result = result.replace(/\son\w+\s*=\s*[^\s>]+/gi, "");
+
+  // Remove javascript: URLs in href/src attributes
+  result = result.replace(/\bhref\s*=\s*["']?\s*javascript:[^"'>\s]*/gi, 'href="#"');
+  result = result.replace(/\bsrc\s*=\s*["']?\s*javascript:[^"'>\s]*/gi, 'src=""');
+
+  // Remove data: URLs except for images (potential XSS vector)
+  result = result.replace(/\bhref\s*=\s*["']?\s*data:(?!image\/)[^"'>\s]*/gi, 'href="#"');
+
+  // Remove vbscript: URLs (IE legacy attack vector)
+  result = result.replace(/\bhref\s*=\s*["']?\s*vbscript:[^"'>\s]*/gi, 'href="#"');
+
+  // Remove expression() CSS (IE attack vector)
+  result = result.replace(/expression\s*\([^)]*\)/gi, "");
+
+  // Remove behavior: CSS property (IE attack vector)
+  result = result.replace(/behavior\s*:\s*url\s*\([^)]*\)/gi, "");
+
+  return result;
+}
+
+/**
  * Sanitize HTML content from WordPress
  *
  * @param html - Raw HTML string from WordPress
@@ -181,18 +224,18 @@ function stripRelatedPostsHtml(html: string): string {
  * const cleanHtml = sanitizeWordPressHtml(post.content.rendered);
  * return <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />;
  * ```
+ *
+ * SECURITY: Uses DOMPurify on client, enhanced regex on server.
+ * The client re-sanitizes on hydration for full protection.
  */
 export function sanitizeWordPressHtml(html: string): string {
   // First strip Related Posts sections (before sanitization)
   let cleanedHtml = stripRelatedPostsHtml(html);
 
   if (typeof window === "undefined") {
-    // Server-side: DOMPurify requires DOM, return as-is
-    // The client will re-sanitize on hydration
-    // For SSR safety, we strip obvious script tags
-    return cleanedHtml
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-      .replace(/on\w+\s*=\s*["'][^"']*["']/gi, "");
+    // Server-side: Use enhanced regex-based sanitization
+    // SECURITY: Client will re-sanitize with DOMPurify on hydration
+    return serverSideSanitize(cleanedHtml);
   }
 
   // DOMPurify.sanitize can return string or TrustedHTML

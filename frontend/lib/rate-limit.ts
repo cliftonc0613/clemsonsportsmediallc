@@ -156,3 +156,30 @@ export const contactFormLimiter = new RateLimiter({
   interval: 60 * 1000, // 1 minute
   limit: 5,
 });
+
+/**
+ * Pre-configured rate limiter for search endpoint
+ * 30 searches per minute per IP (generous for UX, but prevents abuse)
+ */
+export const searchLimiter = new RateLimiter({
+  interval: 60 * 1000, // 1 minute
+  limit: 30,
+});
+
+/**
+ * Pre-configured rate limiter for health check endpoint
+ * 60 requests per minute per IP (monitoring tools may poll frequently)
+ */
+export const healthCheckLimiter = new RateLimiter({
+  interval: 60 * 1000, // 1 minute
+  limit: 60,
+});
+
+/**
+ * Pre-configured rate limiter for revalidation endpoint
+ * 20 requests per minute per IP (prevents brute-force secret guessing)
+ */
+export const revalidateLimiter = new RateLimiter({
+  interval: 60 * 1000, // 1 minute
+  limit: 20,
+});

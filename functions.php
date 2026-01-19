@@ -262,15 +262,44 @@ function starter_theme_add_featured_image_to_rest() {
 add_action('rest_api_init', 'starter_theme_add_featured_image_to_rest');
 
 /**
- * Enable CORS for REST API (development only)
- * Remove or restrict in production
+ * Enable CORS for REST API
+ * SECURITY: Restricts to configured frontend URL instead of wildcard
  */
 function starter_theme_cors_headers() {
-    // Only enable for development
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    // Get the configured frontend URL for CORS
+    $frontend_url = defined('STARTER_FRONTEND_URL')
+        ? STARTER_FRONTEND_URL
+        : get_option('starter_frontend_url', '');
+
+    // Only set CORS headers if frontend URL is configured
+    if (!empty($frontend_url)) {
+        // Parse the frontend URL to get the origin (protocol + host)
+        $parsed = parse_url($frontend_url);
+        $origin = isset($parsed['scheme']) && isset($parsed['host'])
+            ? $parsed['scheme'] . '://' . $parsed['host'] . (isset($parsed['port']) ? ':' . $parsed['port'] : '')
+            : '';
+
+        if (!empty($origin)) {
+            header('Access-Control-Allow-Origin: ' . $origin);
+            header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization');
+            header('Access-Control-Allow-Credentials: true');
+        }
+    } elseif (defined('WP_DEBUG') && WP_DEBUG && php_sapi_name() !== 'cli') {
+        // DEVELOPMENT ONLY: Allow localhost origins when debugging
+        // SECURITY WARNING: Never enable WP_DEBUG in production
+        $allowed_dev_origins = array(
+            'http://localhost:3000',
+            'http://localhost:3001',
+            'http://127.0.0.1:3000',
+        );
+        $request_origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+        if (in_array($request_origin, $allowed_dev_origins, true)) {
+            header('Access-Control-Allow-Origin: ' . $request_origin);
+            header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization');
+            header('Access-Control-Allow-Credentials: true');
+        }
     }
 }
 add_action('rest_api_init', function() {

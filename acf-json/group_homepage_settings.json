@@ -42,7 +42,7 @@
                 "id": ""
             },
             "default_value": "Headless WordPress Theme",
-            "maxlength": "",
+            "maxlength": 200,
             "placeholder": "Project Name",
             "prepend": "",
             "append": ""
@@ -99,7 +99,7 @@
                 "id": ""
             },
             "default_value": "View Frontend",
-            "maxlength": "",
+            "maxlength": 100,
             "placeholder": "View Frontend",
             "prepend": "",
             "append": ""
@@ -169,7 +169,7 @@
                         "id": ""
                     },
                     "default_value": "",
-                    "maxlength": "",
+                    "maxlength": 100,
                     "placeholder": "Posts",
                     "prepend": "",
                     "append": "",
@@ -190,7 +190,7 @@
                         "id": ""
                     },
                     "default_value": "",
-                    "maxlength": "",
+                    "maxlength": 200,
                     "placeholder": "/wp-json/wp/v2/posts",
                     "prepend": "",
                     "append": "",
@@ -211,7 +211,7 @@
                         "id": ""
                     },
                     "default_value": "",
-                    "maxlength": "",
+                    "maxlength": 255,
                     "placeholder": "Blog posts and articles",
                     "prepend": "",
                     "append": "",

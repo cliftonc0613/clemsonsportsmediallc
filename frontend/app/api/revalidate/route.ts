@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { revalidateLimiter, getClientIp } from "@/lib/rate-limit";
 
 /**
  * On-demand ISR Revalidation API
@@ -10,6 +11,8 @@ import { revalidatePath } from "next/cache";
  * SECURITY: POST-only endpoint. Secrets in URL query parameters (GET)
  * are logged in server access logs and can leak via referrer headers.
  *
+ * SECURITY: Rate limited to prevent brute-force secret guessing.
+ *
  * Usage:
  * POST /api/revalidate
  * Body: { "secret": "your-secret", "path": "/blog/my-post" }
@@ -17,7 +20,25 @@ import { revalidatePath } from "next/cache";
  * Or with type/slug (triggered by WordPress save_post hook):
  * Body: { "secret": "your-secret", "type": "post", "slug": "my-post" }
  */
+
+// SECURITY: Valid slug pattern - alphanumeric, hyphens, underscores only
+const VALID_SLUG_PATTERN = /^[a-z0-9_-]+$/i;
+
 export async function POST(request: NextRequest) {
+  // SECURITY: Rate limiting to prevent brute-force secret guessing
+  const clientIp = getClientIp(request);
+  const { success, reset } = revalidateLimiter.check(clientIp);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(reset) },
+      }
+    );
+  }
+
   try {
     const body = await request.json();
     const { secret, path, type, slug } = body;
@@ -28,6 +49,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Invalid revalidation secret" },
         { status: 401 }
+      );
+    }
+
+    // SECURITY: Validate slug format to prevent path injection
+    if (slug && !VALID_SLUG_PATTERN.test(slug)) {
+      return NextResponse.json(
+        { error: "Invalid slug format" },
+        { status: 400 }
       );
     }
 

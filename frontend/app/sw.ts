@@ -32,9 +32,12 @@ declare const self: ServiceWorkerGlobalScope & {
 /**
  * Background Sync plugin for offline form submissions
  * Queues failed POST requests and retries when back online
+ *
+ * SECURITY: Retention time reduced from 24 hours to 4 hours
+ * to minimize exposure of sensitive form data if device is compromised
  */
 const contactFormSync = new BackgroundSyncPlugin("contact-form-queue", {
-  maxRetentionTime: 24 * 60, // Retry for up to 24 hours (in minutes)
+  maxRetentionTime: 4 * 60, // Retry for up to 4 hours (reduced from 24h for security)
   onSync: async ({ queue }) => {
     let entry;
     while ((entry = await queue.shiftRequest())) {

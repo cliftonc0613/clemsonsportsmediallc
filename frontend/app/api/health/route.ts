@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { healthCheckLimiter, getClientIp } from '@/lib/rate-limit'
 
 /**
  * Health Check API Endpoint
@@ -12,6 +13,8 @@ import { NextRequest, NextResponse } from 'next/server'
  * SECURITY: Detailed metrics are only exposed when:
  *   1. X-Health-Detail header matches HEALTH_CHECK_SECRET env var
  *   2. Or running in development mode (NODE_ENV=development)
+ *
+ * SECURITY: Rate limited to prevent reconnaissance/DoS attacks
  */
 
 interface HealthCheck {
@@ -129,6 +132,23 @@ function determineOverallStatus(
 }
 
 export async function GET(request: NextRequest) {
+  // SECURITY: Rate limiting to prevent reconnaissance/DoS
+  const clientIp = getClientIp(request)
+  const { success, reset } = healthCheckLimiter.check(clientIp)
+
+  if (!success) {
+    return NextResponse.json(
+      { status: 'error' as const, timestamp: new Date().toISOString() },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(reset),
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+        },
+      }
+    )
+  }
+
   const showDetails = shouldShowDetails(request)
 
   try {

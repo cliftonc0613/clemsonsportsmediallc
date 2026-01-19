@@ -17,7 +17,7 @@
                 "id": ""
             },
             "default_value": "",
-            "maxlength": "",
+            "maxlength": 50,
             "placeholder": "$99\/month",
             "prepend": "",
             "append": ""
@@ -37,7 +37,7 @@
                 "id": ""
             },
             "default_value": "",
-            "maxlength": "",
+            "maxlength": 50,
             "placeholder": "2-4 weeks",
             "prepend": "",
             "append": ""
@@ -79,7 +79,7 @@
                         "id": ""
                     },
                     "default_value": "",
-                    "maxlength": "",
+                    "maxlength": 200,
                     "placeholder": "Enter a feature",
                     "prepend": "",
                     "append": "",
@@ -102,7 +102,7 @@
                 "id": ""
             },
             "default_value": "Get Started",
-            "maxlength": "",
+            "maxlength": 50,
             "placeholder": "Get Started",
             "prepend": "",
             "append": ""
@@ -122,7 +122,7 @@
                 "id": ""
             },
             "default_value": "",
-            "maxlength": "",
+            "maxlength": 500,
             "allow_in_bindings": 0,
             "placeholder": "",
             "prepend": "",

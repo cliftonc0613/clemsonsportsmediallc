@@ -301,8 +301,39 @@ self.addEventListener("push", (event) => {
 });
 
 /**
+ * Validate notification URL against whitelist
+ * SECURITY: Prevents malicious push notifications from redirecting to phishing sites
+ */
+function isValidNotificationUrl(url: string): boolean {
+  // Must be a relative path starting with /
+  if (!url.startsWith("/")) {
+    return false;
+  }
+  // Prevent protocol-relative URLs (//evil.com)
+  if (url.startsWith("//")) {
+    return false;
+  }
+  // Prevent javascript: or other protocol URLs disguised as paths
+  if (/^\/[a-zA-Z][a-zA-Z0-9+.-]*:/i.test(url)) {
+    return false;
+  }
+  // Decode and re-check for encoded attacks
+  try {
+    const decoded = decodeURIComponent(url);
+    if (decoded.startsWith("//") || /^\/[a-zA-Z][a-zA-Z0-9+.-]*:/i.test(decoded)) {
+      return false;
+    }
+  } catch {
+    // If decoding fails, reject the URL
+    return false;
+  }
+  return true;
+}
+
+/**
  * Handle notification click events
  * Opens the URL specified in the notification data
+ * SECURITY: URL is validated against whitelist before opening
  */
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
@@ -311,7 +342,9 @@ self.addEventListener("notificationclick", (event) => {
     return;
   }
 
-  const url = event.notification.data?.url || "/";
+  const rawUrl = event.notification.data?.url || "/";
+  // SECURITY: Validate URL before opening to prevent malicious redirects
+  const url = isValidNotificationUrl(rawUrl) ? rawUrl : "/";
 
   event.waitUntil(
     (async () => {
