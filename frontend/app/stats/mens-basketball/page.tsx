@@ -5,6 +5,7 @@ import {
   getACCStandings,
   getSchedule,
   getTeamLeaders,
+  getPlayerStatistics,
   CLEMSON_TEAM_ID,
 } from "@/lib/espn";
 import { StatsComparisonWidget, StandingsWidget, SeasonLeadersWidget, PlayerToWatchWidget } from "@/components/espn";
@@ -231,13 +232,8 @@ export default async function MensBasketballStatsPage() {
     const pointsLeader = clemsonLeaders.points;
     const playerId = pointsLeader.athlete.id;
 
-    // Check if this player also leads in other categories to build full stats
-    const getStatForPlayer = (leader: typeof pointsLeader | undefined): number | undefined => {
-      if (leader?.athlete.id === playerId) {
-        return leader.stat.value;
-      }
-      return undefined;
-    };
+    // Fetch actual player statistics
+    const playerStats = await getPlayerStatistics("mensBasketball", playerId);
 
     playerToWatch = {
       id: playerId,
@@ -248,15 +244,12 @@ export default async function MensBasketballStatsPage() {
       headshot: pointsLeader.athlete.headshot,
       team: clemsonLeaders.team,
       stats: {
-        ppg: pointsLeader.stat.value,
-        reb: getStatForPlayer(clemsonLeaders.rebounds),
-        ast: getStatForPlayer(clemsonLeaders.assists),
-        stl: getStatForPlayer(clemsonLeaders.steals),
-        min: getStatForPlayer(clemsonLeaders.minutes),
-        // FG% would need additional API call - use secondary stats if available
-        fgPct: pointsLeader.secondaryStats?.find(s => s.label === "FG%")
-          ? parseFloat(pointsLeader.secondaryStats.find(s => s.label === "FG%")!.value)
-          : undefined,
+        ppg: playerStats?.ppg ?? pointsLeader.stat.value,
+        reb: playerStats?.rpg,
+        ast: playerStats?.apg,
+        stl: playerStats?.spg,
+        min: playerStats?.mpg,
+        fgPct: playerStats?.fgPct,
       },
       highlight: "Top Scorer",
     };

@@ -1034,6 +1034,98 @@ const LEAGUE_PATHS: Record<SportType, string> = {
   baseball: 'baseball/leagues/college-baseball',
 } as const;
 
+/** Player statistics response from ESPN Core API */
+interface ESPNPlayerStatsResponse {
+  splits?: {
+    categories?: Array<{
+      name: string;
+      displayName: string;
+      stats: Array<{
+        name: string;
+        displayName: string;
+        shortDisplayName?: string;
+        abbreviation: string;
+        value: number;
+        displayValue: string;
+        perGameValue?: number;
+        perGameDisplayValue?: string;
+      }>;
+    }>;
+  };
+}
+
+/** Simplified player statistics */
+export interface SimplePlayerStats {
+  ppg?: number;     // Points per game
+  rpg?: number;     // Rebounds per game
+  apg?: number;     // Assists per game
+  spg?: number;     // Steals per game
+  bpg?: number;     // Blocks per game
+  mpg?: number;     // Minutes per game
+  fgPct?: number;   // Field goal percentage
+  fg3Pct?: number;  // 3-point percentage
+  ftPct?: number;   // Free throw percentage
+  topg?: number;    // Turnovers per game
+}
+
+/**
+ * Get individual player statistics for a season
+ * @param sport - Sport type
+ * @param athleteId - ESPN athlete ID
+ */
+export async function getPlayerStatistics(
+  sport: SportType,
+  athleteId: string
+): Promise<SimplePlayerStats | null> {
+  try {
+    const currentYear = new Date().getFullYear();
+    const leaguePath = LEAGUE_PATHS[sport];
+
+    // Fetch from Core API - athlete statistics endpoint
+    const statsData = await fetchESPN<ESPNPlayerStatsResponse>(
+      `${ESPN_CORE_URL}/${leaguePath}/seasons/${currentYear}/types/2/athletes/${athleteId}/statistics`,
+      { cache: CACHE_TIMES.standings }
+    );
+
+    if (!statsData?.splits?.categories) return null;
+
+    const stats: SimplePlayerStats = {};
+
+    // Helper to find a stat by multiple possible names
+    const findStat = (names: string[]): number | undefined => {
+      for (const category of statsData.splits!.categories!) {
+        for (const stat of category.stats) {
+          if (names.some(n =>
+            stat.name?.toLowerCase() === n.toLowerCase() ||
+            stat.abbreviation?.toLowerCase() === n.toLowerCase()
+          )) {
+            // Prefer per-game value if available
+            return stat.perGameValue ?? stat.value;
+          }
+        }
+      }
+      return undefined;
+    };
+
+    // Map ESPN stat names to our simplified structure
+    stats.ppg = findStat(['avgPoints', 'pointsPerGame', 'PTS', 'points']);
+    stats.rpg = findStat(['avgRebounds', 'reboundsPerGame', 'REB', 'rebounds']);
+    stats.apg = findStat(['avgAssists', 'assistsPerGame', 'AST', 'assists']);
+    stats.spg = findStat(['avgSteals', 'stealsPerGame', 'STL', 'steals']);
+    stats.bpg = findStat(['avgBlocks', 'blocksPerGame', 'BLK', 'blocks']);
+    stats.mpg = findStat(['avgMinutes', 'minutesPerGame', 'MIN', 'minutes']);
+    stats.fgPct = findStat(['fieldGoalPct', 'FG%', 'FGP']);
+    stats.fg3Pct = findStat(['threePointFieldGoalPct', '3P%', '3PT%']);
+    stats.ftPct = findStat(['freeThrowPct', 'FT%', 'FTP']);
+    stats.topg = findStat(['avgTurnovers', 'turnoversPerGame', 'TO', 'turnovers']);
+
+    return stats;
+  } catch (error) {
+    console.error(`Failed to fetch player statistics for ${athleteId}:`, error);
+    return null;
+  }
+}
+
 /**
  * Get team leaders (top players per stat category) for a team
  * Uses ESPN Core API which has season-level statistical leaders
