@@ -331,33 +331,46 @@ function WatermarkVariant({
         </div>
       </div>
 
-      {/* Player Info Section */}
+      {/* Player Info Section - Two Column Layout */}
       <div className="p-5 relative z-10">
-        <div className="flex items-center gap-4 mb-6">
-          {/* Large Headshot */}
-          <PlayerHeadshot
-            player={player}
-            initials={initials}
-            teamColor={teamColor}
-            isVisible={isVisible}
-            size="large"
-          />
+        <div className="flex flex-col sm:flex-row gap-6">
+          {/* Left: Player Info */}
+          <div className="flex items-center gap-4 flex-shrink-0">
+            {/* Large Headshot */}
+            <PlayerHeadshot
+              player={player}
+              initials={initials}
+              teamColor={teamColor}
+              isVisible={isVisible}
+              size="large"
+            />
 
-          {/* Player Details */}
-          <PlayerDetails
-            player={player}
-            teamColor={teamColor}
-            isVisible={isVisible}
-          />
+            {/* Player Details */}
+            <PlayerDetails
+              player={player}
+              teamColor={teamColor}
+              isVisible={isVisible}
+            />
+          </div>
+
+          {/* Right: Stats Grid - Fills remaining space */}
+          <div className="flex-1">
+            <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-2 h-full">
+              {stats.map((stat, index) => (
+                <AnimatedStat
+                  key={stat.key}
+                  label={stat.label}
+                  value={player.stats[stat.key]}
+                  isPercentage={stat.isPercentage}
+                  teamColor={teamColor}
+                  isVisible={isVisible}
+                  delay={200 + index * 80}
+                  size="compact"
+                />
+              ))}
+            </div>
+          </div>
         </div>
-
-        {/* Stats Grid */}
-        <StatsGrid
-          stats={stats}
-          playerStats={player.stats}
-          teamColor={teamColor}
-          isVisible={isVisible}
-        />
       </div>
     </div>
   );
@@ -830,7 +843,7 @@ interface AnimatedStatProps {
   teamColor: string;
   isVisible: boolean;
   delay: number;
-  size?: "default" | "large";
+  size?: "default" | "large" | "compact";
 }
 
 function AnimatedStat({
@@ -886,28 +899,33 @@ function AnimatedStat({
       : displayValue.toFixed(1)
     : "—";
 
+  const sizeStyles = {
+    compact: { padding: "p-2", value: "text-lg", label: "text-[10px]" },
+    default: { padding: "p-3", value: "text-2xl", label: "text-xs" },
+    large: { padding: "p-4", value: "text-2xl sm:text-3xl", label: "text-xs sm:text-sm" },
+  };
+
+  const styles = sizeStyles[size];
+
   return (
     <div
       className={cn(
         "text-center bg-gray-50 dark:bg-muted rounded-lg transition-all duration-500",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
-        size === "large" ? "p-4" : "p-3"
+        styles.padding
       )}
       style={{ transitionDelay: `${delay}ms` }}
     >
       <div
-        className={cn(
-          "font-bold tabular-nums",
-          size === "large" ? "text-2xl sm:text-3xl" : "text-2xl"
-        )}
+        className={cn("font-bold tabular-nums", styles.value)}
         style={{ color: teamColor }}
       >
         {formattedValue}
       </div>
       <div
         className={cn(
-          "text-gray-500 dark:text-muted-foreground uppercase tracking-wide mt-1 font-medium",
-          size === "large" ? "text-xs sm:text-sm" : "text-xs"
+          "text-gray-500 dark:text-muted-foreground uppercase tracking-wide mt-0.5 font-medium",
+          styles.label
         )}
       >
         {label}
