@@ -283,7 +283,7 @@ function WatermarkVariant({
       {player.jersey && (
         <div
           className={cn(
-            "absolute -left-4 top-1/2 -translate-y-1/2 pointer-events-none select-none transition-all duration-700",
+            "absolute -left-4 -top-4 pointer-events-none select-none transition-all duration-700",
             isVisible ? "opacity-[0.06]" : "opacity-0"
           )}
           style={{ color: teamColor }}
