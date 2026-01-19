@@ -7,8 +7,8 @@ import {
   getTeamLeaders,
   CLEMSON_TEAM_ID,
 } from "@/lib/espn";
-import { StatsComparisonWidget, StandingsWidget, SeasonLeadersWidget } from "@/components/espn";
-import type { ComparisonStat, ComparisonTeam } from "@/components/espn";
+import { StatsComparisonWidget, StandingsWidget, SeasonLeadersWidget, PlayerToWatchWidget } from "@/components/espn";
+import type { ComparisonStat, ComparisonTeam, PlayerToWatchData } from "@/components/espn";
 import { BodyClass } from "@/components/BodyClass";
 import { BreadcrumbSchema } from "@/components/JsonLd";
 import { AnimatedStatsGrid } from "@/components/ui/AnimatedStatBox";
@@ -225,6 +225,43 @@ export default async function MensBasketballStatsPage() {
     ];
   }
 
+  // Build Player to Watch data from team leaders (use points leader as featured player)
+  let playerToWatch: PlayerToWatchData | null = null;
+  if (clemsonLeaders?.points) {
+    const pointsLeader = clemsonLeaders.points;
+    const playerId = pointsLeader.athlete.id;
+
+    // Check if this player also leads in other categories to build full stats
+    const getStatForPlayer = (leader: typeof pointsLeader | undefined): number | undefined => {
+      if (leader?.athlete.id === playerId) {
+        return leader.stat.value;
+      }
+      return undefined;
+    };
+
+    playerToWatch = {
+      id: playerId,
+      name: pointsLeader.athlete.name,
+      shortName: pointsLeader.athlete.shortName,
+      jersey: pointsLeader.athlete.jersey,
+      position: pointsLeader.athlete.position,
+      headshot: pointsLeader.athlete.headshot,
+      team: clemsonLeaders.team,
+      stats: {
+        ppg: pointsLeader.stat.value,
+        reb: getStatForPlayer(clemsonLeaders.rebounds),
+        ast: getStatForPlayer(clemsonLeaders.assists),
+        stl: getStatForPlayer(clemsonLeaders.steals),
+        min: getStatForPlayer(clemsonLeaders.minutes),
+        // FG% would need additional API call - use secondary stats if available
+        fgPct: pointsLeader.secondaryStats?.find(s => s.label === "FG%")
+          ? parseFloat(pointsLeader.secondaryStats.find(s => s.label === "FG%")!.value)
+          : undefined,
+      },
+      highlight: "Top Scorer",
+    };
+  }
+
   return (
     <>
       <BodyClass className="page-stats" />
@@ -321,7 +358,7 @@ export default async function MensBasketballStatsPage() {
           )}
 
           {/* Row 2: Featured Widgets (Team Stats ~60% + Season Leaders ~40%) */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8 items-start">
             {/* Team Stats Comparison - 60% width */}
             <div className="lg:col-span-3">
               {awayTeam && homeTeam && comparisonStats.length > 0 ? (
@@ -403,12 +440,12 @@ export default async function MensBasketballStatsPage() {
             </div>
           </div>
 
-          {/* Row 3: Secondary Widgets (Averages 50% + Standings 50%) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Clemson Season Averages */}
-            <div>
+          {/* Row 3: Secondary Widgets (Averages + Player to Watch 50% | Standings 50%) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            {/* Clemson Season Averages + Player to Watch */}
+            <div className="space-y-6">
               {clemsonStats ? (
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden h-full">
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                   <div className="bg-[var(--clemson-purple)] px-4 py-3">
                     <h3 className="font-heading text-white text-lg">
                       Clemson Season Averages
@@ -431,12 +468,20 @@ export default async function MensBasketballStatsPage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white rounded-lg shadow-sm p-8 text-center h-full">
+                <div className="bg-white rounded-lg shadow-sm p-8 text-center">
                   <h3 className="font-heading text-xl text-[var(--clemson-purple)] mb-4">
                     Clemson Season Averages
                   </h3>
                   <p className="text-gray-500">Stats will appear during the season.</p>
                 </div>
+              )}
+
+              {/* Player to Watch */}
+              {playerToWatch && (
+                <PlayerToWatchWidget
+                  player={playerToWatch}
+                  title="PLAYER TO WATCH"
+                />
               )}
             </div>
 
