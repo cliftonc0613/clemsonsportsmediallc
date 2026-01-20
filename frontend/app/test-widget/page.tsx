@@ -21,10 +21,10 @@ const createMockGame = (state: "pre" | "in" | "post"): SimpleGame => ({
     logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/228.png",
   },
   homeTeam: {
-    id: "99",
+    id: "150",
     name: "Duke",
     abbreviation: "DUKE",
-    logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/99.png",
+    logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/150.png",
   },
   awayScore: state === "pre" ? 0 : 72,
   homeScore: state === "pre" ? 0 : 68,
