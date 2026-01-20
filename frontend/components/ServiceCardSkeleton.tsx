@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export function ServiceCardSkeleton() {
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white p-6 shadow-sm dark:bg-neutral-900">
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white p-6 shadow-sm">
       {/* Icon placeholder */}
       <Skeleton className="mb-4 h-12 w-12 rounded-lg" />
 

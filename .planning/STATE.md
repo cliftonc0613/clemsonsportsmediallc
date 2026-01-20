@@ -2,73 +2,62 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-14)
+See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Core value:** Blog content delivery and Performance & SEO
-**Current focus:** Phase 8 — PWA & Performance
+**Current focus:** v1.0 complete — planning next milestone
 
 ## Current Position
 
-Phase: 8 of 8 (PWA & Performance) ✓
-Plan: 2 of 2 ✓
-Status: All phases complete - Milestone v1.0 achieved!
-Last activity: 2026-01-15 — Phase 8 PWA & Performance complete
+Phase: v1.0 complete (9 phases shipped)
+Plan: Not started
+Status: Ready to plan v1.1
+Last activity: 2026-01-20 — v1.0 milestone shipped and archived
 
-Progress: ██████████ 100%
+Progress: ██████████ 100% (v1.0)
 
-## Performance Metrics
+## Shipped Milestones
 
-**Velocity:**
-- Total plans completed: 3
-- Average duration: ~12 minutes
-- Total execution time: ~35 minutes
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1. Foundation | 1/1 | ~5min | ~5min |
-| 2. Hero Grid | 1/1 | ~15min | ~15min |
-| 3. Content Cards | 1/1 | ~15min | ~15min |
-
-**Recent Trend:**
-- Last 5 plans: 01-01 ✓, 02-01 ✓, 03-01 ✓
-- Trend: Good progress
+- **v1.0 Sports Media Platform** (2026-01-20) — 9 phases, 12 plans
+  - Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 ## Accumulated Context
 
-### Decisions
-
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
+### Key Decisions (v1.0)
 
 - Rebuild homepage for sports content (replace StoryBrand)
 - Hierarchical categories: Sport > Content Type
 - Typography: Apotek (headlines) + Basic Sans (body) via Adobe Fonts
-- Skip newsletter for v1, focus on core content delivery
 - Flexbox for hero grid layout (600px fixed height)
 - No border radius, small gaps for newspaper feel
-- ArticleCard with 3 variants (horizontal, vertical, compact)
-- Social CTA bar with configurable links
+- ESPN API with tiered caching (30s live → 24h team info)
 
-### Components Built (Phase 3)
+### Components Built
 
-- ExclusiveBadge - Dark purple badge for exclusive content
-- ArticleCard - Versatile card with 3 variants
-- BreakingNewsSection - 4-column news grid
-- CompactArticleList - Horizontal list for sidebars
-- SocialCTABar - Social media CTA with icons
+101 React components including:
+- HeroGrid, ArticleCard, BlogCard
+- SportCategorySection, SportSectionHeader
+- ESPN widgets (GameScoreWidget, LiveScore, ScheduleWidget, StandingsWidget)
+- PWA components (RegisterPWA, PWALoadScreen, SaveOfflineButton)
+- Search (SearchCommand, SearchResultCard)
 
-### Deferred Issues
+### Tech Debt (Low Priority)
 
-None yet.
+- StoryBrand template components unused (9 files)
+- Visual breadcrumbs missing (schema exists)
+- Tag navigation not prominent in header
+- Hardcoded sport categories in homepage
 
 ### Blockers/Concerns
 
-None yet.
+None.
 
 ## Session Continuity
 
-Last session: 2026-01-14
-Stopped at: Phase 3 completed, ready for Phase 4
+Last session: 2026-01-20
+Stopped at: v1.0 milestone complete
 Resume file: None
+
+## Next Steps
+
+Run `/gsd:new-milestone` to start v1.1 planning.

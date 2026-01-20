@@ -8,24 +8,31 @@ import Image from "next/image";
  *
  * Displays a splash screen with the mobile screenshot when the PWA launches.
  * Shows a smooth fade-out animation once the app is fully loaded.
- * Only appears on PWA standalone mode or when explicitly triggered.
+ * Only appears on mobile devices in PWA standalone mode.
  */
 export default function PWALoadScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isPWA, setIsPWA] = useState(false);
+  const [shouldShow, setShouldShow] = useState(false);
 
   useEffect(() => {
+    // Check if on mobile device (user agent only, not viewport width)
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+
     // Check if running as installed PWA (standalone mode)
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as Navigator & { standalone?: boolean }).standalone === true ||
       document.referrer.includes("android-app://");
 
-    setIsPWA(isStandalone);
+    const shouldDisplay = isMobile && isStandalone;
+    setShouldShow(shouldDisplay);
 
-    // If not PWA, hide immediately
-    if (!isStandalone) {
+    // If not mobile PWA, hide immediately
+    if (!shouldDisplay) {
       setIsVisible(false);
       return;
     }
@@ -50,8 +57,8 @@ export default function PWALoadScreen() {
     }
   }, []);
 
-  // Don't render if not visible or not PWA
-  if (!isVisible || !isPWA) {
+  // Don't render if not visible or not mobile PWA
+  if (!isVisible || !shouldShow) {
     return null;
   }
 
@@ -64,8 +71,8 @@ export default function PWALoadScreen() {
     >
       <div className="pwa-load-screen__content">
         <Image
-          src="/screenshots/mobile.png"
-          alt="Loading..."
+          src="/screenshots/clemson-loading-screen.jpg"
+          alt="Clemson Sports Media"
           fill
           priority
           className="pwa-load-screen__image"

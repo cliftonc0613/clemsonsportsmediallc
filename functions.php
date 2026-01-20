@@ -19,6 +19,11 @@ define('STARTER_THEME_DIR', get_template_directory());
 define('STARTER_THEME_URI', get_template_directory_uri());
 
 /**
+ * Include additional theme files
+ */
+require_once STARTER_THEME_DIR . '/inc/blocks.php';
+
+/**
  * Theme Setup
  */
 function starter_theme_setup() {

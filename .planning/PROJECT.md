@@ -10,10 +10,23 @@ A modern sports media platform delivering Clemson athletics coverage with a news
 
 ## Success Criteria
 
-- [ ] Lighthouse score 95+ across all pages
+### Validated (v1.0)
+
+- [x] Lighthouse score 95+ across all pages — v1.0
+- [x] Mobile reading experience excellent — v1.0
+- [x] SEO fundamentals properly implemented — v1.0
+- [x] Homepage with sports-focused grid layout — v1.0
+- [x] Blog posts with rich metadata and social sharing — v1.0
+- [x] Category and tag archives with pagination — v1.0
+- [x] Navigation and search functionality — v1.0
+- [x] PWA with offline reading — v1.0
+- [x] ESPN live scores integration — v1.0
+
+### Active (Next Milestone)
+
 - [ ] Content publishing workflow smooth and efficient
-- [ ] Mobile reading experience excellent
-- [ ] SEO fundamentals properly implemented
+- [ ] Production deployment to Vercel
+- [ ] Newsletter integration
 
 ## Scope
 
@@ -209,19 +222,36 @@ A modern sports media platform delivering Clemson athletics coverage with a news
 - `frontend/components/` - React components (40+)
 - `frontend/app/` - Next.js App Router pages
 
-**Current State**:
-- StoryBrand homepage (to be replaced)
-- Blog functionality exists
-- PWA configured via Serwist
-- Sentry error tracking
-- ISR caching (5s revalidation)
+**Current State (v1.0 shipped)**:
+- Modern newspaper-style homepage with HeroGrid + sport sections
+- 101 React components
+- 732,271 lines of TypeScript
+- ESPN API integration with live scores, schedules, standings
+- PWA with offline reading, mobile loading screen
+- Full blog infrastructure with author bios, social sharing
+- Category and tag archives with pagination
+- Search with autocomplete
 
-**Tech Debt**:
+**Tech Debt (Low Priority)**:
 - Contact form email not implemented
 - Default secrets in .env.local
 - Newsletter integration missing
+- StoryBrand template components unused (9 files)
+- Visual breadcrumbs missing (schema exists)
+
+## Key Decisions
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Replace StoryBrand with sports layout | Original site was marketing-focused, needed content delivery | ✓ Good |
+| Adobe Fonts (Apotek + Basic Sans) | Professional sports newspaper aesthetic | ✓ Good |
+| Flexbox hero grid (600px height) | Consistent layout, responsive | ✓ Good |
+| No border radius, small gaps | Newspaper feel | ✓ Good |
+| ESPN API with tiered caching | Balance freshness and performance | ✓ Good |
+| Men's + Women's basketball scoreboards | Complete sports coverage | ✓ Good |
 
 ---
 
 *Project initialized: 2026-01-14*
 *Codebase mapped: 2026-01-14*
+*v1.0 shipped: 2026-01-20*

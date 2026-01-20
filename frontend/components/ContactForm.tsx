@@ -345,7 +345,7 @@ export function ContactForm({ services = [] }: ContactFormProps) {
 
         {/* Offline Status Indicator */}
         {!isOnline && (
-          <div className="flex items-center justify-center gap-2 rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
             <WifiOff className="h-4 w-4" />
             <span>You&apos;re offline. Your message will be sent when you reconnect.</span>
           </div>
@@ -353,7 +353,7 @@ export function ContactForm({ services = [] }: ContactFormProps) {
 
         {/* Queued Message Indicator */}
         {isQueuedOffline && isOnline && (
-          <div className="flex items-center justify-center gap-2 rounded-lg bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-200">
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-blue-50 p-3 text-sm text-blue-800">
             <CloudOff className="h-4 w-4" />
             <span>A message is queued and will be sent shortly...</span>
           </div>
@@ -364,7 +364,7 @@ export function ContactForm({ services = [] }: ContactFormProps) {
           <Button
             type="submit"
             size="lg"
-            className="min-w-[200px] bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+            className="min-w-[200px] bg-neutral-900 hover:bg-neutral-800"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -384,7 +384,7 @@ export function ContactForm({ services = [] }: ContactFormProps) {
         {/* Privacy Policy */}
         <p className="text-center text-sm text-muted-foreground">
           By submitting this form, you agree to our{" "}
-          <Link href="/privacy-policy" className="underline text-neutral-900 hover:text-neutral-600 dark:text-white dark:hover:text-neutral-300">
+          <Link href="/privacy-policy" className="underline text-neutral-900 hover:text-neutral-600">
             Privacy Policy
           </Link>
         </p>

@@ -138,6 +138,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // Fetch related posts (latest 3 posts excluding current)
   const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id] });
+  console.log('[DEBUG] Related Posts count:', relatedPosts.length);
 
   // Fetch adjacent posts for navigation
   const { previous: previousPost, next: nextPost } = await getAdjacentPosts(post.date, post.id);

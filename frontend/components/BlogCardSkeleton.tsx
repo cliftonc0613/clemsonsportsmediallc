@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export function BlogCardSkeleton() {
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm dark:bg-neutral-900">
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
       {/* Image skeleton */}
       <div className="relative aspect-[16/9] overflow-hidden rounded-t-2xl">
         <Skeleton className="h-full w-full" />

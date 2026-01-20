@@ -14,6 +14,9 @@ import { BlogCard } from "@/components/BlogCard";
 import { Pagination } from "@/components/Pagination";
 import { MultiStructuredData } from "@/components/structured-data";
 import { BodyClass } from "@/components/BodyClass";
+import { ScheduleWidget, StandingsWidget, LiveScore } from "@/components/espn";
+import { getSportFromCategory, getUpcomingGames, getACCStandings, getClemsonGame } from "@/lib/espn";
+import type { SportType } from "@/lib/espn-types";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
@@ -106,6 +109,27 @@ export default async function CategoryPage({
 
   const categoryName = decodeHtmlEntities(result.category.name);
   const { items: posts, totalPages, totalItems } = result;
+
+  // Check if this is a sports category and fetch ESPN data
+  const sport = getSportFromCategory(slug);
+  let espnData: {
+    upcomingGames: Awaited<ReturnType<typeof getUpcomingGames>>;
+    standings: Awaited<ReturnType<typeof getACCStandings>>;
+    currentGame: Awaited<ReturnType<typeof getClemsonGame>>;
+  } | null = null;
+
+  if (sport) {
+    try {
+      const [upcomingGames, standings, currentGame] = await Promise.all([
+        getUpcomingGames(sport, 5),
+        getACCStandings(sport),
+        getClemsonGame(sport),
+      ]);
+      espnData = { upcomingGames, standings, currentGame };
+    } catch (error) {
+      console.error("Failed to fetch ESPN data for category:", error);
+    }
+  }
 
   // Dynamic body classes
   const bodyClasses = [
@@ -218,27 +242,75 @@ export default async function CategoryPage({
         </section>
       )}
 
-      {/* Posts Grid */}
+      {/* ESPN Live Score Banner (if game in progress) */}
+      {sport && espnData?.currentGame && espnData.currentGame.status.state === "in" && (
+        <section className="py-4 bg-[var(--clemson-dark-purple)]">
+          <div className="container mx-auto px-4">
+            <LiveScore
+              sport={sport}
+              initialGame={espnData.currentGame}
+              refreshInterval={30}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Posts Grid with ESPN Sidebar */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           {posts.length > 0 ? (
-            <>
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {posts.slice(4).map((post) => (
-                  <BlogCard key={post.id} post={post} />
-                ))}
+            <div className={sport && espnData ? "lg:grid lg:grid-cols-[1fr_320px] lg:gap-8" : ""}>
+              {/* Main Content */}
+              <div>
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+                  {posts.slice(4).map((post) => (
+                    <BlogCard key={post.id} post={post} />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    basePath={`/category/${slug}`}
+                    className="mt-12"
+                  />
+                )}
               </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  basePath={`/category/${slug}`}
-                  className="mt-12"
-                />
+              {/* ESPN Sidebar (only for sports categories) */}
+              {sport && espnData && (
+                <aside className="hidden lg:block space-y-6">
+                  {/* Upcoming Games */}
+                  {espnData.upcomingGames.length > 0 && (
+                    <ScheduleWidget
+                      games={espnData.upcomingGames}
+                      sport={sport}
+                    />
+                  )}
+
+                  {/* ACC Standings */}
+                  {espnData.standings.length > 0 && (
+                    <StandingsWidget
+                      standings={espnData.standings}
+                      sport={sport}
+                      limit={10}
+                      alwaysShowClemson
+                    />
+                  )}
+
+                  {/* Next Game (if not live) */}
+                  {espnData.currentGame && espnData.currentGame.status.state === "pre" && (
+                    <LiveScore
+                      sport={sport}
+                      initialGame={espnData.currentGame}
+                      title="Next Game"
+                    />
+                  )}
+                </aside>
               )}
-            </>
+            </div>
           ) : (
             <div className="text-center py-12">
               <p className="text-lg text-gray-600">

@@ -1,6 +1,7 @@
 import { WPPost, WPCategory, WPTag } from "@/lib/wordpress";
 import { SportSectionHeader } from "./SportSectionHeader";
 import { AlternatingGrid } from "./AlternatingGrid";
+import { ReactNode } from "react";
 
 interface SportCategorySectionProps {
   posts: WPPost[];
@@ -10,6 +11,8 @@ interface SportCategorySectionProps {
   categorySlug: string;
   watermarkText?: string;
   className?: string;
+  /** Optional content to render between header and grid (e.g., scoreboard) */
+  children?: ReactNode;
 }
 
 export function SportCategorySection({
@@ -20,6 +23,7 @@ export function SportCategorySection({
   categorySlug,
   watermarkText,
   className = "",
+  children,
 }: SportCategorySectionProps) {
   if (posts.length === 0) return null;
 
@@ -31,6 +35,9 @@ export function SportCategorySection({
           categoryName={categoryName}
           watermarkText={watermarkText}
         />
+
+        {/* Optional content (e.g., scoreboard) */}
+        {children}
 
         {/* Alternating Grid Layout */}
         <AlternatingGrid posts={posts} tags={tags} categorySlug={categorySlug} />

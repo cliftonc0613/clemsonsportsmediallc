@@ -23,6 +23,11 @@ const InstagramEmbed = dynamic(
   { ssr: false }
 );
 
+const ESPNScoreEmbed = dynamic(
+  () => import("./espn/ESPNScoreEmbed").then((mod) => mod.ESPNScoreEmbed),
+  { ssr: false }
+);
+
 interface WordPressContentProps {
   html: string;
   className?: string;
@@ -46,6 +51,15 @@ interface FacebookEmbedData {
 interface InstagramEmbedData {
   id: string;
   url: string;
+}
+
+interface ESPNScoreEmbedData {
+  id: string;
+  sport: string;
+  season: string;
+  gameId: string;
+  title: string;
+  nameStyle: "short" | "full";
 }
 
 function extractYouTubeId(url: string): string | null {
@@ -237,6 +251,66 @@ function parseInstagramEmbeds(html: string): { processedHtml: string; embeds: In
   return { processedHtml, embeds };
 }
 
+/**
+ * Parse ESPN Score embeds from WordPress content
+ */
+function parseESPNScoreEmbeds(html: string): { processedHtml: string; embeds: ESPNScoreEmbedData[] } {
+  const embeds: ESPNScoreEmbedData[] = [];
+  let processedHtml = html;
+  let embedIndex = 0;
+
+  // Pattern for ESPN Score block with data attributes
+  // Matches: <div class="wp-block-espn-score" data-espn-score="true" data-sport="..." ...></div>
+  const espnPattern = /<div[^>]*class="[^"]*wp-block-espn-score[^"]*"[^>]*data-espn-score="true"[^>]*>/gi;
+
+  processedHtml = processedHtml.replace(espnPattern, (match) => {
+    // Extract data attributes from the match
+    const sportMatch = match.match(/data-sport="([^"]*)"/);
+    const seasonMatch = match.match(/data-season="([^"]*)"/);
+    const gameIdMatch = match.match(/data-game-id="([^"]*)"/);
+    const titleMatch = match.match(/data-title="([^"]*)"/);
+    const nameStyleMatch = match.match(/data-name-style="([^"]*)"/);
+
+    const sport = sportMatch?.[1] || "football";
+    const season = seasonMatch?.[1] || "";
+    const gameId = gameIdMatch?.[1] || "latest";
+    const title = titleMatch?.[1] || "";
+    const nameStyle = (nameStyleMatch?.[1] === "full" ? "full" : "short") as "short" | "full";
+
+    const id = `espn-score-${embedIndex++}`;
+    embeds.push({ id, sport, season, gameId, title, nameStyle });
+
+    return `<div data-espn-score-placeholder="${id}" class="espn-score-placeholder my-6"></div>`;
+  });
+
+  // Also handle self-closing div pattern
+  const selfClosingPattern = /<div[^>]*class="[^"]*wp-block-espn-score[^"]*"[^>]*data-espn-score="true"[^>]*><\/div>/gi;
+
+  processedHtml = processedHtml.replace(selfClosingPattern, (match) => {
+    // Skip if already processed (check for placeholder)
+    if (match.includes("espn-score-placeholder")) return match;
+
+    const sportMatch = match.match(/data-sport="([^"]*)"/);
+    const seasonMatch = match.match(/data-season="([^"]*)"/);
+    const gameIdMatch = match.match(/data-game-id="([^"]*)"/);
+    const titleMatch = match.match(/data-title="([^"]*)"/);
+    const nameStyleMatch = match.match(/data-name-style="([^"]*)"/);
+
+    const sport = sportMatch?.[1] || "football";
+    const season = seasonMatch?.[1] || "";
+    const gameId = gameIdMatch?.[1] || "latest";
+    const title = titleMatch?.[1] || "";
+    const nameStyle = (nameStyleMatch?.[1] === "full" ? "full" : "short") as "short" | "full";
+
+    const id = `espn-score-${embedIndex++}`;
+    embeds.push({ id, sport, season, gameId, title, nameStyle });
+
+    return `<div data-espn-score-placeholder="${id}" class="espn-score-placeholder my-6"></div>`;
+  });
+
+  return { processedHtml, embeds };
+}
+
 export function WordPressContent({ html, className = "" }: WordPressContentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -244,8 +318,9 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
   // Parse content: sanitize first, then embeds, then images
   // Order matters: sanitization happens first for security
   // Note: Twitter embeds are NOT parsed - they pass through and widgets.js processes them
-  const { processedHtml, youtubeEmbeds, hasTwitter, facebookEmbeds, instagramEmbeds, images } = useMemo(() => {
+  const { processedHtml, youtubeEmbeds, hasTwitter, facebookEmbeds, instagramEmbeds, espnScoreEmbeds, images } = useMemo(() => {
     // First sanitize the HTML to prevent XSS attacks
+    // This also strips Related Posts sections from WordPress plugins
     const sanitizedHtml = sanitizeWordPressHtml(html);
 
     // Parse YouTube embeds
@@ -258,8 +333,11 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
     const facebookResult = parseFacebookEmbeds(youtubeResult.processedHtml);
     const instagramResult = parseInstagramEmbeds(facebookResult.processedHtml);
 
+    // Parse ESPN Score embeds
+    const espnScoreResult = parseESPNScoreEmbeds(instagramResult.processedHtml);
+
     // Finally parse images from the fully processed HTML
-    const imageResult = replaceImagesWithPlaceholders(instagramResult.processedHtml);
+    const imageResult = replaceImagesWithPlaceholders(espnScoreResult.processedHtml);
 
     return {
       processedHtml: imageResult.html,
@@ -267,6 +345,7 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
       hasTwitter,
       facebookEmbeds: facebookResult.embeds,
       instagramEmbeds: instagramResult.embeds,
+      espnScoreEmbeds: espnScoreResult.embeds,
       images: imageResult.images,
     };
   }, [html]);
@@ -307,7 +386,7 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
   }, [mounted, hasTwitter]);
 
   return (
-    <div ref={containerRef} className={className}>
+    <div ref={containerRef} className={className} suppressHydrationWarning>
       {/* suppressHydrationWarning: Server uses regex sanitization, client uses DOMPurify.
           Content is intentionally re-sanitized on client for security. */}
       <div dangerouslySetInnerHTML={{ __html: processedHtml }} suppressHydrationWarning />
@@ -344,6 +423,20 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
           key={embed.id}
           targetId={embed.id}
           url={embed.url}
+          containerRef={containerRef}
+        />
+      ))}
+
+      {/* Render ESPN Score embeds via portals */}
+      {mounted && espnScoreEmbeds.map((embed) => (
+        <ESPNScoreEmbedPortal
+          key={embed.id}
+          targetId={embed.id}
+          sport={embed.sport}
+          season={embed.season}
+          gameId={embed.gameId}
+          title={embed.title}
+          nameStyle={embed.nameStyle}
           containerRef={containerRef}
         />
       ))}
@@ -513,6 +606,55 @@ function InstagramEmbedPortal({
 
   return createPortal(
     <InstagramEmbed url={url} />,
+    portalTarget
+  );
+}
+
+interface ESPNScoreEmbedPortalProps {
+  targetId: string;
+  sport: string;
+  season: string;
+  gameId: string;
+  title: string;
+  nameStyle: "short" | "full";
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}
+
+function ESPNScoreEmbedPortal({
+  targetId,
+  sport,
+  season,
+  gameId,
+  title,
+  nameStyle,
+  containerRef,
+}: ESPNScoreEmbedPortalProps) {
+  const [portalTarget, setPortalTarget] = useState<Element | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const element = containerRef.current.querySelector(
+      `[data-espn-score-placeholder="${targetId}"]`
+    );
+
+    if (element && !element.hasAttribute("data-portal-ready")) {
+      element.setAttribute("data-portal-ready", "true");
+      element.textContent = "";
+      setPortalTarget(element);
+    }
+  }, [containerRef, targetId]);
+
+  if (!portalTarget) return null;
+
+  return createPortal(
+    <ESPNScoreEmbed
+      sport={sport as "football" | "mensBasketball" | "womensBasketball" | "baseball"}
+      gameId={gameId}
+      season={season || undefined}
+      title={title || undefined}
+      nameStyle={nameStyle}
+    />,
     portalTarget
   );
 }
