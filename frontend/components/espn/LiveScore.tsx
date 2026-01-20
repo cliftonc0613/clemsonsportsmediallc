@@ -236,7 +236,7 @@ export function LiveScore({
 
         {/* Venue and Broadcast */}
         {(game.venue || (game.broadcasts && game.broadcasts.length > 0)) && (
-          <div className="mt-4 pt-3 border-t border-gray-700 text-center text-xs text-gray-500">
+          <div className="mt-4 pt-3 border-t border-gray-700 text-center text-xs text-white">
             {game.venue && <span>{game.venue.name}</span>}
             {game.venue && game.broadcasts && game.broadcasts.length > 0 && (
               <span className="mx-2">•</span>
