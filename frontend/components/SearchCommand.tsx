@@ -92,6 +92,16 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
     router.push(url);
   }, [router, setOpen]);
 
+  // Handle view all results
+  const handleViewAll = useCallback(() => {
+    if (query.trim()) {
+      setOpen(false);
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+      setQuery("");
+      setResults([]);
+    }
+  }, [query, router, setOpen]);
+
   // Group results by type
   const groupedResults = enabledTypes.reduce((acc, typeConfig) => {
     const typeResults = results.filter(r => r.type === typeConfig.type);
@@ -101,12 +111,25 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
     return acc;
   }, [] as { config: SearchableType; results: SearchResult[] }[]);
 
+  // Handle Enter key when no item is selected
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && query.trim() && !loading) {
+      // Check if any item is highlighted/selected - if not, go to search page
+      const selectedItem = document.querySelector('[cmdk-item][data-selected="true"]');
+      if (!selectedItem) {
+        e.preventDefault();
+        handleViewAll();
+      }
+    }
+  }, [query, loading, handleViewAll]);
+
   return (
     <CommandDialog open={isOpen} onOpenChange={setOpen} className="sm:max-w-[50vw]">
       <CommandInput
         placeholder="Search posts, pages, services..."
         value={query}
         onValueChange={setQuery}
+        onKeyDown={handleKeyDown}
       />
       <CommandList>
         {loading && (
@@ -163,6 +186,21 @@ export function SearchCommand({ open: controlledOpen, onOpenChange }: SearchComm
             <p>Start typing to search...</p>
             <p className="mt-1 text-xs">
               Press <kbd className="rounded border bg-muted px-1">Esc</kbd> to close
+            </p>
+          </div>
+        )}
+
+        {/* View all results link */}
+        {!loading && query && results.length > 0 && (
+          <div className="border-t p-3 text-center">
+            <button
+              onClick={handleViewAll}
+              className="text-sm font-medium text-[var(--clemson-orange)] hover:underline"
+            >
+              View all results for &quot;{query}&quot; →
+            </button>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Press <kbd className="rounded border bg-muted px-1">Enter</kbd> to view all results
             </p>
           </div>
         )}

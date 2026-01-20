@@ -1,0 +1,21 @@
+{
+  "name": "clemsonsportsmedia-theme",
+  "version": "1.0.0",
+  "description": "Clemson Sports Media WordPress theme with custom Gutenberg blocks",
+  "private": true,
+  "scripts": {
+    "build": "wp-scripts build --webpack-src-dir=src --output-path=blocks",
+    "start": "wp-scripts start --webpack-src-dir=src --output-path=blocks",
+    "format": "wp-scripts format",
+    "lint:js": "wp-scripts lint-js",
+    "lint:css": "wp-scripts lint-style",
+    "packages-update": "wp-scripts packages-update"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.28.6",
+    "@wordpress/scripts": "^28.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

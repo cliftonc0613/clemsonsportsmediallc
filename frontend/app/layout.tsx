@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { DM_Sans, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -12,6 +11,8 @@ import { Providers } from "./providers";
 import RegisterPWA from "@/components/RegisterPWA";
 import PWALoadScreen from "@/components/PWALoadScreen.enhanced";
 import RouteProgress from "@/components/RouteProgress";
+import { NotificationPrompt } from "@/components/NotificationPrompt";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
@@ -32,24 +33,6 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
 };
-
-const dmSans = DM_Sans({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-heading",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrains = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -104,6 +87,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Preconnect hints for critical third-party origins */}
+        <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
+
+        {/* Adobe Fonts - Apotek (headlines) & Basic Sans (body) with font-display:swap */}
+        <link rel="stylesheet" href="https://use.typekit.net/rlq1tnk.css" />
+
+        {/* DNS prefetch for WordPress API (dynamic based on environment) */}
+        <link rel="dns-prefetch" href="//wp.clemsonsportsmediacom.local" />
+
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -112,9 +105,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#0a0a0a" />
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body
-        className={`${dmSans.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
-      >
+      <body className="font-sans antialiased">
         <Providers>
           <PWALoadScreen />
           <RegisterPWA />
@@ -126,10 +117,12 @@ export default function RootLayout({
           <ScrollAnimations />
           <div className="flex min-h-screen flex-col">
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow pt-16">{children}</main>
             <Footer />
           </div>
           <Toaster />
+          <NotificationPrompt />
+          <PWAInstallPrompt />
         </Providers>
       </body>
     </html>

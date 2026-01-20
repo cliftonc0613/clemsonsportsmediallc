@@ -1,0 +1,294 @@
+/**
+ * ESPN ScoreCard Block - Editor Styles
+ *
+ * Matches the Next.js ScoreCard component design for
+ * consistent preview in the WordPress block editor.
+ */
+
+/* Block container */
+.espn-score-block {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 4px;
+}
+
+/* Inline Controls */
+.espn-score-controls {
+  background: #f0f0f1;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.espn-score-controls__row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.espn-score-controls__field {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+}
+
+.espn-score-controls__field--wide {
+  flex: 1;
+  min-width: 200px;
+}
+
+.espn-score-controls__field label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #1e1e1e;
+  margin-bottom: 4px;
+}
+
+.espn-score-controls__field .components-select-control__input {
+  min-height: 36px;
+}
+
+.espn-score-controls__field .components-base-control__field {
+  margin-bottom: 0;
+}
+
+/* Scorecard container */
+.espn-scorecard {
+  width: 100%;
+}
+
+/* Header title */
+.espn-scorecard__title {
+  font-family: 'Oswald', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-style: italic;
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: #522D80; /* Clemson Purple */
+  text-align: center;
+  margin: 0 0 2rem 0;
+  padding: 0;
+}
+
+/* Three-column layout */
+.espn-scorecard__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+/* Team column */
+.espn-scorecard__team {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+
+/* Team logo */
+.espn-scorecard__logo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+/* Logo placeholder when no logo available */
+.espn-scorecard__logo-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: 'Oswald', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+/* Team name */
+.espn-scorecard__team-name {
+  font-family: 'Oswald', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+/* Ranking badge */
+.espn-scorecard__rank {
+  color: #6b7280;
+  font-weight: 400;
+}
+
+/* Team record */
+.espn-scorecard__record {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* Score display */
+.espn-scorecard__score {
+  font-family: 'Oswald', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 3.5rem;
+  line-height: 1;
+  margin-top: 1rem;
+}
+
+/* Center info column */
+.espn-scorecard__info {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+
+/* Period label */
+.espn-scorecard__period-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+/* Quarter/Half dots container */
+.espn-scorecard__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Individual dot */
+.espn-scorecard__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  display: inline-block;
+}
+
+/* Active dot */
+.espn-scorecard__dot--active {
+  background-color: #F56600; /* Clemson Orange */
+}
+
+/* Game status */
+.espn-scorecard__status {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  color: #111827;
+}
+
+/* Date display */
+.espn-scorecard__date {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-top: 1rem;
+}
+
+/* Venue display */
+.espn-scorecard__venue {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  line-height: 1.4;
+}
+
+/* Broadcast info */
+.espn-scorecard__broadcast {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  color: #374151;
+}
+
+.espn-scorecard__broadcast span {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+/* Bottom border */
+.espn-scorecard__border {
+  border-bottom: 2px solid #e5e7eb;
+  margin-top: 2rem;
+}
+
+/* Responsive adjustments for editor */
+@media (max-width: 782px) {
+  .espn-scorecard__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "away home"
+      "info info";
+    gap: 1rem;
+  }
+
+  /* Away team - top left (first child) */
+  .espn-scorecard__content > *:nth-child(1) {
+    grid-area: away;
+  }
+
+  /* Center info - full width below (second child) */
+  .espn-scorecard__content > *:nth-child(2) {
+    grid-area: info;
+  }
+
+  /* Home team - top right (third child) */
+  .espn-scorecard__content > *:nth-child(3) {
+    grid-area: home;
+  }
+
+  .espn-scorecard__team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .espn-scorecard__logo,
+  .espn-scorecard__logo-placeholder {
+    width: 80px;
+    height: 80px;
+  }
+
+  .espn-scorecard__logo-placeholder {
+    font-size: 1.5rem;
+  }
+
+  .espn-scorecard__team-name {
+    font-size: 1rem;
+  }
+
+  .espn-scorecard__score {
+    font-size: 2.5rem;
+  }
+
+  .espn-scorecard__title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Placeholder styling */
+.espn-score-block .components-placeholder {
+  min-height: 200px;
+}
+
+.espn-score-block .components-placeholder__label {
+  font-family: 'Oswald', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Loading state */
+.espn-score-block .components-spinner {
+  margin: 0 auto 1rem;
+}

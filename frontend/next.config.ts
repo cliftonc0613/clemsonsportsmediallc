@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 import withSerwistInit from "@serwist/next";
+import path from "path";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -55,6 +56,12 @@ const nextConfig: NextConfig = {
         hostname: 'wp.clemsonsportsmediacom.local',
         pathname: '/wp-content/uploads/**',
       },
+      // ESPN CDN for team logos
+      {
+        protocol: 'https',
+        hostname: 'a.espncdn.com',
+        pathname: '/i/teamlogos/**',
+      },
       // Production WordPress domain (uncomment when deploying)
       // {
       //   protocol: 'https',
@@ -67,6 +74,17 @@ const nextConfig: NextConfig = {
   // Environment variables that should be available on the client
   env: {
     WORDPRESS_API_URL: process.env.WORDPRESS_API_URL,
+  },
+
+  // Fix module resolution for CSS imports (tw-animate-css)
+  // Next.js incorrectly detects workspace root due to ~/package-lock.json
+  webpack: (config) => {
+    // Ensure node_modules in frontend directory is resolved first
+    config.resolve.modules = [
+      path.resolve(__dirname, 'node_modules'),
+      'node_modules',
+    ];
+    return config;
   },
 };
 

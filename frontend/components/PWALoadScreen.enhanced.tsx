@@ -19,10 +19,11 @@ interface LoadingStage {
  * - Critical resource prefetch completion tracking
  * - Graceful timeout fallback
  * - Better state management with refs for cleanup
+ * - Only shows on mobile devices
  */
 export default function PWALoadScreenEnhanced() {
-  // Start with null to avoid hydration mismatch, then determine PWA status
-  const [isPWA, setIsPWA] = useState<boolean | null>(null);
+  // Start with null to avoid hydration mismatch, then determine display status
+  const [shouldShow, setShouldShow] = useState<boolean | null>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -60,15 +61,22 @@ export default function PWALoadScreenEnhanced() {
   useEffect(() => {
     mountedRef.current = true;
 
+    // Check if on mobile device (user agent only, not viewport width)
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+
     // Check if running as installed PWA (standalone mode)
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as Navigator & { standalone?: boolean }).standalone === true ||
       document.referrer.includes("android-app://");
 
-    setIsPWA(isStandalone);
+    const shouldDisplay = isMobile && isStandalone;
+    setShouldShow(shouldDisplay);
 
-    if (!isStandalone) {
+    if (!shouldDisplay) {
       setIsVisible(false);
       return;
     }
@@ -171,9 +179,9 @@ export default function PWALoadScreenEnhanced() {
     };
   }, [completeStage, isLoaded]);
 
-  // Hide if: explicitly not a PWA, or loading is complete
-  // Show if: isPWA is null (checking) or true (confirmed PWA) AND still visible
-  if (isPWA === false || !isVisible) {
+  // Hide if: not confirmed as mobile PWA, or loading is complete
+  // Only show if shouldShow is explicitly true (confirmed mobile PWA) AND still visible
+  if (!shouldShow || !isVisible) {
     return null;
   }
 
@@ -189,8 +197,8 @@ export default function PWALoadScreenEnhanced() {
     >
       <div className="pwa-load-screen__content">
         <Image
-          src="/screenshots/mobile.png"
-          alt=""
+          src="/screenshots/clemson-loading-screen.jpg"
+          alt="Clemson Sports Media"
           fill
           priority
           className="pwa-load-screen__image"

@@ -22,8 +22,8 @@ export function ServiceCard({
   return (
     <Card className="flex h-full flex-col p-6">
       {/* Icon */}
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800">
-        <Zap className="h-7 w-7 text-neutral-700 dark:text-neutral-300" />
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-neutral-100">
+        <Zap className="h-7 w-7 text-neutral-700" />
       </div>
 
       {/* Title */}
@@ -40,7 +40,7 @@ export function ServiceCard({
       {showCta && (
         <Link
           href={ctaLink}
-          className="inline-flex items-center gap-1 font-semibold text-neutral-800 transition-colors hover:text-neutral-600 dark:text-white dark:hover:text-neutral-300"
+          className="inline-flex items-center gap-1 font-semibold text-neutral-800 transition-colors hover:text-neutral-600"
         >
           {ctaText}
           <ArrowRight className="h-4 w-4" />

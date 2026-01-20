@@ -235,4 +235,112 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// =============================================================================
+// Push Notification Handlers
+// =============================================================================
+
+/**
+ * Handle incoming push notifications
+ * Expected payload format:
+ * {
+ *   title: string;
+ *   body: string;
+ *   icon?: string;
+ *   badge?: string;
+ *   url?: string;
+ *   tag?: string;
+ *   data?: object;
+ * }
+ */
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  let payload;
+  try {
+    payload = event.data.json();
+  } catch {
+    // If not JSON, treat as plain text
+    payload = {
+      title: "Clemson Sports Media",
+      body: event.data.text(),
+    };
+  }
+
+  const {
+    title = "Clemson Sports Media",
+    body = "New update available",
+    icon = "/icons/icon-192x192.png",
+    badge = "/icons/icon-96x96.png",
+    url = "/",
+    tag = "csm-notification",
+    data = {},
+  } = payload;
+
+  // Service Worker NotificationOptions (extends standard with vibrate/actions)
+  const options = {
+    body,
+    icon,
+    badge,
+    tag,
+    data: { ...data, url },
+    vibrate: [100, 50, 100],
+    actions: [
+      {
+        action: "open",
+        title: "Read More",
+      },
+      {
+        action: "close",
+        title: "Dismiss",
+      },
+    ],
+    requireInteraction: false,
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+/**
+ * Handle notification click events
+ * Opens the URL specified in the notification data
+ */
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  if (event.action === "close") {
+    return;
+  }
+
+  const url = event.notification.data?.url || "/";
+
+  event.waitUntil(
+    (async () => {
+      // Try to focus an existing window with the URL
+      const windowClients = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
+
+      for (const client of windowClients) {
+        if (client.url === url && "focus" in client) {
+          return client.focus();
+        }
+      }
+
+      // Open a new window if none found
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(url);
+      }
+    })()
+  );
+});
+
+/**
+ * Handle notification close events (for analytics)
+ */
+self.addEventListener("notificationclose", (event) => {
+  // Could send analytics here if needed
+  console.log("[SW] Notification closed:", event.notification.tag);
+});
+
 serwist.addEventListeners();

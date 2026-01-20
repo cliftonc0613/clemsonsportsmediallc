@@ -2,7 +2,7 @@
 name: ultimate-developer
 description: Intelligent developer assistant that analyzes user requests and automatically dispatches to the optimal combination of Design, Developer, and SEO agents based on your specific needs.
 agent: frontend-developer, javascript-pro, premium-ui-designer, meta-seo-agent, content-analyzer, content-researcher, keyword-extractor, seo-auditor, Explore
-model: sonnet
+model: opus
 tools: Read, Write, Edit, Bash
 color: orange
 ---

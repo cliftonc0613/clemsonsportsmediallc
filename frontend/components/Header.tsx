@@ -1,16 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { Menu, Phone, Mail, Calendar, Facebook, Linkedin, Search } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Menu, Search, ChevronDown } from "lucide-react";
 import { SearchCommand } from "@/components/SearchCommand";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
 import {
   Sheet,
@@ -18,204 +21,428 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
 import Headroom from "headroom.js";
 
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/services", label: "Services" },
-  { href: "/blog", label: "Blog" },
-  { href: "/testimonials", label: "Testimonials" },
-  { href: "/contact", label: "Contact" },
+// Sports categories for navigation
+const sportCategories = [
+  { slug: "football", label: "Football" },
+  { slug: "basketball", label: "Basketball" },
+  { slug: "baseball", label: "Baseball" },
+  { slug: "softball", label: "Softball" },
+  { slug: "soccer", label: "Soccer" },
+  { slug: "recruiting", label: "Recruiting" },
 ];
 
-// Contact info - can be moved to env vars or CMS later
-const contactInfo = {
-  phone: "(123) 456-7890",
-  email: "hello@example.com",
-  schedulingUrl: "/contact",
-};
+// Roster categories for navigation
+const rosterCategories = [
+  { slug: "football", label: "Football" },
+  { slug: "mens-basketball", label: "Men's Basketball" },
+  { slug: "mens-soccer", label: "Men's Soccer" },
+  { slug: "womens-soccer", label: "Women's Soccer" },
+  { slug: "baseball", label: "Baseball" },
+  { slug: "softball", label: "Softball" },
+];
 
-// Social links
-const socialLinks = [
-  { href: "https://facebook.com", icon: Facebook, label: "Facebook" },
-  { href: "https://linkedin.com", icon: Linkedin, label: "LinkedIn" },
+// Schedule categories for navigation
+const scheduleCategories = [
+  { slug: "football", label: "Football" },
+  { slug: "mens-basketball", label: "Men's Basketball" },
+  { slug: "mens-soccer", label: "Men's Soccer" },
+];
+
+// Main navigation items (without Sports dropdown)
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/atp-podcast", label: "ATP Podcast" },
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [sportsExpanded, setSportsExpanded] = useState(false);
+  const [rostersExpanded, setRostersExpanded] = useState(false);
+  const [schedulesExpanded, setSchedulesExpanded] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const pathname = usePathname();
+
+  // Check if current page is a category page (for Sports active state)
+  const isSportsActive = pathname.startsWith("/category/");
+  const isRostersActive = pathname.startsWith("/roster/");
+  const isSchedulesActive = pathname.startsWith("/schedule/");
+
+  // Check if a nav item is active
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   useEffect(() => {
     if (!headerRef.current) return;
 
-    // Initialize Headroom - handles show/hide on scroll
-    // Background opacity and blur transitions are handled via CSS classes
-    // See globals.css: .headroom--top and .headroom--not-top
-    const headroom = new Headroom(headerRef.current, {
-      offset: 100,
-      tolerance: {
-        up: 10,
-        down: 5,
-      },
-      classes: {
-        initial: "headroom",
-        pinned: "headroom--pinned",
-        unpinned: "headroom--unpinned",
-        top: "headroom--top",
-        notTop: "headroom--not-top",
-        frozen: "headroom--frozen",
-      },
-    });
-    headroom.init();
+    let headroom: Headroom | null = null;
+
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      if (!headerRef.current) return;
+
+      headroom = new Headroom(headerRef.current, {
+        offset: 100,
+        tolerance: {
+          up: 10,
+          down: 5,
+        },
+        classes: {
+          initial: "headroom",
+          pinned: "headroom--pinned",
+          unpinned: "headroom--unpinned",
+          top: "headroom--top",
+          notTop: "headroom--not-top",
+          frozen: "headroom--frozen",
+        },
+      });
+      headroom.init();
+    }, 0);
 
     return () => {
-      headroom.destroy();
+      clearTimeout(timeoutId);
+      if (headroom) {
+        headroom.destroy();
+      }
     };
   }, []);
 
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 z-50 w-full border-b bg-neutral-200/95 backdrop-blur supports-[backdrop-filter]:bg-neutral-200/80"
+      className="fixed top-0 z-50 w-full border-b-4 border-[var(--clemson-purple)] bg-[var(--clemson-orange)]"
     >
-      <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center justify-between px-4 transition-[height] duration-300">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold tracking-tight text-neutral-900">Starter WP</span>
+      <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center px-4 transition-[height] duration-300 relative">
+        {/* Logo - White version for orange background */}
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/images/clemson-sports-media-horz-white-logo@3x.png"
+            alt="Clemson Sports Media"
+            width={280}
+            height={60}
+            className="h-10 md:h-12 w-auto"
+            priority
+          />
         </Link>
 
-        {/* Desktop Navigation */}
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            {navItems.map((item) => (
-              <NavigationMenuItem key={item.href}>
-                <NavigationMenuLink asChild>
-                  <Link href={item.href}>{item.label}</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            ))}
+        {/* Desktop Navigation - Centered */}
+        <NavigationMenu className="hidden lg:flex absolute left-1/2 -translate-x-1/2">
+          <NavigationMenuList className="gap-1">
+            {/* Home Link */}
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link
+                  href="/"
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
+                  `}
+                >
+                  Home
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            {/* Sports Dropdown */}
+            <NavigationMenuItem>
+              <NavigationMenuTrigger
+                className="font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent text-white hover:text-white/80"
+              >
+                Sports
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="grid w-[400px] grid-cols-2 gap-2 p-4 bg-white shadow-lg">
+                  {sportCategories.map((sport) => (
+                    <Link
+                      key={sport.slug}
+                      href={`/category/${sport.slug}`}
+                      className={`block px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors rounded
+                        ${pathname === `/category/${sport.slug}`
+                          ? "bg-[var(--clemson-dark-purple)] text-white"
+                          : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-purple)]/10 hover:text-[var(--clemson-purple)]"
+                        }
+                      `}
+                    >
+                      {sport.label}
+                    </Link>
+                  ))}
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            {/* Rosters Dropdown */}
+            <NavigationMenuItem>
+              <NavigationMenuTrigger
+                className="font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent text-white hover:text-white/80"
+              >
+                Rosters
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="grid w-[400px] grid-cols-2 gap-2 p-4 bg-white shadow-lg">
+                  {rosterCategories.map((roster) => (
+                    <Link
+                      key={roster.slug}
+                      href={`/roster/${roster.slug}`}
+                      className={`block px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors rounded
+                        ${pathname === `/roster/${roster.slug}` || pathname.includes(`/roster/2025/${roster.slug}`)
+                          ? "bg-[var(--clemson-dark-purple)] text-white"
+                          : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-purple)]/10 hover:text-[var(--clemson-purple)]"
+                        }
+                      `}
+                    >
+                      {roster.label}
+                    </Link>
+                  ))}
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            {/* Schedules Dropdown */}
+            <NavigationMenuItem>
+              <NavigationMenuTrigger
+                className="font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent text-white hover:text-white/80"
+              >
+                Schedules
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="grid w-[300px] grid-cols-1 gap-2 p-4 bg-white shadow-lg">
+                  {scheduleCategories.map((schedule) => (
+                    <Link
+                      key={schedule.slug}
+                      href={`/schedule/${schedule.slug}`}
+                      className={`block px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors rounded
+                        ${pathname === `/schedule/${schedule.slug}`
+                          ? "bg-[var(--clemson-dark-purple)] text-white"
+                          : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-purple)]/10 hover:text-[var(--clemson-purple)]"
+                        }
+                      `}
+                    >
+                      {schedule.label}
+                    </Link>
+                  ))}
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            {/* ATP Podcast Link */}
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link
+                  href="/atp-podcast"
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/atp-podcast") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
+                  `}
+                >
+                  ATP Podcast
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Desktop Search, Theme Toggle & CTA */}
-        <div className="hidden items-center gap-2 md:flex">
+        {/* Desktop Search */}
+        <div className="hidden items-center gap-2 lg:flex ml-auto">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
-            className="text-neutral-900 hover:bg-neutral-300/50"
+            className="text-white hover:text-white/80 hover:bg-white/20"
           >
             <Search className="h-5 w-5" />
-          </Button>
-          <ThemeToggle className="text-neutral-900 hover:bg-neutral-300/50" />
-          <Button asChild className="bg-white text-neutral-900 hover:bg-neutral-100 border border-neutral-300">
-            <Link href="/contact">Get in Touch</Link>
           </Button>
         </div>
 
-        {/* Mobile Search, Theme Toggle & Menu */}
-        <div className="flex items-center gap-1 md:hidden">
+        {/* Mobile Search & Menu */}
+        <div className="flex items-center gap-1 lg:hidden ml-auto">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
-            className="text-neutral-900 hover:bg-neutral-300/50"
+            className="text-white hover:text-white/80 hover:bg-white/20"
           >
             <Search className="h-5 w-5" />
           </Button>
-          <ThemeToggle className="text-neutral-900 hover:bg-neutral-300/50" />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Toggle menu" className="text-neutral-900 hover:bg-neutral-300/50">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Toggle menu"
+                className="text-white hover:text-white/80 hover:bg-white/20"
+              >
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-          <SheetContent side="right" className="flex w-[320px] flex-col overflow-y-auto sm:w-[400px]">
-            <SheetHeader className="border-b pb-4">
-              <SheetTitle className="text-left text-xl font-bold">
-                Menu
-              </SheetTitle>
-            </SheetHeader>
+            <SheetContent side="right" className="flex w-[320px] flex-col overflow-y-auto sm:w-[400px] bg-[var(--clemson-orange)] border-l-0">
+              <SheetHeader className="border-b-2 border-white/30 pb-4">
+                <SheetTitle className="text-left font-heading text-xl font-bold text-white">
+                  Menu
+                </SheetTitle>
+              </SheetHeader>
 
-            {/* Navigation Links */}
-            <nav className="flex flex-col space-y-1 px-4 pt-4">
-              {navItems.map((item) => (
+              {/* Mobile Navigation Links */}
+              <nav className="flex flex-col space-y-1 pt-4">
+                {/* Home */}
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  href="/"
                   onClick={() => setIsOpen(false)}
-                  className="py-2 text-sm font-bold uppercase tracking-wider text-foreground/90 transition-colors hover:text-foreground"
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                    ${isActive("/")
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
+                    }
+                  `}
                 >
-                  {item.label}
+                  Home
                 </Link>
-              ))}
-            </nav>
 
-            {/* CTA Button */}
-            <div className="px-4 pt-4">
-              <Button asChild className="w-full rounded-lg py-6 text-sm font-bold uppercase tracking-wider bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100">
-                <Link href="/contact" onClick={() => setIsOpen(false)}>
-                  Get in Touch
-                </Link>
-              </Button>
-            </div>
-
-            {/* Contact Section */}
-            <div className="mt-6 border-t px-4 pt-6">
-              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider">
-                Contact
-              </h3>
-              <div className="space-y-3">
-                <a
-                  href={`tel:${contactInfo.phone.replace(/[^0-9]/g, "")}`}
-                  className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <Phone className="h-4 w-4" />
-                  {contactInfo.phone}
-                </a>
-                <a
-                  href={`mailto:${contactInfo.email}`}
-                  className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <Mail className="h-4 w-4" />
-                  {contactInfo.email}
-                </a>
-                <Link
-                  href={contactInfo.schedulingUrl}
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 text-sm font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <Calendar className="h-4 w-4" />
-                  Schedule Meeting
-                </Link>
-              </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="mt-6 border-t px-4 pb-8 pt-6">
-              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider">
-                Connect
-              </h3>
-              <div className="flex gap-3">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-foreground/50 hover:text-foreground"
+                {/* Sports Collapsible */}
+                <div>
+                  <button
+                    onClick={() => setSportsExpanded(!sportsExpanded)}
+                    className={`w-full flex items-center justify-between py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                      ${isSportsActive
+                        ? "bg-white/20 border-l-4 border-white"
+                        : "hover:bg-white/10"
+                      }
+                    `}
                   >
-                    <social.icon className="h-5 w-5" />
-                  </a>
-                ))}
+                    <span>Sports</span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${sportsExpanded ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {sportsExpanded && (
+                    <div className="bg-white/10 py-2">
+                      {sportCategories.map((sport) => (
+                        <Link
+                          key={sport.slug}
+                          href={`/category/${sport.slug}`}
+                          onClick={() => setIsOpen(false)}
+                          className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors text-white
+                            ${pathname === `/category/${sport.slug}`
+                              ? "bg-white/20"
+                              : "hover:bg-white/10"
+                            }
+                          `}
+                        >
+                          {sport.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Rosters Collapsible */}
+                <div>
+                  <button
+                    onClick={() => setRostersExpanded(!rostersExpanded)}
+                    className={`w-full flex items-center justify-between py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                      ${isRostersActive
+                        ? "bg-white/20 border-l-4 border-white"
+                        : "hover:bg-white/10"
+                      }
+                    `}
+                  >
+                    <span>Rosters</span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${rostersExpanded ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {rostersExpanded && (
+                    <div className="bg-white/10 py-2">
+                      {rosterCategories.map((roster) => (
+                        <Link
+                          key={roster.slug}
+                          href={`/roster/${roster.slug}`}
+                          onClick={() => setIsOpen(false)}
+                          className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors text-white
+                            ${pathname === `/roster/${roster.slug}` || pathname.includes(`/roster/2025/${roster.slug}`)
+                              ? "bg-white/20"
+                              : "hover:bg-white/10"
+                            }
+                          `}
+                        >
+                          {roster.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Schedules Collapsible */}
+                <div>
+                  <button
+                    onClick={() => setSchedulesExpanded(!schedulesExpanded)}
+                    className={`w-full flex items-center justify-between py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                      ${isSchedulesActive
+                        ? "bg-white/20 border-l-4 border-white"
+                        : "hover:bg-white/10"
+                      }
+                    `}
+                  >
+                    <span>Schedules</span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${schedulesExpanded ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {schedulesExpanded && (
+                    <div className="bg-white/10 py-2">
+                      {scheduleCategories.map((schedule) => (
+                        <Link
+                          key={schedule.slug}
+                          href={`/schedule/${schedule.slug}`}
+                          onClick={() => setIsOpen(false)}
+                          className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors text-white
+                            ${pathname === `/schedule/${schedule.slug}`
+                              ? "bg-white/20"
+                              : "hover:bg-white/10"
+                            }
+                          `}
+                        >
+                          {schedule.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* ATP Podcast */}
+                <Link
+                  href="/atp-podcast"
+                  onClick={() => setIsOpen(false)}
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                    ${isActive("/atp-podcast")
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
+                    }
+                  `}
+                >
+                  ATP Podcast
+                </Link>
+              </nav>
+
+              {/* Mobile Search CTA */}
+              <div className="mt-auto border-t border-white/30 pt-6 px-4 pb-8">
+                <Button
+                  onClick={() => {
+                    setIsOpen(false);
+                    setSearchOpen(true);
+                  }}
+                  className="w-full bg-white hover:bg-white/90 text-[var(--clemson-orange)] font-heading font-bold uppercase tracking-wider"
+                >
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
               </div>
-            </div>
-          </SheetContent>
+            </SheetContent>
           </Sheet>
         </div>
 

@@ -33,9 +33,9 @@ interface StakesSectionProps {
 const variantStyles = {
   stakes: {
     section: "bg-muted/30",
-    badge: "border-neutral-300 bg-neutral-100 text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300",
-    card: "border-neutral-200 hover:border-neutral-300 dark:border-neutral-700 dark:hover:border-neutral-600",
-    icon: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
+    badge: "border-neutral-300 bg-neutral-100 text-neutral-700",
+    card: "border-neutral-200 hover:border-neutral-300",
+    icon: "bg-neutral-100 text-neutral-600",
   },
   stats: {
     section: "bg-muted/30 border-y",
