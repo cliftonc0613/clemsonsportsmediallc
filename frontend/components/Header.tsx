@@ -81,25 +81,35 @@ export function Header() {
   useEffect(() => {
     if (!headerRef.current) return;
 
-    const headroom = new Headroom(headerRef.current, {
-      offset: 100,
-      tolerance: {
-        up: 10,
-        down: 5,
-      },
-      classes: {
-        initial: "headroom",
-        pinned: "headroom--pinned",
-        unpinned: "headroom--unpinned",
-        top: "headroom--top",
-        notTop: "headroom--not-top",
-        frozen: "headroom--frozen",
-      },
-    });
-    headroom.init();
+    let headroom: Headroom | null = null;
+
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      if (!headerRef.current) return;
+
+      headroom = new Headroom(headerRef.current, {
+        offset: 100,
+        tolerance: {
+          up: 10,
+          down: 5,
+        },
+        classes: {
+          initial: "headroom",
+          pinned: "headroom--pinned",
+          unpinned: "headroom--unpinned",
+          top: "headroom--top",
+          notTop: "headroom--not-top",
+          frozen: "headroom--frozen",
+        },
+      });
+      headroom.init();
+    }, 0);
 
     return () => {
-      headroom.destroy();
+      clearTimeout(timeoutId);
+      if (headroom) {
+        headroom.destroy();
+      }
     };
   }, []);
 

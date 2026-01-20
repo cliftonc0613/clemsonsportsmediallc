@@ -4,10 +4,16 @@ import { useState, useEffect } from "react";
 import { GameScoreWidget } from "@/components/espn";
 import type { SimpleGame } from "@/lib/espn-types";
 
-const mockGame: SimpleGame = {
+// Use a fixed date to avoid hydration mismatch
+const FIXED_GAME_DATE = "2025-01-20T19:00:00.000Z";
+
+const createMockGame = (state: "pre" | "in" | "post"): SimpleGame => ({
   id: "test-123",
-  date: new Date().toISOString(),
-  status: { state: "pre", detail: "" },
+  date: FIXED_GAME_DATE,
+  status: {
+    state,
+    detail: state === "in" ? "2nd Half - 10:30" : "",
+  },
   awayTeam: {
     id: "228",
     name: "Clemson",
@@ -20,16 +26,22 @@ const mockGame: SimpleGame = {
     abbreviation: "DUKE",
     logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/99.png",
   },
-  awayScore: 0,
-  homeScore: 0,
+  awayScore: state === "pre" ? 0 : 72,
+  homeScore: state === "pre" ? 0 : 68,
   venue: { name: "Cameron Indoor Stadium" },
   broadcasts: ["ESPN"],
-};
+});
 
 export default function TestWidgetPage() {
   const [gameState, setGameState] = useState<"pre" | "in" | "post">("pre");
   const [key, setKey] = useState(0);
   const [postGameTimer, setPostGameTimer] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure client-side only rendering to avoid hydration issues
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Track when we switch to "post" to show countdown
   useEffect(() => {
@@ -49,21 +61,25 @@ export default function TestWidgetPage() {
     }
   }, [gameState, key]);
 
-  const game: SimpleGame = {
-    ...mockGame,
-    status: {
-      state: gameState,
-      detail: gameState === "in" ? "2nd Half - 10:30" : "",
-    },
-    awayScore: gameState === "pre" ? 0 : 72,
-    homeScore: gameState === "pre" ? 0 : 68,
-  };
-
   // Reset component when state changes to simulate fresh mount
   const handleStateChange = (newState: "pre" | "in" | "post") => {
     setGameState(newState);
     setKey((k) => k + 1);
   };
+
+  const game = createMockGame(gameState);
+
+  // Show loading state during SSR to avoid hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-[var(--clemson-purple)] p-8">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-2xl font-bold text-white">GameScoreWidget Test Page</h1>
+          <p className="text-gray-400 mt-4">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--clemson-purple)] p-8">
