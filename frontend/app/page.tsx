@@ -150,7 +150,7 @@ export default async function HomePage() {
               categorySlug={cat.slug}
             >
               {isBasketball && (mensBasketballGame || womensBasketballGame) && (
-                <div className="mb-8 space-y-4">
+                <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {mensBasketballGame && (
                     <GameScoreWidget
                       sport="mensBasketball"
