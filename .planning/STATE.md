@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-01-14)
 
 **Core value:** Blog content delivery and Performance & SEO
-**Current focus:** Phase 8 — PWA & Performance
+**Current focus:** Phase 9 — ESPN API Integration
 
 ## Current Position
 
-Phase: 8 of 8 (PWA & Performance) ✓
+Phase: 9 of 9 (ESPN API Integration)
 Plan: 2 of 2 ✓
-Status: All phases complete - Milestone v1.0 achieved!
-Last activity: 2026-01-15 — Phase 8 PWA & Performance complete
+Status: Phase 9 complete - ESPN widgets fully integrated
+Last activity: 2026-01-20 — Completed 09-02-PLAN.md (women's basketball gap closure)
 
 Progress: ██████████ 100%
 
@@ -51,13 +51,21 @@ Recent decisions affecting current work:
 - ArticleCard with 3 variants (horizontal, vertical, compact)
 - Social CTA bar with configurable links
 
-### Components Built (Phase 3)
+### Components Built
 
+**Phase 3:**
 - ExclusiveBadge - Dark purple badge for exclusive content
 - ArticleCard - Versatile card with 3 variants
 - BreakingNewsSection - 4-column news grid
 - CompactArticleList - Horizontal list for sidebars
 - SocialCTABar - Social media CTA with icons
+
+**Phase 9 (ESPN API Integration):**
+- ESPN API service layer with caching
+- GameScoreWidget for live/upcoming game scores
+- ScheduleWidget for upcoming games list
+- StandingsWidget for ACC conference standings
+- Homepage integration with basketball scorecards (men's + women's)
 
 ### Deferred Issues
 
@@ -69,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-14
-Stopped at: Phase 3 completed, ready for Phase 4
+Last session: 2026-01-20
+Stopped at: Completed 09-02-PLAN.md (ESPN API women's basketball gap closure)
 Resume file: None
