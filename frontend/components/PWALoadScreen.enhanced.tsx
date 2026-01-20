@@ -61,11 +61,11 @@ export default function PWALoadScreenEnhanced() {
   useEffect(() => {
     mountedRef.current = true;
 
-    // Check if on mobile device
+    // Check if on mobile device (user agent only, not viewport width)
     const isMobile =
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
-      ) || window.matchMedia("(max-width: 768px)").matches;
+      );
 
     // Check if running as installed PWA (standalone mode)
     const isStandalone =
