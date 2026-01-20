@@ -6,6 +6,7 @@ import type { SimpleGame, SportType } from "@/lib/espn-types";
 interface CompactScoreCardProps {
   game: SimpleGame;
   sport: SportType;
+  title?: string;
   className?: string;
 }
 
@@ -17,6 +18,7 @@ interface CompactScoreCardProps {
 export function CompactScoreCard({
   game,
   sport,
+  title,
   className,
 }: CompactScoreCardProps) {
   const isPreGame = game.status.state === "pre";
@@ -82,6 +84,11 @@ export function CompactScoreCard({
         className
       )}
     >
+      {title && (
+        <div className="text-center text-xs text-white uppercase tracking-widest mb-2">
+          {title}
+        </div>
+      )}
       <div className="flex items-center justify-center gap-4 md:gap-6">
         {/* Away Team Section */}
         <div className="flex items-center gap-3 md:gap-4">

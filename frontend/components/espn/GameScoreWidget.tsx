@@ -98,5 +98,5 @@ export function GameScoreWidget({
     );
   }
 
-  return <CompactScoreCard game={game} sport={sport} className={className} />;
+  return <CompactScoreCard game={game} sport={sport} title={title} className={className} />;
 }

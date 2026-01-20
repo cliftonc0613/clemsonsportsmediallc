@@ -156,6 +156,7 @@ export default async function HomePage() {
                       sport="mensBasketball"
                       initialGame={mensBasketballGame}
                       postGameDuration={30}
+                      title="Men's Basketball"
                     />
                   )}
                   {womensBasketballGame && (
@@ -163,6 +164,7 @@ export default async function HomePage() {
                       sport="womensBasketball"
                       initialGame={womensBasketballGame}
                       postGameDuration={30}
+                      title="Women's Basketball"
                     />
                   )}
                 </div>
