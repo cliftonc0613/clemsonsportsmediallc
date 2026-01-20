@@ -189,8 +189,8 @@ export default function PWALoadScreenEnhanced() {
     >
       <div className="pwa-load-screen__content">
         <Image
-          src="/screenshots/mobile.png"
-          alt=""
+          src="/screenshots/clemson-loading-screen.jpg"
+          alt="Clemson Sports Media"
           fill
           priority
           className="pwa-load-screen__image"
