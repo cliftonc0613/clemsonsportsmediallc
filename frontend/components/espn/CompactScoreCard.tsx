@@ -92,8 +92,8 @@ export function CompactScoreCard({
       <div className="flex items-center justify-center gap-4 md:gap-6">
         {/* Away Team Section */}
         <div className="flex items-center gap-3 md:gap-4">
-          {/* Rank + Team Name + Record - desktop only */}
-          <div className="hidden lg:block text-right">
+          {/* Rank + Team Name + Record - desktop only (1260px+) */}
+          <div className="hidden min-[1260px]:block text-right">
             <div className="flex items-center justify-end gap-2">
               {game.awayTeam.rank && (
                 <span className="text-gray-400 text-sm md:text-base">
@@ -185,8 +185,8 @@ export function CompactScoreCard({
             </span>
           )}
 
-          {/* Team Name + Record - desktop only */}
-          <div className="hidden lg:block text-left">
+          {/* Team Name + Record - desktop only (1260px+) */}
+          <div className="hidden min-[1260px]:block text-left">
             <div className="flex items-center gap-2">
               <span
                 className={cn(
