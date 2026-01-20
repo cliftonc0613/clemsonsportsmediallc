@@ -2,7 +2,7 @@ import { getPosts, getCategories, getTags, getPostsByCategorySlug, isWordPressCo
 import type { WPPost, WPCategory, WPTag } from "@/lib/wordpress";
 import { getClemsonGameById } from "@/lib/espn";
 import type { SimpleGame } from "@/lib/espn-types";
-import { CompactScoreCard } from "@/components/espn";
+import { CompactScoreCard, LiveScore } from "@/components/espn";
 
 // Category slugs
 const BREAKING_NEWS_CATEGORY = "breaking-news";
@@ -143,10 +143,15 @@ export default async function HomePage() {
               categorySlug={cat.slug}
             >
               {isBasketball && mensBasketballGame && (
-                <div className="mb-8">
+                <div className="mb-8 space-y-4">
                   <CompactScoreCard
                     game={mensBasketballGame}
                     sport="mensBasketball"
+                  />
+                  <LiveScore
+                    sport="mensBasketball"
+                    initialGame={mensBasketballGame}
+                    title="Live Score"
                   />
                 </div>
               )}
