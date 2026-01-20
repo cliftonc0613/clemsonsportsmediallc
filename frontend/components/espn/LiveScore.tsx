@@ -157,7 +157,7 @@ export function LiveScore({
               {game.awayTeam.abbreviation}
             </span>
             {game.awayTeam.rank && (
-              <span className="text-gray-500 text-xs">#{game.awayTeam.rank}</span>
+              <span className="text-white text-xs">#{game.awayTeam.rank}</span>
             )}
           </div>
 
@@ -171,7 +171,7 @@ export function LiveScore({
                     minute: "2-digit",
                   })}
                 </span>
-                <span className="text-gray-400 text-xs">
+                <span className="text-white text-xs">
                   {new Date(game.date).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
@@ -229,7 +229,7 @@ export function LiveScore({
               {game.homeTeam.abbreviation}
             </span>
             {game.homeTeam.rank && (
-              <span className="text-gray-500 text-xs">#{game.homeTeam.rank}</span>
+              <span className="text-white text-xs">#{game.homeTeam.rank}</span>
             )}
           </div>
         </div>
