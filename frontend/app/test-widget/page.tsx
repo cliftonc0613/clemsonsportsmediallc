@@ -9,26 +9,31 @@ const FIXED_GAME_DATE = "2025-01-20T19:00:00.000Z";
 
 const createMockGame = (state: "pre" | "in" | "post"): SimpleGame => ({
   id: "test-123",
+  name: "Clemson at Duke",
+  shortName: "CLEM @ DUKE",
   date: FIXED_GAME_DATE,
   status: {
     state,
     detail: state === "in" ? "2nd Half - 10:30" : "",
+    completed: state === "post",
   },
   awayTeam: {
     id: "228",
     name: "Clemson",
+    displayName: "Clemson Tigers",
     abbreviation: "CLEM",
     logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/228.png",
   },
   homeTeam: {
     id: "150",
     name: "Duke",
+    displayName: "Duke Blue Devils",
     abbreviation: "DUKE",
     logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/150.png",
   },
   awayScore: state === "pre" ? 0 : 72,
   homeScore: state === "pre" ? 0 : 68,
-  venue: { name: "Cameron Indoor Stadium" },
+  venue: { name: "Cameron Indoor Stadium", city: "Durham, NC" },
   broadcasts: ["ESPN"],
 });
 

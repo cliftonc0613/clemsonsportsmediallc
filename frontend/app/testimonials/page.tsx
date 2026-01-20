@@ -29,11 +29,11 @@ function ValueBlock({
 }) {
   return (
     <div className="flex flex-col justify-center p-6">
-      <span className="mb-4 inline-block w-fit rounded-full bg-neutral-100 px-4 py-1.5 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+      <span className="mb-4 inline-block w-fit rounded-full bg-neutral-100 px-4 py-1.5 text-sm font-medium text-neutral-700">
         {badge}
       </span>
-      <h3 className="text-2xl font-bold text-neutral-900 dark:text-white">{heading}</h3>
-      <p className="mt-3 leading-relaxed text-neutral-600 dark:text-neutral-300">{description}</p>
+      <h3 className="text-2xl font-bold text-neutral-900">{heading}</h3>
+      <p className="mt-3 leading-relaxed text-neutral-600">{description}</p>
     </div>
   );
 }
@@ -64,10 +64,10 @@ function FeaturedTestimonial({ testimonial }: { testimonial: WPTestimonial }) {
       : clientName.slice(0, 2).toUpperCase();
 
   return (
-    <div className="rounded-2xl bg-neutral-50 p-8 dark:bg-neutral-800 md:p-12">
+    <div className="rounded-2xl bg-neutral-50 p-8 md:p-12">
       <div className="mx-auto max-w-3xl text-center">
         {/* Badge */}
-        <span className="mb-6 inline-block rounded-full bg-neutral-200 px-4 py-1.5 text-sm font-medium text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300">
+        <span className="mb-6 inline-block rounded-full bg-neutral-200 px-4 py-1.5 text-sm font-medium text-neutral-700">
           Client Success Story
         </span>
 
@@ -76,35 +76,35 @@ function FeaturedTestimonial({ testimonial }: { testimonial: WPTestimonial }) {
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
               key={i}
-              className={`h-5 w-5 ${i < rating ? "fill-yellow-400 text-yellow-400" : "fill-neutral-200 text-neutral-200 dark:fill-neutral-600 dark:text-neutral-600"}`}
+              className={`h-5 w-5 ${i < rating ? "fill-yellow-400 text-yellow-400" : "fill-neutral-200 text-neutral-200"}`}
             />
           ))}
         </div>
 
         {/* Quote */}
         {quote && (
-          <blockquote className="text-xl leading-relaxed text-neutral-800 dark:text-white md:text-2xl">
+          <blockquote className="text-xl leading-relaxed text-neutral-800 md:text-2xl">
             &ldquo;{quote}&rdquo;
           </blockquote>
         )}
 
         {/* Author */}
         <div className="mt-8 flex items-center justify-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-300 text-sm font-semibold text-neutral-700 dark:bg-neutral-600 dark:text-neutral-200">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-300 text-sm font-semibold text-neutral-700">
             {initials}
           </div>
           <div className="text-left">
-            <p className="font-semibold text-neutral-900 dark:text-white">{clientName}</p>
-            {company && <p className="text-sm text-neutral-500 dark:text-neutral-400">{company}</p>}
+            <p className="font-semibold text-neutral-900">{clientName}</p>
+            {company && <p className="text-sm text-neutral-500">{company}</p>}
           </div>
         </div>
 
         {/* Bottom heading */}
         <div className="mt-10">
-          <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
+          <h3 className="text-xl font-bold text-neutral-900">
             Outstanding Results
           </h3>
-          <p className="mt-2 text-neutral-600 dark:text-neutral-300">
+          <p className="mt-2 text-neutral-600">
             Delivering exceptional services that exceed expectations every time.
           </p>
         </div>
@@ -200,12 +200,12 @@ export default async function TestimonialsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-neutral-100 py-16 dark:bg-neutral-800 md:py-24">
+      <section className="bg-neutral-100 py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl">
             Ready to Be Our Next Success Story?
           </h2>
-          <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-300">
+          <p className="mt-4 text-lg text-neutral-600">
             Join our growing list of satisfied clients. Let&apos;s discuss how
             we can help your business thrive.
           </p>

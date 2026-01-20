@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export function TestimonialCardSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-2xl border bg-white p-6 shadow-sm dark:bg-neutral-900">
+    <div className="flex h-full flex-col rounded-2xl border bg-white p-6 shadow-sm">
       {/* Quote */}
       <div className="mb-6 flex-1 space-y-2">
         <Skeleton className="h-4 w-full" />

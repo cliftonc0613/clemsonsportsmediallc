@@ -201,14 +201,14 @@ function DefaultVariant({
     <div
       ref={containerRef}
       className={cn(
-        "bg-white dark:bg-card rounded-lg shadow-sm overflow-hidden",
+        "bg-white rounded-lg shadow-sm overflow-hidden",
         className
       )}
     >
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-border">
+      <div className="px-5 py-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-base font-bold text-gray-900 dark:text-foreground tracking-wide">
+          <h3 className="font-heading text-base font-bold text-gray-900 tracking-wide">
             {title}
           </h3>
           {player.highlight && (
@@ -275,7 +275,7 @@ function WatermarkVariant({
     <div
       ref={containerRef}
       className={cn(
-        "bg-white dark:bg-card rounded-lg shadow-sm overflow-hidden relative",
+        "bg-white rounded-lg shadow-sm overflow-hidden relative",
         className
       )}
     >
@@ -312,9 +312,9 @@ function WatermarkVariant({
       )}
 
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-border relative z-10">
+      <div className="px-5 py-4 border-b border-gray-100 relative z-10">
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-base font-bold text-gray-900 dark:text-foreground tracking-wide">
+          <h3 className="font-heading text-base font-bold text-gray-900 tracking-wide">
             {title}
           </h3>
           {player.highlight && (
@@ -394,14 +394,14 @@ function SidePanelVariant({
     <div
       ref={containerRef}
       className={cn(
-        "bg-white dark:bg-card rounded-lg shadow-sm overflow-hidden",
+        "bg-white rounded-lg shadow-sm overflow-hidden",
         className
       )}
     >
       {/* Header - Full Width */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-border">
+      <div className="px-5 py-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-base font-bold text-gray-900 dark:text-foreground tracking-wide">
+          <h3 className="font-heading text-base font-bold text-gray-900 tracking-wide">
             {title}
           </h3>
           {player.highlight && (
@@ -486,19 +486,19 @@ function SidePanelVariant({
                     />
                   </div>
                 )}
-                <span className="text-xs font-medium text-gray-500 dark:text-muted-foreground uppercase tracking-wide">
+                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   {player.team.abbreviation}
                 </span>
               </div>
 
               {/* Name */}
-              <h4 className="text-xl font-heading font-bold text-gray-900 dark:text-foreground leading-tight">
+              <h4 className="text-xl font-heading font-bold text-gray-900 leading-tight">
                 {player.name}
               </h4>
 
               {/* Position only (jersey is in side panel) */}
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-sm text-gray-600 dark:text-muted-foreground font-medium">
+                <span className="text-sm text-gray-600 font-medium">
                   {player.position}
                 </span>
               </div>
@@ -536,7 +536,7 @@ function HeroVariant({
     <div
       ref={containerRef}
       className={cn(
-        "bg-white dark:bg-card rounded-lg shadow-sm overflow-hidden relative",
+        "bg-white rounded-lg shadow-sm overflow-hidden relative",
         className
       )}
     >
@@ -573,9 +573,9 @@ function HeroVariant({
       )}
 
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-border relative z-10">
+      <div className="px-5 py-4 border-b border-gray-100 relative z-10">
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-base font-bold text-gray-900 dark:text-foreground tracking-wide">
+          <h3 className="font-heading text-base font-bold text-gray-900 tracking-wide">
             {title}
           </h3>
           {player.highlight && (
@@ -623,24 +623,24 @@ function HeroVariant({
                   />
                 </div>
               )}
-              <span className="text-sm font-medium text-gray-500 dark:text-muted-foreground uppercase tracking-wide">
+              <span className="text-sm font-medium text-gray-500 uppercase tracking-wide">
                 {player.team.abbreviation}
               </span>
             </div>
 
             {/* Name - Extra Large */}
-            <h4 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900 dark:text-foreground leading-tight text-center sm:text-left">
+            <h4 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900 leading-tight text-center sm:text-left">
               {player.name}
             </h4>
 
             {/* Position & Jersey */}
             <div className="flex items-center gap-3 mt-2">
-              <span className="text-base text-gray-600 dark:text-muted-foreground font-medium">
+              <span className="text-base text-gray-600 font-medium">
                 {player.position}
               </span>
               {player.jersey && (
                 <>
-                  <span className="text-gray-300 dark:text-border">•</span>
+                  <span className="text-gray-300">•</span>
                   <span
                     className="text-lg font-bold"
                     style={{ color: teamColor }}
@@ -776,24 +776,24 @@ function PlayerDetails({ player, teamColor, isVisible }: PlayerDetailsProps) {
             />
           </div>
         )}
-        <span className="text-xs font-medium text-gray-500 dark:text-muted-foreground uppercase tracking-wide">
+        <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
           {player.team.abbreviation}
         </span>
       </div>
 
       {/* Name */}
-      <h4 className="text-xl font-heading font-bold text-gray-900 dark:text-foreground leading-tight">
+      <h4 className="text-xl font-heading font-bold text-gray-900 leading-tight">
         {player.name}
       </h4>
 
       {/* Position & Jersey */}
       <div className="flex items-center gap-2 mt-1">
-        <span className="text-sm text-gray-600 dark:text-muted-foreground font-medium">
+        <span className="text-sm text-gray-600 font-medium">
           {player.position}
         </span>
         {player.jersey && (
           <>
-            <span className="text-gray-300 dark:text-border">•</span>
+            <span className="text-gray-300">•</span>
             <span
               className="text-sm font-bold"
               style={{ color: teamColor }}
@@ -910,7 +910,7 @@ function AnimatedStat({
   return (
     <div
       className={cn(
-        "text-center bg-gray-50 dark:bg-muted rounded-lg transition-all duration-500",
+        "text-center bg-gray-50 rounded-lg transition-all duration-500",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
         styles.padding
       )}
@@ -924,7 +924,7 @@ function AnimatedStat({
       </div>
       <div
         className={cn(
-          "text-gray-500 dark:text-muted-foreground uppercase tracking-wide mt-0.5 font-medium",
+          "text-gray-500 uppercase tracking-wide mt-0.5 font-medium",
           styles.label
         )}
       >
