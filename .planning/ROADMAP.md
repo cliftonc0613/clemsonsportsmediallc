@@ -161,10 +161,11 @@ Key deliverables:
 **Goal**: Integrate ESPN public API for live sports data
 **Depends on**: Phase 8
 **Research**: Complete (API documentation reviewed)
-**Plans**: 1 plan
+**Plans**: 2 plans
 
 Plans:
-- [ ] 09-01: ESPN API Service Layer & Components
+- [x] 09-01: ESPN API Service Layer & Components
+- [ ] 09-02: Add Women's Basketball to Homepage (gap closure)
 
 Key deliverables:
 - ESPN API service layer with caching
@@ -175,6 +176,7 @@ Key deliverables:
 - LiveScore component with auto-refresh
 - Homepage and category page integration
 - Error handling and fallbacks
+- Women's basketball scoreboard on homepage
 
 ## Progress
 
@@ -191,7 +193,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 6. Archive Pages | 1/1 | Complete | 2026-01-15 |
 | 7. Navigation & Search | 2/2 | Complete | 2026-01-15 |
 | 8. PWA & Performance | 2/2 | Complete | 2026-01-15 |
-| 9. ESPN API Integration | 0/1 | In Progress | - |
+| 9. ESPN API Integration | 1/2 | In Progress | - |
 
 ---
 
