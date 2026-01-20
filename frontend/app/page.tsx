@@ -46,12 +46,19 @@ export default async function HomePage() {
   let tags: WPTag[] = [];
   let sportPosts: Record<string, WPPost[]> = {};
   let mensBasketballGame: SimpleGame | null = null;
+  let womensBasketballGame: SimpleGame | null = null;
 
   // Fetch basketball game data (current game or next upcoming game)
   try {
     mensBasketballGame = await getClemsonGameById("mensBasketball", "latest");
   } catch (error) {
     console.error("Failed to fetch men's basketball game:", error);
+  }
+
+  try {
+    womensBasketballGame = await getClemsonGameById("womensBasketball", "latest");
+  } catch (error) {
+    console.error("Failed to fetch women's basketball game:", error);
   }
 
   if (isWordPressConfigured()) {
@@ -142,13 +149,22 @@ export default async function HomePage() {
               categoryName={cat.name}
               categorySlug={cat.slug}
             >
-              {isBasketball && mensBasketballGame && (
-                <div className="mb-8">
-                  <GameScoreWidget
-                    sport="mensBasketball"
-                    initialGame={mensBasketballGame}
-                    postGameDuration={30}
-                  />
+              {isBasketball && (mensBasketballGame || womensBasketballGame) && (
+                <div className="mb-8 space-y-4">
+                  {mensBasketballGame && (
+                    <GameScoreWidget
+                      sport="mensBasketball"
+                      initialGame={mensBasketballGame}
+                      postGameDuration={30}
+                    />
+                  )}
+                  {womensBasketballGame && (
+                    <GameScoreWidget
+                      sport="womensBasketball"
+                      initialGame={womensBasketballGame}
+                      postGameDuration={30}
+                    />
+                  )}
                 </div>
               )}
             </SportCategorySection>
