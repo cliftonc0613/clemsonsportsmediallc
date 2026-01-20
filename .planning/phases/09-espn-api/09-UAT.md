@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 09-espn-api
 source: 09-01-PLAN.md (features discovered via codebase analysis)
 started: 2026-01-18T14:30:00Z
@@ -57,7 +57,14 @@ skipped: 0
   reason: "User reported: there is not women basketball scoreboard"
   severity: major
   test: 1
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "Homepage only fetches and displays men's basketball game data - women's basketball not included in SPORT_CATEGORIES and no womensBasketballGame fetch exists"
+  artifacts:
+    - path: "frontend/app/page.tsx"
+      issue: "SPORT_CATEGORIES only has generic 'basketball' slug; only mensBasketballGame is fetched; scoreboard only renders men's basketball data"
+    - path: "frontend/lib/espn.ts"
+      issue: "ESPN library fully supports women's basketball but homepage never calls getClemsonGameById for womensBasketball"
+  missing:
+    - "Add women's basketball category or handle within basketball section"
+    - "Add womensBasketballGame fetch: getClemsonGameById('womensBasketball', 'latest')"
+    - "Add conditional rendering for women's basketball GameScoreWidget"
+  debug_session: "agent-a4e62d7"
