@@ -179,9 +179,9 @@ export default function PWALoadScreenEnhanced() {
     };
   }, [completeStage, isLoaded]);
 
-  // Hide if: explicitly not a mobile PWA, or loading is complete
-  // Show if: shouldShow is null (checking) or true (confirmed mobile PWA) AND still visible
-  if (shouldShow === false || !isVisible) {
+  // Hide if: not confirmed as mobile PWA, or loading is complete
+  // Only show if shouldShow is explicitly true (confirmed mobile PWA) AND still visible
+  if (!shouldShow || !isVisible) {
     return null;
   }
 
