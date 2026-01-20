@@ -12,6 +12,7 @@ export { ESPNScoreEmbed } from "./ESPNScoreEmbed";
 export { ScheduleWidget } from "./ScheduleWidget";
 export { StandingsWidget } from "./StandingsWidget";
 export { LiveScore } from "./LiveScore";
+export { GameScoreWidget } from "./GameScoreWidget";
 export { StatsComparisonWidget } from "./StatsComparisonWidget";
 export type { ComparisonStat, ComparisonTeam } from "./StatsComparisonWidget";
 export { SeasonLeadersWidget } from "./SeasonLeadersWidget";

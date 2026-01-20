@@ -15,6 +15,8 @@ interface LiveScoreProps {
   /** Custom title */
   title?: string;
   className?: string;
+  /** Callback when game data is updated (for parent components tracking state) */
+  onGameUpdate?: (game: SimpleGame) => void;
 }
 
 /**
@@ -29,6 +31,7 @@ export function LiveScore({
   refreshInterval = 30,
   title,
   className,
+  onGameUpdate,
 }: LiveScoreProps) {
   const [game, setGame] = useState<SimpleGame | null>(initialGame || null);
   const [loading, setLoading] = useState(!initialGame);
@@ -46,6 +49,7 @@ export function LiveScore({
 
       const gameData: SimpleGame = await response.json();
       setGame(gameData);
+      onGameUpdate?.(gameData);
       setLastUpdated(new Date());
       setError(null);
     } catch (err) {
@@ -54,7 +58,7 @@ export function LiveScore({
     } finally {
       setLoading(false);
     }
-  }, [sport]);
+  }, [sport, onGameUpdate]);
 
   // Initial fetch
   useEffect(() => {
