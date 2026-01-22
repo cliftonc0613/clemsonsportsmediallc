@@ -90,6 +90,9 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
         </div>
       </div>
 
+      {/* Separator */}
+      <div className="border-t border-gray-200 mb-8" />
+
       {/* Recent Posts Widget */}
       {recentPosts.length > 0 && (
         <RecentPostsWidget posts={recentPosts} currentPostId={currentPostId} />
