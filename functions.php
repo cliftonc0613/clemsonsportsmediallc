@@ -380,19 +380,26 @@ add_filter('preview_post_link', 'starter_theme_preview_link', 10, 2);
  * Redirect published post permalinks to Next.js frontend
  * Makes "View Post" button in admin link to the frontend
  */
-function starter_theme_frontend_permalink($permalink, $post) {
+function starter_theme_frontend_permalink($permalink, $post_or_id) {
     // Only modify in admin context
     if (!is_admin()) {
         return $permalink;
     }
 
-    $frontend_url = defined('STARTER_FRONTEND_URL')
-        ? STARTER_FRONTEND_URL
-        : get_option('starter_frontend_url', '');
+    // Handle both post object and post ID (page_link passes ID)
+    if (is_numeric($post_or_id)) {
+        $post = get_post($post_or_id);
+    } else {
+        $post = $post_or_id;
+    }
 
-    if (empty($frontend_url)) {
+    if (!$post) {
         return $permalink;
     }
+
+    $frontend_url = defined('STARTER_FRONTEND_URL')
+        ? STARTER_FRONTEND_URL
+        : get_option('starter_frontend_url', 'http://localhost:3000');
 
     // Build frontend URL based on post type
     switch ($post->post_type) {
