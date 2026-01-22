@@ -196,13 +196,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="container mx-auto px-4">
           {/* Featured Image - Hanging */}
           {featuredImageUrl && (
-            <div className="mx-auto max-w-[1200px] mb-8">
+            <div className="mx-auto max-w-[1100px] mb-8">
               <div className="relative aspect-video overflow-hidden">
                 <BlurImage
                   src={featuredImageUrl}
                   alt={title}
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1100px) 100vw, 1100px"
                   className="object-cover"
                   priority
                 />
