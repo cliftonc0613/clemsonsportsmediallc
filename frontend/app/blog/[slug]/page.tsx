@@ -215,7 +215,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           {/* Title & Meta Below Image */}
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-[1250px] text-center">
             {/* Category Badges */}
             {categories.length > 0 && (
               <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
@@ -254,7 +254,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Article Content */}
       <article className="py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-[1250px]">
             <WordPressContent
               html={contentHtml}
               className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:font-bold prose-a:text-[var(--clemson-orange)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-blockquote:border-l-[var(--clemson-purple)] prose-blockquote:border-l-4"
@@ -262,12 +262,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Post Meta: Categories & Tags */}
-          <div className="mx-auto max-w-3xl mt-12 pt-8 border-t border-gray-200">
+          <div className="mx-auto max-w-[1250px] mt-12 pt-8 border-t border-gray-200">
             <PostMeta categories={categories} tags={tags} />
           </div>
 
           {/* Site Blurb */}
-          <div className="mx-auto max-w-3xl mt-8 pt-8 border-t border-gray-200">
+          <div className="mx-auto max-w-[1250px] mt-8 pt-8 border-t border-gray-200">
             <p className="text-gray-600 leading-relaxed">
               Stay up-to-date with all things Clemson sports by visiting Clemson Sports Media,
               your one-stop website for everything Clemson. We provide post-game interviews,
@@ -282,7 +282,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Previous/Next Navigation */}
           {(previousPost || nextPost) && (
-            <div className="mx-auto max-w-3xl mt-8 pt-8 border-t border-gray-200">
+            <div className="mx-auto max-w-[1250px] mt-8 pt-8 border-t border-gray-200">
               <div className="flex items-stretch">
                 {/* Previous */}
                 <div className="flex-1 pr-4">
@@ -325,7 +325,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           {/* Actions: Back to Blog, Save Offline & Share */}
-          <div className="mx-auto max-w-3xl mt-8 flex flex-wrap items-center justify-between gap-4">
+          <div className="mx-auto max-w-[1250px] mt-8 flex flex-wrap items-center justify-between gap-4">
             <Button asChild variant="outline" className="border-[var(--clemson-purple)] text-[var(--clemson-purple)] hover:bg-[var(--clemson-purple)] hover:text-white">
               <Link href="/">← Back to Blog</Link>
             </Button>
@@ -340,7 +340,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Author Bio */}
-          <div className="mx-auto max-w-3xl mt-12">
+          <div className="mx-auto max-w-[1250px] mt-12">
             <AuthorBio
               name={authorName}
               avatar={authorAvatar}
