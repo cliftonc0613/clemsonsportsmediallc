@@ -60,11 +60,6 @@ interface BlogSidebarProps {
 export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProps) {
   return (
     <aside className="w-full lg:w-[300px] flex-shrink-0">
-      {/* Recent Posts Widget */}
-      {recentPosts.length > 0 && (
-        <RecentPostsWidget posts={recentPosts} currentPostId={currentPostId} />
-      )}
-
       {/* Stay Connected Section */}
       <div className="mb-8">
         <div className="inline-block bg-[var(--clemson-orange)] text-white text-sm font-bold uppercase tracking-wider px-4 py-2 mb-4">
@@ -96,7 +91,7 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
       </div>
 
       {/* Sponsorship Box */}
-      <div className="sticky top-24">
+      <div className="mb-8">
         <div className="bg-gray-100 border border-gray-200 p-4">
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 text-center">
             Sponsored
@@ -119,6 +114,11 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
           </p>
         </div>
       </div>
+
+      {/* Recent Posts Widget */}
+      {recentPosts.length > 0 && (
+        <RecentPostsWidget posts={recentPosts} currentPostId={currentPostId} />
+      )}
     </aside>
   );
 }
