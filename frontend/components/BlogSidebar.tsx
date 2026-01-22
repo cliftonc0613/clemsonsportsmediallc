@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Facebook, Twitter, Youtube } from "lucide-react";
 
 interface SocialLink {
@@ -81,11 +82,14 @@ export function BlogSidebar() {
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 text-center">
             Sponsored
           </p>
-          <div className="w-[300px] h-[250px] bg-gray-200 flex items-center justify-center mx-auto">
-            <div className="text-center text-gray-500">
-              <p className="text-lg font-bold">300 x 250</p>
-              <p className="text-sm">Ad Space</p>
-            </div>
+          <div className="w-[300px] h-[250px] flex items-center justify-center mx-auto">
+            <Image
+              src="/images/clemson-sports-media@3x.png"
+              alt="Clemson Sports Media"
+              width={250}
+              height={250}
+              className="object-contain"
+            />
           </div>
           <p className="text-xs text-gray-500 text-center mt-2">
             <a href="/contact" className="hover:text-[var(--clemson-orange)]">
