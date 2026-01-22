@@ -161,6 +161,48 @@ function starter_theme_register_post_types() {
         'menu_icon'           => 'dashicons-format-quote',
         'supports'            => array('title', 'thumbnail', 'revisions'),
     ));
+
+    // Photo Gallery CPT
+    register_post_type('photo-gallery', array(
+        'labels' => array(
+            'name'                  => __('Photo Galleries', 'starter-wp-theme'),
+            'singular_name'         => __('Photo Gallery', 'starter-wp-theme'),
+            'menu_name'             => __('Photo Galleries', 'starter-wp-theme'),
+            'add_new'               => __('Add New', 'starter-wp-theme'),
+            'add_new_item'          => __('Add New Photo Gallery', 'starter-wp-theme'),
+            'edit_item'             => __('Edit Photo Gallery', 'starter-wp-theme'),
+            'new_item'              => __('New Photo Gallery', 'starter-wp-theme'),
+            'view_item'             => __('View Photo Gallery', 'starter-wp-theme'),
+            'view_items'            => __('View Photo Galleries', 'starter-wp-theme'),
+            'search_items'          => __('Search Photo Galleries', 'starter-wp-theme'),
+            'not_found'             => __('No photo galleries found', 'starter-wp-theme'),
+            'not_found_in_trash'    => __('No photo galleries found in Trash', 'starter-wp-theme'),
+            'all_items'             => __('All Photo Galleries', 'starter-wp-theme'),
+            'archives'              => __('Photo Gallery Archives', 'starter-wp-theme'),
+            'attributes'            => __('Photo Gallery Attributes', 'starter-wp-theme'),
+            'insert_into_item'      => __('Insert into photo gallery', 'starter-wp-theme'),
+            'uploaded_to_this_item' => __('Uploaded to this photo gallery', 'starter-wp-theme'),
+            'featured_image'        => __('Gallery Cover Image', 'starter-wp-theme'),
+            'set_featured_image'    => __('Set gallery cover image', 'starter-wp-theme'),
+            'remove_featured_image' => __('Remove gallery cover image', 'starter-wp-theme'),
+            'use_featured_image'    => __('Use as gallery cover image', 'starter-wp-theme'),
+        ),
+        'public'              => true,
+        'publicly_queryable'  => true,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'show_in_nav_menus'   => true,
+        'show_in_rest'        => true,
+        'rest_base'           => 'photo-gallery',
+        'query_var'           => true,
+        'rewrite'             => array('slug' => 'photo-gallery', 'with_front' => false),
+        'capability_type'     => 'post',
+        'has_archive'         => true,
+        'hierarchical'        => false,
+        'menu_position'       => 7,
+        'menu_icon'           => 'dashicons-format-gallery',
+        'supports'            => array('title', 'thumbnail', 'excerpt', 'revisions'),
+    ));
 }
 add_action('init', 'starter_theme_register_post_types');
 

@@ -104,7 +104,7 @@
             {
                 "param": "post_type",
                 "operator": "==",
-                "value": "photo-galleries"
+                "value": "photo-gallery"
             }
         ]
     ],
