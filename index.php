@@ -145,7 +145,7 @@ if (empty($endpoints) && $show_endpoints) {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 70vmin;
+            width: 93vmin;
             height: auto;
             opacity: 0.04;
             pointer-events: none;
@@ -347,9 +347,7 @@ if (empty($endpoints) && $show_endpoints) {
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
     <div class="glow glow-3"></div>
-    <?php if ($logo): ?>
-        <img src="<?php echo esc_url($logo); ?>" alt="" class="bg-logo">
-    <?php endif; ?>
+    <img src="<?php echo esc_url(get_template_directory_uri() . '/frontend/public/images/clemson-sports-media-logo.png'); ?>" alt="" class="bg-logo">
 
     <main class="container">
         <?php if ($logo): ?>
