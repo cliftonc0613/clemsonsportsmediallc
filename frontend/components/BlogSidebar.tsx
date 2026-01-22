@@ -91,7 +91,7 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
       </div>
 
       {/* Separator */}
-      <div className="border-t border-gray-200 mb-8" />
+      <div className="border-t-2 border-[var(--clemson-orange)] mb-8" />
 
       {/* Recent Posts Widget */}
       {recentPosts.length > 0 && (
