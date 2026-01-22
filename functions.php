@@ -381,19 +381,23 @@ add_filter('preview_post_link', 'starter_theme_preview_link', 10, 2);
  * Makes "View Post" button in admin link to the frontend
  */
 function starter_theme_frontend_permalink($permalink, $post_or_id) {
-    // Only modify in admin context
-    if (!is_admin()) {
+    // Get post ID regardless of what was passed
+    if (is_numeric($post_or_id)) {
+        $post_id = $post_or_id;
+    } elseif (is_object($post_or_id) && isset($post_or_id->ID)) {
+        $post_id = $post_or_id->ID;
+    } else {
         return $permalink;
     }
 
-    // Handle both post object and post ID (page_link passes ID)
-    if (is_numeric($post_or_id)) {
-        $post = get_post($post_or_id);
-    } else {
-        $post = $post_or_id;
+    // Force fresh post lookup from database
+    $post = get_post($post_id);
+    if (!$post) {
+        return $permalink;
     }
 
-    if (!$post) {
+    $slug = $post->post_name;
+    if (empty($slug)) {
         return $permalink;
     }
 
@@ -404,15 +408,15 @@ function starter_theme_frontend_permalink($permalink, $post_or_id) {
     // Build frontend URL based on post type
     switch ($post->post_type) {
         case 'post':
-            return trailingslashit($frontend_url) . 'blog/' . $post->post_name;
+            return trailingslashit($frontend_url) . 'blog/' . $slug;
         case 'page':
-            return trailingslashit($frontend_url) . $post->post_name;
+            return trailingslashit($frontend_url) . $slug;
         case 'services':
-            return trailingslashit($frontend_url) . 'services/' . $post->post_name;
+            return trailingslashit($frontend_url) . 'services/' . $slug;
         case 'testimonials':
-            return trailingslashit($frontend_url) . 'testimonials/' . $post->post_name;
+            return trailingslashit($frontend_url) . 'testimonials/' . $slug;
         case 'photo-gallery':
-            return trailingslashit($frontend_url) . 'photo-gallery/' . $post->post_name;
+            return trailingslashit($frontend_url) . 'photo-gallery/' . $slug;
         default:
             return $permalink;
     }
