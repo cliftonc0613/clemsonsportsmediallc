@@ -93,7 +93,7 @@ export function BlogSidebar() {
             <p className="text-lg font-bold text-gray-500 mt-2">300 x 250</p>
             <p className="text-sm text-gray-500">Ad Space</p>
           </div>
-          <p className="text-xs text-gray-500 text-center mt-2">
+          <p className="text-xs text-gray-500 text-center mt-2 uppercase tracking-wider">
             <a href="/contact" className="hover:text-[var(--clemson-orange)]">
               Advertise with us
             </a>
