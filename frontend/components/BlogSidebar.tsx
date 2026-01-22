@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { Facebook, Youtube } from "lucide-react";
+import { RecentPostsWidget } from "./RecentPostsWidget";
+import type { WPPost } from "@/lib/wordpress";
 
 // X (formerly Twitter) icon
 const XIcon = ({ className }: { className?: string }) => (
@@ -50,9 +52,19 @@ const socialLinks: SocialLink[] = [
   },
 ];
 
-export function BlogSidebar() {
+interface BlogSidebarProps {
+  recentPosts?: WPPost[];
+  currentPostId?: number;
+}
+
+export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProps) {
   return (
     <aside className="w-full lg:w-[300px] flex-shrink-0">
+      {/* Recent Posts Widget */}
+      {recentPosts.length > 0 && (
+        <RecentPostsWidget posts={recentPosts} currentPostId={currentPostId} />
+      )}
+
       {/* Stay Connected Section */}
       <div className="mb-8">
         <div className="inline-block bg-[var(--clemson-orange)] text-white text-sm font-bold uppercase tracking-wider px-4 py-2 mb-4">

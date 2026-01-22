@@ -139,7 +139,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // Fetch related posts (latest 3 posts excluding current)
   const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id] });
-  console.log('[DEBUG] Related Posts count:', relatedPosts.length);
+
+  // Fetch recent posts for sidebar (get 4 in case current is in the list)
+  const recentPosts = await getPosts({ per_page: 4 });
 
   // Fetch adjacent posts for navigation
   const { previous: previousPost, next: nextPost } = await getAdjacentPosts(post.date, post.id);
@@ -353,7 +355,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* Sidebar - Hidden on mobile, visible on lg+ */}
             <div className="hidden lg:block">
-              <BlogSidebar />
+              <BlogSidebar recentPosts={recentPosts} currentPostId={post.id} />
             </div>
           </div>
         </div>
