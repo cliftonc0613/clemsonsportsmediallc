@@ -20,7 +20,7 @@ const socialLinks: SocialLink[] = [
     count: "2.5K",
     label: "Fans",
     action: "LIKE",
-    url: "https://facebook.com/clemsonsportsmedia",
+    url: "https://www.facebook.com/cusportsmedia",
     bgColor: "bg-[#3b5998]",
   },
   {
@@ -29,7 +29,7 @@ const socialLinks: SocialLink[] = [
     count: "8.2K",
     label: "Followers",
     action: "FOLLOW",
-    url: "https://twitter.com/cleaborntiger",
+    url: "https://x.com/CUSportsMedia",
     bgColor: "bg-[#1da1f2]",
   },
   {
@@ -38,7 +38,7 @@ const socialLinks: SocialLink[] = [
     count: "15K",
     label: "Subscribers",
     action: "SUBSCRIBE",
-    url: "https://youtube.com/@clemsonsportsmedia",
+    url: "https://www.youtube.com/@clemson_sports_media",
     bgColor: "bg-[#cd201f]",
   },
 ];
