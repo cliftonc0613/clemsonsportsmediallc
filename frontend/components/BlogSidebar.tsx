@@ -98,6 +98,9 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
         <RecentPostsWidget posts={recentPosts} currentPostId={currentPostId} />
       )}
 
+      {/* Separator */}
+      <div className="border-t-2 border-[var(--clemson-orange)] mb-8" />
+
       {/* Sponsorship Box */}
       <div className="mb-8">
         <div className="bg-gray-100 border border-gray-200 p-4">
