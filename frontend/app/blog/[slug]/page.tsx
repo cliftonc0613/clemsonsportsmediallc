@@ -31,6 +31,7 @@ import { ReadingProgress } from "@/components/ReadingProgress";
 import { SaveOfflineButton } from "@/components/SaveOfflineButton";
 import { AuthorBio } from "@/components/AuthorBio";
 import { PostMeta } from "@/components/PostMeta";
+import { BlogSidebar } from "@/components/BlogSidebar";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
@@ -254,98 +255,106 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Article Content */}
       <article className="py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-[1250px]">
-            <WordPressContent
-              html={contentHtml}
-              className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:font-bold prose-a:text-[var(--clemson-orange)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-blockquote:border-l-[var(--clemson-purple)] prose-blockquote:border-l-4"
-            />
-          </div>
+          <div className="mx-auto max-w-[1250px] flex flex-col lg:flex-row gap-8">
+            {/* Main Content */}
+            <div className="flex-1 min-w-0">
+              <WordPressContent
+                html={contentHtml}
+                className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:font-bold prose-a:text-[var(--clemson-orange)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-blockquote:border-l-[var(--clemson-purple)] prose-blockquote:border-l-4"
+              />
 
-          {/* Post Meta: Categories & Tags */}
-          <div className="mx-auto max-w-[1250px] mt-12 pt-8 border-t border-gray-200">
-            <PostMeta categories={categories} tags={tags} />
-          </div>
+              {/* Post Meta: Categories & Tags */}
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <PostMeta categories={categories} tags={tags} />
+              </div>
 
-          {/* Site Blurb */}
-          <div className="mx-auto max-w-[1250px] mt-8 pt-8 border-t border-gray-200">
-            <p className="text-gray-600 leading-relaxed">
-              Stay up-to-date with all things Clemson sports by visiting Clemson Sports Media,
-              your one-stop website for everything Clemson. We provide post-game interviews,
-              in-depth analysis, and comprehensive coverage of all Clemson sports. Don&apos;t miss
-              out on the latest news and updates, visit{" "}
-              <Link href="/" className="text-[var(--clemson-orange)] font-semibold hover:underline">
-                Clemson Sports Media
-              </Link>{" "}
-              today.
-            </p>
-          </div>
+              {/* Site Blurb */}
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <p className="text-gray-600 leading-relaxed">
+                  Stay up-to-date with all things Clemson sports by visiting Clemson Sports Media,
+                  your one-stop website for everything Clemson. We provide post-game interviews,
+                  in-depth analysis, and comprehensive coverage of all Clemson sports. Don&apos;t miss
+                  out on the latest news and updates, visit{" "}
+                  <Link href="/" className="text-[var(--clemson-orange)] font-semibold hover:underline">
+                    Clemson Sports Media
+                  </Link>{" "}
+                  today.
+                </p>
+              </div>
 
-          {/* Previous/Next Navigation */}
-          {(previousPost || nextPost) && (
-            <div className="mx-auto max-w-[1250px] mt-8 pt-8 border-t border-gray-200">
-              <div className="flex items-stretch">
-                {/* Previous */}
-                <div className="flex-1 pr-4">
-                  {previousPost && (
-                    <Link href={`/blog/${previousPost.slug}`} className="group flex items-start gap-3">
-                      <ChevronLeft className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
-                      <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
-                          Previous
-                        </span>
-                        <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
-                          {decodeHtmlEntities(previousPost.title.rendered)}
-                        </h4>
-                      </div>
-                    </Link>
-                  )}
+              {/* Previous/Next Navigation */}
+              {(previousPost || nextPost) && (
+                <div className="mt-8 pt-8 border-t border-gray-200">
+                  <div className="flex items-stretch">
+                    {/* Previous */}
+                    <div className="flex-1 pr-4">
+                      {previousPost && (
+                        <Link href={`/blog/${previousPost.slug}`} className="group flex items-start gap-3">
+                          <ChevronLeft className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
+                          <div>
+                            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
+                              Previous
+                            </span>
+                            <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
+                              {decodeHtmlEntities(previousPost.title.rendered)}
+                            </h4>
+                          </div>
+                        </Link>
+                      )}
+                    </div>
+
+                    {/* Divider */}
+                    <div className="w-px bg-gray-200" />
+
+                    {/* Next */}
+                    <div className="flex-1 pl-4 text-right">
+                      {nextPost && (
+                        <Link href={`/blog/${nextPost.slug}`} className="group flex items-start gap-3 justify-end">
+                          <div>
+                            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
+                              Next
+                            </span>
+                            <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
+                              {decodeHtmlEntities(nextPost.title.rendered)}
+                            </h4>
+                          </div>
+                          <ChevronRight className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
                 </div>
+              )}
 
-                {/* Divider */}
-                <div className="w-px bg-gray-200" />
-
-                {/* Next */}
-                <div className="flex-1 pl-4 text-right">
-                  {nextPost && (
-                    <Link href={`/blog/${nextPost.slug}`} className="group flex items-start gap-3 justify-end">
-                      <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
-                          Next
-                        </span>
-                        <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
-                          {decodeHtmlEntities(nextPost.title.rendered)}
-                        </h4>
-                      </div>
-                      <ChevronRight className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
-                    </Link>
-                  )}
+              {/* Actions: Back to Blog, Save Offline & Share */}
+              <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+                <Button asChild variant="outline" className="border-[var(--clemson-purple)] text-[var(--clemson-purple)] hover:bg-[var(--clemson-purple)] hover:text-white">
+                  <Link href="/">← Back to Blog</Link>
+                </Button>
+                <div className="flex items-center gap-2">
+                  <SaveOfflineButton url={postUrl} title={title} />
+                  <ShareButton
+                    title={title}
+                    text={stripHtml(post.excerpt.rendered)}
+                    url={postUrl}
+                  />
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Actions: Back to Blog, Save Offline & Share */}
-          <div className="mx-auto max-w-[1250px] mt-8 flex flex-wrap items-center justify-between gap-4">
-            <Button asChild variant="outline" className="border-[var(--clemson-purple)] text-[var(--clemson-purple)] hover:bg-[var(--clemson-purple)] hover:text-white">
-              <Link href="/">← Back to Blog</Link>
-            </Button>
-            <div className="flex items-center gap-2">
-              <SaveOfflineButton url={postUrl} title={title} />
-              <ShareButton
-                title={title}
-                text={stripHtml(post.excerpt.rendered)}
-                url={postUrl}
-              />
+              {/* Author Bio */}
+              <div className="mt-12">
+                <AuthorBio
+                  name={authorName}
+                  avatar={authorAvatar}
+                  bio={authorBio}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Author Bio */}
-          <div className="mx-auto max-w-[1250px] mt-12">
-            <AuthorBio
-              name={authorName}
-              avatar={authorAvatar}
-              bio={authorBio}
-            />
+            {/* Sidebar - Hidden on mobile, visible on lg+ */}
+            <div className="hidden lg:block">
+              <BlogSidebar />
+            </div>
           </div>
         </div>
       </article>
