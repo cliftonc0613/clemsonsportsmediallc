@@ -91,7 +91,7 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
       </div>
 
       {/* Separator */}
-      <div className="border-t-2 border-[var(--clemson-orange)] mb-8" />
+      <div className="border-t border-[var(--clemson-orange)] mb-8" />
 
       {/* Recent Posts Widget */}
       {recentPosts.length > 0 && (
@@ -99,7 +99,7 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
       )}
 
       {/* Separator */}
-      <div className="border-t-2 border-[var(--clemson-orange)] mb-8" />
+      <div className="border-t border-[var(--clemson-orange)] mb-8" />
 
       {/* Sponsorship Box */}
       <div className="mb-8">
