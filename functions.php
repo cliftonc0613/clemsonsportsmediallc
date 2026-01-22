@@ -159,29 +159,29 @@ function starter_theme_register_post_types() {
         'hierarchical'        => false,
         'menu_position'       => 6,
         'menu_icon'           => 'dashicons-format-quote',
-        'supports'            => array('title', 'thumbnail', 'revisions'),
+        'supports'            => array('title', 'editor', 'thumbnail', 'revisions'),
     ));
 
-    // Photo Gallery CPT
+    // Gallery CPT
     register_post_type('photo-gallery', array(
         'labels' => array(
-            'name'                  => __('Photo Galleries', 'starter-wp-theme'),
-            'singular_name'         => __('Photo Gallery', 'starter-wp-theme'),
-            'menu_name'             => __('Photo Galleries', 'starter-wp-theme'),
+            'name'                  => __('Galleries', 'starter-wp-theme'),
+            'singular_name'         => __('Gallery', 'starter-wp-theme'),
+            'menu_name'             => __('Galleries', 'starter-wp-theme'),
             'add_new'               => __('Add New', 'starter-wp-theme'),
-            'add_new_item'          => __('Add New Photo Gallery', 'starter-wp-theme'),
-            'edit_item'             => __('Edit Photo Gallery', 'starter-wp-theme'),
-            'new_item'              => __('New Photo Gallery', 'starter-wp-theme'),
-            'view_item'             => __('View Photo Gallery', 'starter-wp-theme'),
-            'view_items'            => __('View Photo Galleries', 'starter-wp-theme'),
-            'search_items'          => __('Search Photo Galleries', 'starter-wp-theme'),
-            'not_found'             => __('No photo galleries found', 'starter-wp-theme'),
-            'not_found_in_trash'    => __('No photo galleries found in Trash', 'starter-wp-theme'),
-            'all_items'             => __('All Photo Galleries', 'starter-wp-theme'),
-            'archives'              => __('Photo Gallery Archives', 'starter-wp-theme'),
-            'attributes'            => __('Photo Gallery Attributes', 'starter-wp-theme'),
-            'insert_into_item'      => __('Insert into photo gallery', 'starter-wp-theme'),
-            'uploaded_to_this_item' => __('Uploaded to this photo gallery', 'starter-wp-theme'),
+            'add_new_item'          => __('Add New Gallery', 'starter-wp-theme'),
+            'edit_item'             => __('Edit Gallery', 'starter-wp-theme'),
+            'new_item'              => __('New Gallery', 'starter-wp-theme'),
+            'view_item'             => __('View Gallery', 'starter-wp-theme'),
+            'view_items'            => __('View Galleries', 'starter-wp-theme'),
+            'search_items'          => __('Search Galleries', 'starter-wp-theme'),
+            'not_found'             => __('No galleries found', 'starter-wp-theme'),
+            'not_found_in_trash'    => __('No galleries found in Trash', 'starter-wp-theme'),
+            'all_items'             => __('All Galleries', 'starter-wp-theme'),
+            'archives'              => __('Gallery Archives', 'starter-wp-theme'),
+            'attributes'            => __('Gallery Attributes', 'starter-wp-theme'),
+            'insert_into_item'      => __('Insert into gallery', 'starter-wp-theme'),
+            'uploaded_to_this_item' => __('Uploaded to this gallery', 'starter-wp-theme'),
             'featured_image'        => __('Gallery Cover Image', 'starter-wp-theme'),
             'set_featured_image'    => __('Set gallery cover image', 'starter-wp-theme'),
             'remove_featured_image' => __('Remove gallery cover image', 'starter-wp-theme'),
@@ -201,7 +201,7 @@ function starter_theme_register_post_types() {
         'hierarchical'        => false,
         'menu_position'       => 7,
         'menu_icon'           => 'dashicons-format-gallery',
-        'supports'            => array('title', 'thumbnail', 'excerpt', 'revisions'),
+        'supports'            => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
     ));
 }
 add_action('init', 'starter_theme_register_post_types');
@@ -576,6 +576,51 @@ function starter_theme_register_photo_credit_field() {
     ));
 }
 add_action('acf/init', 'starter_theme_register_photo_credit_field');
+
+/**
+ * Set Gutenberg meta box panel to 50% height by default
+ */
+function starter_theme_admin_meta_box_styles() {
+    $screen = get_current_screen();
+
+    // Only apply to CPTs with editor support
+    $cpts_with_meta = array('services', 'testimonials', 'photo-gallery');
+
+    if ($screen && in_array($screen->post_type, $cpts_with_meta) && $screen->is_block_editor()) {
+        ?>
+        <style>
+            /* Set meta box panel to 50% viewport height */
+            .interface-interface-skeleton__secondary-sidebar,
+            .edit-post-meta-boxes-area {
+                min-height: 50vh !important;
+            }
+
+            /* Gutenberg meta box container */
+            .edit-post-layout__metaboxes {
+                flex: 1 1 50vh !important;
+                min-height: 50vh !important;
+            }
+
+            /* Meta box area wrapper */
+            .edit-post-meta-boxes-area__container {
+                max-height: none !important;
+            }
+
+            /* Ensure the editor content area shares space */
+            .interface-interface-skeleton__content {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .edit-post-visual-editor {
+                flex: 1 1 50vh;
+                min-height: 50vh;
+            }
+        </style>
+        <?php
+    }
+}
+add_action('admin_head', 'starter_theme_admin_meta_box_styles');
 
 /**
  * Include additional functionality files

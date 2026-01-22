@@ -33,6 +33,7 @@ if (empty($endpoints) && $show_endpoints) {
     $endpoints = array(
         array('name' => 'Posts', 'path' => '/wp-json/wp/v2/posts', 'description' => 'Blog posts and articles'),
         array('name' => 'Pages', 'path' => '/wp-json/wp/v2/pages', 'description' => 'Static pages content'),
+        array('name' => 'Galleries', 'path' => '/wp-json/wp/v2/photo-gallery', 'description' => 'Photo galleries'),
         array('name' => 'Services', 'path' => '/wp-json/wp/v2/services', 'description' => 'Service offerings'),
         array('name' => 'Testimonials', 'path' => '/wp-json/wp/v2/testimonials', 'description' => 'Client testimonials'),
         array('name' => 'Media', 'path' => '/wp-json/wp/v2/media', 'description' => 'Images and attachments'),
@@ -54,7 +55,7 @@ if (empty($endpoints) && $show_endpoints) {
 
         body {
             font-family: 'Inter', -apple-system, sans-serif;
-            background: #000;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16082a 50%, #0d0515 100%);
             color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
@@ -85,15 +86,24 @@ if (empty($endpoints) && $show_endpoints) {
         .glow-1 {
             top: -200px;
             left: -200px;
-            background: #fff;
+            background: #ff6b35;
             animation: pulse 8s ease-in-out infinite;
         }
 
         .glow-2 {
             bottom: -200px;
             right: -200px;
-            background: #888;
+            background: #9b59b6;
             animation: pulse 8s ease-in-out infinite reverse;
+        }
+
+        .glow-3 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #8e44ad;
+            opacity: 0.08;
+            animation: pulse 10s ease-in-out infinite 2s;
         }
 
         @keyframes pulse {
@@ -125,9 +135,21 @@ if (empty($endpoints) && $show_endpoints) {
         }
 
         .logo img {
-            height: 70px;
+            height: 120px;
             width: auto;
-            filter: brightness(0) invert(1);
+        }
+
+        /* Background watermark logo */
+        .bg-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vmin;
+            height: auto;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
         }
 
         /* Title */
@@ -162,8 +184,8 @@ if (empty($endpoints) && $show_endpoints) {
             align-items: center;
             gap: 0.75rem;
             padding: 1rem 2rem;
-            background: #fff;
-            color: #000;
+            background: #ff6b35;
+            color: #fff;
             font-size: 0.875rem;
             font-weight: 600;
             text-decoration: none;
@@ -175,7 +197,7 @@ if (empty($endpoints) && $show_endpoints) {
 
         .cta:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 60px rgba(255,255,255,0.3);
+            box-shadow: 0 0 60px rgba(255, 107, 53, 0.4);
         }
 
         .cta svg {
@@ -198,20 +220,20 @@ if (empty($endpoints) && $show_endpoints) {
         .cta-outline {
             background: transparent;
             color: #fff;
-            border: 1px solid rgba(255,255,255,0.25);
+            border: 1px solid rgba(155, 89, 182, 0.5);
         }
 
         .cta-outline:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.4);
-            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+            background: rgba(155, 89, 182, 0.15);
+            border-color: rgba(155, 89, 182, 0.8);
+            box-shadow: 0 0 40px rgba(155, 89, 182, 0.2);
         }
 
         /* API Section */
         .api-section {
             margin-top: 2.5rem;
             padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.08);
+            border-top: 1px solid rgba(155, 89, 182, 0.2);
             opacity: 0;
             animation: fadeUp 1s ease forwards 0.8s;
         }
@@ -225,7 +247,7 @@ if (empty($endpoints) && $show_endpoints) {
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            color: rgba(255,255,255,0.35);
+            color: rgba(155, 89, 182, 0.6);
         }
 
         .api-grid {
@@ -242,8 +264,8 @@ if (empty($endpoints) && $show_endpoints) {
             flex-direction: column;
             gap: 0.5rem;
             padding: 1.25rem;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(155, 89, 182, 0.05);
+            border: 1px solid rgba(155, 89, 182, 0.15);
             border-radius: 12px;
             text-decoration: none;
             transition: all 0.2s ease;
@@ -252,8 +274,8 @@ if (empty($endpoints) && $show_endpoints) {
         }
 
         .api-card:hover {
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(255,255,255,0.15);
+            background: rgba(155, 89, 182, 0.1);
+            border-color: rgba(255, 107, 53, 0.4);
             transform: translateY(-2px);
         }
 
@@ -274,8 +296,8 @@ if (empty($endpoints) && $show_endpoints) {
             font-family: 'SF Mono', Monaco, monospace;
             font-size: 0.625rem;
             font-weight: 600;
-            color: rgba(255,255,255,0.4);
-            background: rgba(255,255,255,0.08);
+            color: #ff6b35;
+            background: rgba(255, 107, 53, 0.15);
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
         }
@@ -283,7 +305,7 @@ if (empty($endpoints) && $show_endpoints) {
         .api-card code {
             font-family: 'SF Mono', Monaco, monospace;
             font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 107, 53, 0.7);
             word-break: break-all;
         }
 
@@ -324,11 +346,15 @@ if (empty($endpoints) && $show_endpoints) {
 <body>
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+    <?php if ($logo): ?>
+        <img src="<?php echo esc_url($logo); ?>" alt="" class="bg-logo">
+    <?php endif; ?>
 
     <main class="container">
         <?php if ($logo): ?>
             <div class="logo">
-                <img src="<?php echo esc_url($logo); ?>" alt="">
+                <img src="<?php echo esc_url($logo); ?>" alt="Clemson Sports Media">
             </div>
         <?php endif; ?>
 
