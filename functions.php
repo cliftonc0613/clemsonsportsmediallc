@@ -377,6 +377,44 @@ function starter_theme_preview_link($preview_link, $post) {
 add_filter('preview_post_link', 'starter_theme_preview_link', 10, 2);
 
 /**
+ * Redirect published post permalinks to Next.js frontend
+ * Makes "View Post" button in admin link to the frontend
+ */
+function starter_theme_frontend_permalink($permalink, $post) {
+    // Only modify in admin context
+    if (!is_admin()) {
+        return $permalink;
+    }
+
+    $frontend_url = defined('STARTER_FRONTEND_URL')
+        ? STARTER_FRONTEND_URL
+        : get_option('starter_frontend_url', '');
+
+    if (empty($frontend_url)) {
+        return $permalink;
+    }
+
+    // Build frontend URL based on post type
+    switch ($post->post_type) {
+        case 'post':
+            return trailingslashit($frontend_url) . 'blog/' . $post->post_name;
+        case 'page':
+            return trailingslashit($frontend_url) . $post->post_name;
+        case 'services':
+            return trailingslashit($frontend_url) . 'services/' . $post->post_name;
+        case 'testimonials':
+            return trailingslashit($frontend_url) . 'testimonials/' . $post->post_name;
+        case 'photo-gallery':
+            return trailingslashit($frontend_url) . 'photo-gallery/' . $post->post_name;
+        default:
+            return $permalink;
+    }
+}
+add_filter('post_link', 'starter_theme_frontend_permalink', 10, 2);
+add_filter('page_link', 'starter_theme_frontend_permalink', 10, 2);
+add_filter('post_type_link', 'starter_theme_frontend_permalink', 10, 2);
+
+/**
  * Trigger Next.js revalidation when content is published or updated
  */
 function starter_theme_trigger_revalidation($post_id, $post, $update) {
