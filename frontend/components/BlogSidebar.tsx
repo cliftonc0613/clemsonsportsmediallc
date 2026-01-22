@@ -82,14 +82,16 @@ export function BlogSidebar() {
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-2 text-center">
             Sponsored
           </p>
-          <div className="w-[300px] h-[250px] flex items-center justify-center mx-auto">
+          <div className="w-[300px] h-[250px] bg-gray-200 flex flex-col items-center justify-center mx-auto">
             <Image
               src="/images/clemson-sports-media@3x.png"
               alt="Clemson Sports Media"
-              width={250}
-              height={250}
+              width={150}
+              height={150}
               className="object-contain"
             />
+            <p className="text-lg font-bold text-gray-500 mt-2">300 x 250</p>
+            <p className="text-sm text-gray-500">Ad Space</p>
           </div>
           <p className="text-xs text-gray-500 text-center mt-2">
             <a href="/contact" className="hover:text-[var(--clemson-orange)]">
