@@ -90,6 +90,11 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
         </div>
       </div>
 
+      {/* Recent Posts Widget */}
+      {recentPosts.length > 0 && (
+        <RecentPostsWidget posts={recentPosts} currentPostId={currentPostId} />
+      )}
+
       {/* Sponsorship Box */}
       <div className="mb-8">
         <div className="bg-gray-100 border border-gray-200 p-4">
@@ -114,11 +119,6 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
           </p>
         </div>
       </div>
-
-      {/* Recent Posts Widget */}
-      {recentPosts.length > 0 && (
-        <RecentPostsWidget posts={recentPosts} currentPostId={currentPostId} />
-      )}
     </aside>
   );
 }
