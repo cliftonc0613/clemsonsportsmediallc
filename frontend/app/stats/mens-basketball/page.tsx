@@ -417,7 +417,7 @@ export default async function MensBasketballStatsPage() {
                     View Schedule →
                   </Link>
                   <Link
-                    href="/roster/2025/mens-basketball"
+                    href="/roster/mens-basketball"
                     className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--clemson-orange)] transition-colors"
                   >
                     View Roster →

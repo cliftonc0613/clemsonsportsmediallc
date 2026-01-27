@@ -189,7 +189,7 @@ export function Header() {
                       key={roster.slug}
                       href={`/roster/${roster.slug}`}
                       className={`block px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors rounded
-                        ${pathname === `/roster/${roster.slug}` || pathname.includes(`/roster/2025/${roster.slug}`)
+                        ${pathname === `/roster/${roster.slug}`
                           ? "bg-[var(--clemson-dark-purple)] text-white"
                           : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-purple)]/10 hover:text-[var(--clemson-purple)]"
                         }
@@ -364,7 +364,7 @@ export function Header() {
                           href={`/roster/${roster.slug}`}
                           onClick={() => setIsOpen(false)}
                           className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors text-white
-                            ${pathname === `/roster/${roster.slug}` || pathname.includes(`/roster/2025/${roster.slug}`)
+                            ${pathname === `/roster/${roster.slug}`
                               ? "bg-white/20"
                               : "hover:bg-white/10"
                             }
