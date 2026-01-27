@@ -110,9 +110,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match root-level date patterns: /YYYY/MM/DD/slug
-    "/:year(\\d{4})/:month(\\d{2})/:day(\\d{2})/:slug",
-    // Match old /blog patterns for redirects
-    "/blog/:path*",
+    /*
+     * Match paths that could be date-based post URLs or old blog URLs.
+     * Excludes Next.js internals, static files, and API routes.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|api|images|fonts).*)",
   ],
 };
