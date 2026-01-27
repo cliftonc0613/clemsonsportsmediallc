@@ -10,6 +10,13 @@ import type { NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // 0. Redirect old roster URLs: /roster/{year}/{sport} → /roster/{sport}
+  const oldRosterMatch = pathname.match(/^\/roster\/\d{4}\/([^\/]+)$/);
+  if (oldRosterMatch) {
+    const [, sport] = oldRosterMatch;
+    return NextResponse.redirect(new URL(`/roster/${sport}`, request.url), 308);
+  }
+
   // 1. Handle root-level date pattern: /{year}/{month}/{day}/{slug}
   // Rewrite to /post/{year}/{month}/{day}/{slug} which has the actual page component
   const datePostMatch = pathname.match(/^\/(\d{4})\/(\d{2})\/(\d{2})\/([^\/]+)$/);

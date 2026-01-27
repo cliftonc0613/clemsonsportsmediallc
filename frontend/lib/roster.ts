@@ -189,3 +189,35 @@ export async function getRosterMetadata(
     playerCount,
   };
 }
+
+// =============================================================================
+// Current Season Helpers
+// =============================================================================
+
+/**
+ * Current roster season year
+ * Change this when the season changes
+ */
+export const CURRENT_ROSTER_YEAR = "2025";
+
+/**
+ * Get current roster as flat array of simplified players
+ * @param sport - Sport slug
+ * @returns Array of simplified player objects for current season
+ */
+export async function getCurrentRoster(
+  sport: RosterSportSlug
+): Promise<SimpleRosterPlayer[]> {
+  return getSimpleRoster(sport, CURRENT_ROSTER_YEAR);
+}
+
+/**
+ * Get current roster organized by position groups
+ * @param sport - Sport slug
+ * @returns Object with group names as keys and player arrays as values for current season
+ */
+export async function getCurrentRosterByGroup(
+  sport: RosterSportSlug
+): Promise<Record<string, SimpleRosterPlayer[]>> {
+  return getRosterByGroup(sport, CURRENT_ROSTER_YEAR);
+}
