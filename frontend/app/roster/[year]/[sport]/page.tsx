@@ -323,9 +323,14 @@ export default async function RosterPage({
             )
           ) : (
             <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">
-                {year} roster not available. Check back soon!
-              </p>
+              <div className="inline-block bg-[var(--clemson-purple)]/10 rounded-lg p-8">
+                <p className="text-[var(--clemson-purple)] text-xl font-heading font-bold mb-2">
+                  {year} Roster Coming Soon
+                </p>
+                <p className="text-gray-500">
+                  The {year} {SPORT_CONFIG[sport]?.displayName} roster will be available once the season begins.
+                </p>
+              </div>
             </div>
           )}
         </div>
