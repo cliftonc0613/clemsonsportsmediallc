@@ -30,11 +30,16 @@ export function BreakingNewsSection({
           const imageUrl = rewriteImageUrl(post.featured_image_url);
           const title = decodeHtmlEntities(post.title.rendered);
           const categoryName = getDisplayCategoryName(post, categories);
+          // Build date-based URL
+          const postDate = new Date(post.date);
+          const year = postDate.getFullYear();
+          const month = String(postDate.getMonth() + 1).padStart(2, "0");
+          const postUrl = `/blog/${year}/${month}/${post.slug}`;
 
           return (
             <Link
               key={post.id}
-              href={`/blog/${post.slug}`}
+              href={postUrl}
               className="group relative block aspect-[3/4] overflow-hidden"
             >
               {/* Background Image */}

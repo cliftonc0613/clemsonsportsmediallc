@@ -86,13 +86,22 @@ export function AlternatingGrid({
   );
 }
 
+// Helper to get post URL with date format
+function getPostUrl(post: WPPost) {
+  const postDate = new Date(post.date);
+  const year = postDate.getFullYear();
+  const month = String(postDate.getMonth() + 1).padStart(2, "0");
+  return `/blog/${year}/${month}/${post.slug}`;
+}
+
 // Image-only card (no title) for top row positions 1 & 3
 function ImageCard({ post }: { post: WPPost }) {
   const imageUrl = rewriteImageUrl(post.featured_image_url);
   const title = decodeHtmlEntities(post.title.rendered);
+  const postUrl = getPostUrl(post);
 
   return (
-    <Link href={`/blog/${post.slug}`} className="group block">
+    <Link href={postUrl} className="group block">
       <div className="relative aspect-[4/3] overflow-hidden">
         {imageUrl ? (
           <Image
@@ -125,10 +134,11 @@ function TextCard({
   const authorAvatar = getPostAuthorAvatar(post);
   const date = formatDate(post.date);
   const isExclusive = showExclusive && postHasTag(post, tags, "exclusive");
+  const postUrl = getPostUrl(post);
 
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={postUrl}
       className="group flex flex-col justify-center"
     >
       {isExclusive && (
@@ -157,9 +167,10 @@ function ImageCardWithTitle({ post }: { post: WPPost }) {
   const authorName = getPostAuthorName(post);
   const authorAvatar = getPostAuthorAvatar(post);
   const date = formatDate(post.date);
+  const postUrl = getPostUrl(post);
 
   return (
-    <Link href={`/blog/${post.slug}`} className="group block">
+    <Link href={postUrl} className="group block">
       <div className="relative aspect-[4/3] overflow-hidden mb-3">
         {imageUrl ? (
           <Image

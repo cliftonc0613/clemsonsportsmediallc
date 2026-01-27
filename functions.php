@@ -410,7 +410,7 @@ function starter_theme_frontend_permalink($permalink, $post_or_id) {
         case 'post':
             $year = date('Y', strtotime($post->post_date));
             $month = date('m', strtotime($post->post_date));
-            return trailingslashit($frontend_url) . $year . '/' . $month . '/' . $slug;
+            return trailingslashit($frontend_url) . 'blog/' . $year . '/' . $month . '/' . $slug;
         case 'page':
             return trailingslashit($frontend_url) . $slug;
         case 'services':

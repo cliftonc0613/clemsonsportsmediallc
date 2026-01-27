@@ -27,11 +27,16 @@ export function ArticleListGrid({
           const categoryName = getDisplayCategoryName(post, categories);
           // Show exclusive badge if post has "exclusive" tag
           const isExclusive = postHasTag(post, tags, "exclusive");
+          // Build date-based URL
+          const postDate = new Date(post.date);
+          const year = postDate.getFullYear();
+          const month = String(postDate.getMonth() + 1).padStart(2, "0");
+          const postUrl = `/blog/${year}/${month}/${post.slug}`;
 
           return (
             <Link
               key={post.id}
-              href={`/blog/${post.slug}`}
+              href={postUrl}
               className={`group flex gap-3 ${index >= 4 ? "hidden sm:flex" : ""}`}
             >
               {/* Text Content - Left */}

@@ -12,6 +12,14 @@ interface ArticleCardProps {
   className?: string;
 }
 
+// Helper to get post URL with date format
+function getPostUrl(post: WPPost) {
+  const postDate = new Date(post.date);
+  const year = postDate.getFullYear();
+  const month = String(postDate.getMonth() + 1).padStart(2, "0");
+  return `/blog/${year}/${month}/${post.slug}`;
+}
+
 export function ArticleCard({
   post,
   variant,
@@ -22,12 +30,13 @@ export function ArticleCard({
   const imageUrl = rewriteImageUrl(post.featured_image_url);
   const title = decodeHtmlEntities(post.title.rendered);
   const date = formatDate(post.date);
+  const postUrl = getPostUrl(post);
 
   // Horizontal variant: thumbnail left, text right
   if (variant === "horizontal") {
     return (
       <Link
-        href={`/blog/${post.slug}`}
+        href={postUrl}
         className={`group flex gap-4 ${className}`}
       >
         {/* Thumbnail */}
@@ -64,7 +73,7 @@ export function ArticleCard({
   if (variant === "compact") {
     return (
       <Link
-        href={`/blog/${post.slug}`}
+        href={postUrl}
         className={`group flex gap-3 items-center ${className}`}
       >
         {/* Small Thumbnail */}
@@ -98,7 +107,7 @@ export function ArticleCard({
   // Vertical variant: image top, text below (default)
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={postUrl}
       className={`group block ${className}`}
     >
       {/* Image */}

@@ -23,12 +23,17 @@ export function HeroArticleCard({
   const title = decodeHtmlEntities(post.title.rendered);
   const date = formatDate(post.date);
   const author = post.author_name || "Staff Writer";
+  // Build date-based URL
+  const postDate = new Date(post.date);
+  const year = postDate.getFullYear();
+  const month = String(postDate.getMonth() + 1).padStart(2, "0");
+  const postUrl = `/blog/${year}/${month}/${post.slug}`;
 
   const isLarge = variant === "large";
 
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={postUrl}
       className={`group relative block overflow-hidden ${className}`}
     >
       {/* Background Image */}

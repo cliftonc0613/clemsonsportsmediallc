@@ -37,13 +37,19 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
 
 interface BlogPostPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ year: string; month: string; slug: string }>;
+}
+
+// Helper to get post URL with date format
+function getPostUrl(post: { slug: string; date: string }) {
+  const postDate = new Date(post.date);
+  const year = postDate.getFullYear();
+  const month = String(postDate.getMonth() + 1).padStart(2, "0");
+  return `/blog/${year}/${month}/${post.slug}`;
 }
 
 // Generate static paths for all posts
 export async function generateStaticParams() {
-  // If WordPress isn't configured during build, return empty array
-  // Pages will be generated on-demand with ISR
   if (!isWordPressConfigured()) {
     console.warn('WORDPRESS_API_URL not set - skipping static generation for blog posts');
     return [];
@@ -51,9 +57,14 @@ export async function generateStaticParams() {
 
   try {
     const posts = await getPosts({ per_page: 100 });
-    return posts.map((post) => ({
-      slug: post.slug,
-    }));
+    return posts.map((post) => {
+      const postDate = new Date(post.date);
+      return {
+        year: String(postDate.getFullYear()),
+        month: String(postDate.getMonth() + 1).padStart(2, "0"),
+        slug: post.slug,
+      };
+    });
   } catch (error) {
     console.error('Failed to fetch posts for static generation:', error);
     return [];
@@ -70,7 +81,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { year, month, slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
@@ -85,7 +96,7 @@ export async function generateMetadata({
 
   // Try to get RankMath SEO metadata
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const pageUrl = `${siteUrl}/blog/${slug}`;
+  const pageUrl = `${siteUrl}/blog/${year}/${month}/${slug}`;
   const rankMathMeta = await getRankMathMeta(pageUrl);
 
   // Fallback metadata from WordPress post data
@@ -117,10 +128,19 @@ export async function generateMetadata({
 export const revalidate = 5;
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const { slug } = await params;
+  const { year, month, slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
+    notFound();
+  }
+
+  // Verify the year/month match the post date
+  const postDate = new Date(post.date);
+  const postYear = String(postDate.getFullYear());
+  const postMonth = String(postDate.getMonth() + 1).padStart(2, "0");
+
+  if (year !== postYear || month !== postMonth) {
     notFound();
   }
 
@@ -146,7 +166,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Fetch adjacent posts for navigation
   const { previous: previousPost, next: nextPost } = await getAdjacentPosts(post.date, post.id);
 
-  const postUrl = `${SITE_URL}/blog/${slug}`;
+  const postUrl = `${SITE_URL}/blog/${year}/${month}/${slug}`;
 
   // Dynamic body classes for CSS targeting
   const bodyClasses = [
@@ -291,7 +311,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     {/* Previous */}
                     <div className="flex-1 pr-4">
                       {previousPost && (
-                        <Link href={`/blog/${previousPost.slug}`} className="group flex items-start gap-3">
+                        <Link href={getPostUrl(previousPost)} className="group flex items-start gap-3">
                           <ChevronLeft className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
                           <div>
                             <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
@@ -311,7 +331,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     {/* Next */}
                     <div className="flex-1 pl-4 text-right">
                       {nextPost && (
-                        <Link href={`/blog/${nextPost.slug}`} className="group flex items-start gap-3 justify-end">
+                        <Link href={getPostUrl(nextPost)} className="group flex items-start gap-3 justify-end">
                           <div>
                             <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
                               Next

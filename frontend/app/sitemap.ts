@@ -58,12 +58,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Blog posts - medium priority, updated monthly
-  const blogPosts: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${SITE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.modified),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const blogPosts: MetadataRoute.Sitemap = posts.map((post) => {
+    const postDate = new Date(post.date);
+    const year = postDate.getFullYear();
+    const month = String(postDate.getMonth() + 1).padStart(2, "0");
+    return {
+      url: `${SITE_URL}/blog/${year}/${month}/${post.slug}`,
+      lastModified: new Date(post.modified),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    };
+  });
 
   // Services - high priority, updated monthly
   const servicePages: MetadataRoute.Sitemap = services.map((service) => ({
