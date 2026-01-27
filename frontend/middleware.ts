@@ -11,12 +11,11 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Handle root-level date pattern: /{year}/{month}/{day}/{slug}
-  // Match /{4-digit-year}/{2-digit-month}/{2-digit-day}/{slug}
+  // Rewrite to /post/{year}/{month}/{day}/{slug} which has the actual page component
   const datePostMatch = pathname.match(/^\/(\d{4})\/(\d{2})\/(\d{2})\/([^\/]+)$/);
   if (datePostMatch) {
     const [, year, month, day, slug] = datePostMatch;
-    // Rewrite to internal _posts route (underscore prefix hides from public routing)
-    return NextResponse.rewrite(new URL(`/_posts/${year}/${month}/${day}/${slug}`, request.url));
+    return NextResponse.rewrite(new URL(`/post/${year}/${month}/${day}/${slug}`, request.url));
   }
 
   // 2. Redirect old /blog/{year}/{month}/{slug} URLs to new format
