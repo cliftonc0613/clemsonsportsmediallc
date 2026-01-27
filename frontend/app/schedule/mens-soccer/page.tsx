@@ -280,7 +280,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
     id: "sp-1",
     date: "2026-02-18",
     time: "7:00 PM",
-    opponent: { name: "Portland Hearts of Pine", abbreviation: "PHP", logo: "https://clemsontigers.com/wp-content/uploads/2026/01/portland-hearts-of-pine-logo.jpeg" },
+    opponent: { name: "Portland Hearts of Pine", abbreviation: "PHP", logo: "https://a.espncdn.com/i/teamlogos/soccer/500/22528.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
