@@ -52,7 +52,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
     id: "ex-1",
     date: "2025-08-09",
     time: "6:00 PM",
-    opponent: { name: "Charlotte", abbreviation: "CLT", logo: "https://clemsontigers.com/wp-content/uploads/2023/11/Charlotte.jpg" },
+    opponent: { name: "Charlotte", abbreviation: "CLT", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2429.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -63,7 +63,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
     id: "ex-2",
     date: "2025-08-12",
     time: "6:00 PM",
-    opponent: { name: "USC Upstate", abbreviation: "UPST", logo: "https://clemsontigers.com/wp-content/uploads/2025/05/usc_upstate.png" },
+    opponent: { name: "USC Upstate", abbreviation: "UPST", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2692.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -74,7 +74,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
     id: "ex-3",
     date: "2025-08-16",
     time: "7:00 PM",
-    opponent: { name: "Georgia State", abbreviation: "GAST", logo: "https://clemsontigers.com/wp-content/uploads/2021/09/Georgia_State_Athletics_logo.svg_-1024x841.png" },
+    opponent: { name: "Georgia State", abbreviation: "GAST", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2247.png" },
     isHome: false,
     venue: "GSU Soccer Field",
     location: "Atlanta, Ga.",
@@ -85,7 +85,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "1",
     date: "2025-08-21",
-    opponent: { name: "Indiana", abbreviation: "IND", logo: "https://clemsontigers.com/wp-content/uploads/2018/08/Indiana_Hoosiers_logo.svg_-811x1024.png" },
+    opponent: { name: "Indiana", abbreviation: "IND", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/84.png" },
     isHome: false,
     venue: "Jerry Yeagley Field",
     location: "Bloomington, Ind.",
@@ -96,7 +96,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "2",
     date: "2025-08-26",
-    opponent: { name: "South Carolina", abbreviation: "SC", logo: "https://clemsontigers.com/wp-content/uploads/2024/11/SouthCarolina.jpg" },
+    opponent: { name: "South Carolina", abbreviation: "SC", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2579.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -107,7 +107,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "3",
     date: "2025-08-29",
-    opponent: { name: "UAB", abbreviation: "UAB", logo: "https://clemsontigers.com/wp-content/uploads/2021/10/UAB.jpg" },
+    opponent: { name: "UAB", abbreviation: "UAB", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/5.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -118,7 +118,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "4",
     date: "2025-09-05",
-    opponent: { name: "Pittsburgh", abbreviation: "PITT", logo: "https://clemsontigers.com/wp-content/uploads/2024/11/Pittsburgh.jpg" },
+    opponent: { name: "Pittsburgh", abbreviation: "PITT", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/221.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -129,7 +129,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "5",
     date: "2025-09-09",
-    opponent: { name: "VCU", abbreviation: "VCU", logo: "https://clemsontigers.com/wp-content/uploads/2024/11/VCU.jpg" },
+    opponent: { name: "VCU", abbreviation: "VCU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2670.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -140,7 +140,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "6",
     date: "2025-09-13",
-    opponent: { name: "SMU", abbreviation: "SMU", logo: "https://clemsontigers.com/wp-content/uploads/2025/01/FB_500x500__0000s_0002_SMU.png" },
+    opponent: { name: "SMU", abbreviation: "SMU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2567.png" },
     isHome: false,
     venue: "Washburne Soccer & Track Stadium",
     location: "Dallas, Texas",
@@ -151,7 +151,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "7",
     date: "2025-09-16",
-    opponent: { name: "Queens", abbreviation: "QU", logo: "https://clemsontigers.com/wp-content/uploads/2023/08/queens.png" },
+    opponent: { name: "Queens", abbreviation: "QU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/3101.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -162,7 +162,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "8",
     date: "2025-09-19",
-    opponent: { name: "California", abbreviation: "CAL", logo: "https://clemsontigers.com/wp-content/uploads/2025/01/California_Golden_Bears_logo.svg_-1024x819.png" },
+    opponent: { name: "California", abbreviation: "CAL", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/25.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -173,7 +173,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "9",
     date: "2025-09-26",
-    opponent: { name: "Wake Forest", abbreviation: "WAKE", logo: "https://clemsontigers.com/wp-content/uploads/2024/11/WakeForest.jpg" },
+    opponent: { name: "Wake Forest", abbreviation: "WAKE", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/154.png" },
     isHome: false,
     venue: "Spry Stadium",
     location: "Winston-Salem, N.C.",
@@ -184,7 +184,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "10",
     date: "2025-10-04",
-    opponent: { name: "Elon", abbreviation: "ELON", logo: "https://clemsontigers.com/wp-content/uploads/2022/12/elon-925x1024.png" },
+    opponent: { name: "Elon", abbreviation: "ELON", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2210.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -195,7 +195,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "11",
     date: "2025-10-10",
-    opponent: { name: "NC State", abbreviation: "NCST", logo: "https://clemsontigers.com/wp-content/uploads/2020/03/NC-State-Wolfpack-Logo.png" },
+    opponent: { name: "NC State", abbreviation: "NCST", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/152.png" },
     isHome: false,
     venue: "Dail Soccer Field",
     location: "Raleigh, N.C.",
@@ -206,7 +206,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "12",
     date: "2025-10-17",
-    opponent: { name: "Duke", abbreviation: "DUKE", logo: "https://clemsontigers.com/wp-content/uploads/2025/01/FB_500x500__0000s_0001_Duke-Color.png" },
+    opponent: { name: "Duke", abbreviation: "DUKE", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/150.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -217,7 +217,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "13",
     date: "2025-10-21",
-    opponent: { name: "UNCW", abbreviation: "UNCW", logo: "https://clemsontigers.com/wp-content/uploads/2025/06/UNC_Wilmington_Seahawks_logo.svg-1-902x1024.png" },
+    opponent: { name: "UNCW", abbreviation: "UNCW", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/350.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -228,7 +228,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "14",
     date: "2025-10-25",
-    opponent: { name: "Virginia", abbreviation: "UVA", logo: "https://clemsontigers.com/wp-content/uploads/2024/01/Virginia.jpg" },
+    opponent: { name: "Virginia", abbreviation: "UVA", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/258.png" },
     isHome: false,
     venue: "Klöckner Stadium",
     location: "Charlottesville, Va.",
@@ -239,7 +239,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "15",
     date: "2025-10-31",
-    opponent: { name: "Virginia Tech", abbreviation: "VT", logo: "https://clemsontigers.com/wp-content/uploads/2025/05/VirginiaTech.jpg" },
+    opponent: { name: "Virginia Tech", abbreviation: "VT", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/259.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -251,7 +251,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "16",
     date: "2025-11-05",
-    opponent: { name: "Pittsburgh", abbreviation: "PITT", logo: "https://clemsontigers.com/wp-content/uploads/2024/11/Pittsburgh.jpg" },
+    opponent: { name: "Pittsburgh", abbreviation: "PITT", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/221.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -265,7 +265,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   {
     id: "17",
     date: "2025-11-20",
-    opponent: { name: "Western Michigan", abbreviation: "WMU", logo: "https://clemsontigers.com/wp-content/uploads/2025/11/westernmichiganlogo-1024x430.png" },
+    opponent: { name: "Western Michigan", abbreviation: "WMU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2711.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -291,7 +291,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
     id: "sp-2",
     date: "2026-02-26",
     time: "7:00 PM",
-    opponent: { name: "Furman", abbreviation: "FUR", logo: "https://clemsontigers.com/wp-content/uploads/2025/12/furman-1024x1004.png" },
+    opponent: { name: "Furman", abbreviation: "FUR", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/231.png" },
     isHome: false,
     venue: "Stone Soccer Stadium",
     location: "Greenville, S.C.",
@@ -324,7 +324,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
     id: "sp-5",
     date: "2026-04-12",
     time: "2:00 PM",
-    opponent: { name: "Presbyterian", abbreviation: "PC", logo: "https://clemsontigers.com/wp-content/uploads/2025/10/Presbyterian.jpg" },
+    opponent: { name: "Presbyterian", abbreviation: "PC", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2506.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
