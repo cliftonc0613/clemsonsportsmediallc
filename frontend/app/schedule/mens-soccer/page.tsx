@@ -410,6 +410,20 @@ export default function MensSoccerSchedulePage() {
       <section className="py-8 md:py-12 bg-gray-100">
         <div className="mx-auto px-4 max-w-[1150px]">
           <div className="space-y-12">
+            {/* Spring 2026 */}
+            {spring2026.length > 0 && (
+              <div>
+                <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
+                  Spring 2026
+                </h2>
+                <div className="space-y-3">
+                  {spring2026.map((game) => (
+                    <ScheduleRow key={game.id} game={game} />
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Fall 2025 Exhibition */}
             {fallExhibition.length > 0 && (
               <div>
@@ -446,20 +460,6 @@ export default function MensSoccerSchedulePage() {
                 </h2>
                 <div className="space-y-3">
                   {postseason.map((game) => (
-                    <ScheduleRow key={game.id} game={game} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Spring 2026 */}
-            {spring2026.length > 0 && (
-              <div>
-                <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
-                  Spring 2026
-                </h2>
-                <div className="space-y-3">
-                  {spring2026.map((game) => (
                     <ScheduleRow key={game.id} game={game} />
                   ))}
                 </div>
