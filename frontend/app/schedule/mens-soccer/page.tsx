@@ -63,7 +63,7 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
     id: "ex-2",
     date: "2025-08-12",
     time: "6:00 PM",
-    opponent: { name: "USC Upstate", abbreviation: "UPST", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2692.png" },
+    opponent: { name: "USC Upstate", abbreviation: "UPST", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2908.png" },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
