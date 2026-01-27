@@ -68,6 +68,12 @@ const nextConfig: NextConfig = {
         hostname: 'clemsonsportsmedia.com',
         pathname: '/wp-content/uploads/**',
       },
+      // Clemson Tigers official site for team logos
+      {
+        protocol: 'https',
+        hostname: 'clemsontigers.com',
+        pathname: '/wp-content/uploads/**',
+      },
     ],
   },
 
