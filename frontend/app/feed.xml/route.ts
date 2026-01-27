@@ -40,7 +40,8 @@ export async function GET() {
         const pubDate = postDate.toUTCString();
         const year = postDate.getFullYear();
         const month = String(postDate.getMonth() + 1).padStart(2, '0');
-        const link = `${SITE_URL}/blog/${year}/${month}/${post.slug}`;
+        const day = String(postDate.getDate()).padStart(2, '0');
+        const link = `${SITE_URL}/${year}/${month}/${day}/${post.slug}`;
         const author = post.author_name || 'Author';
 
         return `

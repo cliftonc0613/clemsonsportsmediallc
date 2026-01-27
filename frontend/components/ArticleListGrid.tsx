@@ -27,11 +27,12 @@ export function ArticleListGrid({
           const categoryName = getDisplayCategoryName(post, categories);
           // Show exclusive badge if post has "exclusive" tag
           const isExclusive = postHasTag(post, tags, "exclusive");
-          // Build date-based URL
+          // Build date-based URL (year/month/day/slug)
           const postDate = new Date(post.date);
           const year = postDate.getFullYear();
           const month = String(postDate.getMonth() + 1).padStart(2, "0");
-          const postUrl = `/blog/${year}/${month}/${post.slug}`;
+          const day = String(postDate.getDate()).padStart(2, "0");
+          const postUrl = `/${year}/${month}/${day}/${post.slug}`;
 
           return (
             <Link

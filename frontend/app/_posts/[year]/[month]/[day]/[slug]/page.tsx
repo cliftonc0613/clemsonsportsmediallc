@@ -37,15 +37,16 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
 
 interface BlogPostPageProps {
-  params: Promise<{ year: string; month: string; slug: string }>;
+  params: Promise<{ year: string; month: string; day: string; slug: string }>;
 }
 
-// Helper to get post URL with date format
+// Helper to get post URL with date format (year/month/day/slug)
 function getPostUrl(post: { slug: string; date: string }) {
   const postDate = new Date(post.date);
   const year = postDate.getFullYear();
   const month = String(postDate.getMonth() + 1).padStart(2, "0");
-  return `/blog/${year}/${month}/${post.slug}`;
+  const day = String(postDate.getDate()).padStart(2, "0");
+  return `/${year}/${month}/${day}/${post.slug}`;
 }
 
 // Generate static paths for all posts
@@ -62,6 +63,7 @@ export async function generateStaticParams() {
       return {
         year: String(postDate.getFullYear()),
         month: String(postDate.getMonth() + 1).padStart(2, "0"),
+        day: String(postDate.getDate()).padStart(2, "0"),
         slug: post.slug,
       };
     });
@@ -81,7 +83,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
-  const { year, month, slug } = await params;
+  const { year, month, day, slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
@@ -96,7 +98,7 @@ export async function generateMetadata({
 
   // Try to get RankMath SEO metadata
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const pageUrl = `${siteUrl}/blog/${year}/${month}/${slug}`;
+  const pageUrl = `${siteUrl}/${year}/${month}/${day}/${slug}`;
   const rankMathMeta = await getRankMathMeta(pageUrl);
 
   // Fallback metadata from WordPress post data
@@ -128,19 +130,20 @@ export async function generateMetadata({
 export const revalidate = 5;
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const { year, month, slug } = await params;
+  const { year, month, day, slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
     notFound();
   }
 
-  // Verify the year/month match the post date
+  // Verify the year/month/day match the post date
   const postDate = new Date(post.date);
   const postYear = String(postDate.getFullYear());
   const postMonth = String(postDate.getMonth() + 1).padStart(2, "0");
+  const postDay = String(postDate.getDate()).padStart(2, "0");
 
-  if (year !== postYear || month !== postMonth) {
+  if (year !== postYear || month !== postMonth || day !== postDay) {
     notFound();
   }
 
@@ -166,7 +169,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Fetch adjacent posts for navigation
   const { previous: previousPost, next: nextPost } = await getAdjacentPosts(post.date, post.id);
 
-  const postUrl = `${SITE_URL}/blog/${year}/${month}/${slug}`;
+  const postUrl = `${SITE_URL}/${year}/${month}/${day}/${slug}`;
 
   // Dynamic body classes for CSS targeting
   const bodyClasses = [

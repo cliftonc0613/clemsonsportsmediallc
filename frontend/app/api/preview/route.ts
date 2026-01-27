@@ -55,20 +55,23 @@ export async function GET(request: NextRequest) {
         const postDate = new Date(post.date);
         const year = postDate.getFullYear();
         const month = String(postDate.getMonth() + 1).padStart(2, "0");
-        redirectPath = `/blog/${year}/${month}/${slug}`;
+        const day = String(postDate.getDate()).padStart(2, "0");
+        redirectPath = `/${year}/${month}/${day}/${slug}`;
       } else {
         // Fallback if post not found - use current date
         const now = new Date();
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, "0");
-        redirectPath = `/blog/${year}/${month}/${slug}`;
+        const day = String(now.getDate()).padStart(2, "0");
+        redirectPath = `/${year}/${month}/${day}/${slug}`;
       }
     } catch {
       // Fallback on error - use current date
       const now = new Date();
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, "0");
-      redirectPath = `/blog/${year}/${month}/${slug}`;
+      const day = String(now.getDate()).padStart(2, "0");
+      redirectPath = `/${year}/${month}/${day}/${slug}`;
     }
   } else {
     const pathMap: Record<string, string> = {

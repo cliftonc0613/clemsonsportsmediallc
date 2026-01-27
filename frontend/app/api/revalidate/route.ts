@@ -54,7 +54,8 @@ export async function POST(request: NextRequest) {
             const postDate = new Date(post.date);
             const year = postDate.getFullYear();
             const month = String(postDate.getMonth() + 1).padStart(2, "0");
-            pathToRevalidate = `/blog/${year}/${month}/${slug}`;
+            const day = String(postDate.getDate()).padStart(2, "0");
+            pathToRevalidate = `/${year}/${month}/${day}/${slug}`;
           }
         } catch {
           // If we can't fetch the post, still try to revalidate listing pages

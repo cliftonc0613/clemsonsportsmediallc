@@ -86,12 +86,13 @@ export function AlternatingGrid({
   );
 }
 
-// Helper to get post URL with date format
+// Helper to get post URL with date format (year/month/day/slug)
 function getPostUrl(post: WPPost) {
   const postDate = new Date(post.date);
   const year = postDate.getFullYear();
   const month = String(postDate.getMonth() + 1).padStart(2, "0");
-  return `/blog/${year}/${month}/${post.slug}`;
+  const day = String(postDate.getDate()).padStart(2, "0");
+  return `/${year}/${month}/${day}/${post.slug}`;
 }
 
 // Image-only card (no title) for top row positions 1 & 3
