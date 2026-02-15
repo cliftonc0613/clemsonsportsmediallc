@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { getSchedule, getClemsonTeamId } from "@/lib/espn";
+import type { SimpleScheduleGame } from "@/lib/espn-types";
 import { BodyClass } from "@/components/BodyClass";
 import { BreadcrumbSchema } from "@/components/JsonLd";
 import { cn } from "@/lib/utils";
@@ -22,605 +24,81 @@ export const metadata: Metadata = {
 // Revalidate every hour
 export const revalidate = 3600;
 
-// Static schedule data for Baseball 2026
-interface ScheduleGame {
-  id: string;
-  date: string;
-  time: string;
-  opponent: {
-    name: string;
-    logo: string;
-    abbreviation: string;
-  };
-  isHome: boolean;
-  isNeutral?: boolean;
-  venue: string;
-  location: string;
-  isConference: boolean;
-  result?: {
-    win: boolean;
-    score: string;
+// Transform schedule event to SimpleScheduleGame
+function transformEvent(event: any): SimpleScheduleGame {
+  const competition = event.competitions?.[0];
+  const competitors = competition?.competitors || [];
+
+  // Find Clemson and opponent (baseball uses team ID 117, not 228)
+  const clemsonId = getClemsonTeamId("baseball");
+  const clemsonTeam = competitors.find((c: any) => c.team.id === clemsonId);
+  const opponentTeam = competitors.find((c: any) => c.team.id !== clemsonId);
+
+  const isHome = clemsonTeam?.homeAway === "home";
+  // Status is in competition, not event
+  const isCompleted = competition?.status?.type?.completed || event.status?.type?.completed;
+
+  let result: SimpleScheduleGame["result"] | undefined;
+  if (isCompleted && clemsonTeam && opponentTeam) {
+    // Handle different ESPN score formats
+    const clemsonScore = parseInt(
+      clemsonTeam.score?.displayValue ||
+      clemsonTeam.score?.value ||
+      clemsonTeam.score ||
+      "0",
+      10
+    );
+    const opponentScore = parseInt(
+      opponentTeam.score?.displayValue ||
+      opponentTeam.score?.value ||
+      opponentTeam.score ||
+      "0",
+      10
+    );
+    if (clemsonScore > 0 || opponentScore > 0) {
+      result = {
+        win: clemsonScore > opponentScore,
+        score: `${clemsonScore}-${opponentScore}`,
+      };
+    }
+  }
+
+  return {
+    id: event.id,
+    date: event.date,
+    opponent: {
+      id: opponentTeam?.team?.id || "",
+      name: opponentTeam?.team?.displayName || opponentTeam?.team?.name || "TBD",
+      abbreviation: opponentTeam?.team?.abbreviation || "",
+      displayName: opponentTeam?.team?.displayName || "TBD",
+      logo: opponentTeam?.team?.logo || opponentTeam?.team?.logos?.[0]?.href,
+      color: opponentTeam?.team?.color,
+      record: opponentTeam?.records?.[0]?.summary,
+      rank: opponentTeam?.curatedRank?.current,
+    },
+    isHome,
+    result,
+    venue: competition?.venue?.fullName,
+    broadcasts: competition?.broadcasts?.[0]?.names || [],
+    link: event.links?.[0]?.href,
   };
 }
 
-// ESPN team logo helper
-const espnLogo = (id: number) => `https://a.espncdn.com/i/teamlogos/ncaa/500/${id}.png`;
+export default async function BaseballSchedulePage() {
+  let games: SimpleScheduleGame[] = [];
 
-const SCHEDULE_2026: ScheduleGame[] = [
-  // February
-  {
-    id: "1",
-    date: "2026-02-13",
-    time: "4:00 PM",
-    opponent: { name: "Army West Point", abbreviation: "ARMY", logo: espnLogo(349) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "2",
-    date: "2026-02-14",
-    time: "2:00 PM",
-    opponent: { name: "Army West Point", abbreviation: "ARMY", logo: espnLogo(349) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "3",
-    date: "2026-02-15",
-    time: "12:00 PM",
-    opponent: { name: "Army West Point", abbreviation: "ARMY", logo: espnLogo(349) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "4",
-    date: "2026-02-17",
-    time: "4:00 PM",
-    opponent: { name: "Charlotte", abbreviation: "CLT", logo: espnLogo(2429) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "5",
-    date: "2026-02-20",
-    time: "4:00 PM",
-    opponent: { name: "Bryant", abbreviation: "BRY", logo: espnLogo(2803) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "6",
-    date: "2026-02-21",
-    time: "2:00 PM",
-    opponent: { name: "Bryant", abbreviation: "BRY", logo: espnLogo(2803) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "7",
-    date: "2026-02-22",
-    time: "1:00 PM",
-    opponent: { name: "Bryant", abbreviation: "BRY", logo: espnLogo(2803) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "8",
-    date: "2026-02-24",
-    time: "4:00 PM",
-    opponent: { name: "Presbyterian", abbreviation: "PC", logo: espnLogo(2506) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "9",
-    date: "2026-02-27",
-    time: "7:00 PM",
-    opponent: { name: "South Carolina", abbreviation: "SC", logo: espnLogo(2579) },
-    isHome: false,
-    venue: "Founders Park",
-    location: "Columbia, S.C.",
-    isConference: false,
-  },
-  {
-    id: "10",
-    date: "2026-02-28",
-    time: "3:00 PM",
-    opponent: { name: "South Carolina", abbreviation: "SC", logo: espnLogo(2579) },
-    isHome: false,
-    isNeutral: true,
-    venue: "Segra Park",
-    location: "Columbia, S.C.",
-    isConference: false,
-  },
-  // March
-  {
-    id: "11",
-    date: "2026-03-01",
-    time: "3:00 PM",
-    opponent: { name: "South Carolina", abbreviation: "SC", logo: espnLogo(2579) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "12",
-    date: "2026-03-04",
-    time: "6:00 PM",
-    opponent: { name: "Michigan State", abbreviation: "MSU", logo: espnLogo(127) },
-    isHome: false,
-    isNeutral: true,
-    venue: "Fluor Field",
-    location: "Greenville, S.C.",
-    isConference: false,
-  },
-  {
-    id: "13",
-    date: "2026-03-06",
-    time: "4:00 PM",
-    opponent: { name: "La Salle", abbreviation: "LAS", logo: espnLogo(2325) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "14",
-    date: "2026-03-07",
-    time: "12:00 PM",
-    opponent: { name: "La Salle", abbreviation: "LAS", logo: espnLogo(2325) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "15",
-    date: "2026-03-07",
-    time: "4:00 PM",
-    opponent: { name: "La Salle", abbreviation: "LAS", logo: espnLogo(2325) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "16",
-    date: "2026-03-08",
-    time: "1:00 PM",
-    opponent: { name: "La Salle", abbreviation: "LAS", logo: espnLogo(2325) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "17",
-    date: "2026-03-10",
-    time: "6:30 PM",
-    opponent: { name: "Georgia Southern", abbreviation: "GASO", logo: espnLogo(290) },
-    isHome: false,
-    isNeutral: true,
-    venue: "SRP Park",
-    location: "North Augusta, S.C.",
-    isConference: false,
-  },
-  {
-    id: "18",
-    date: "2026-03-12",
-    time: "7:00 PM",
-    opponent: { name: "Georgia Tech", abbreviation: "GT", logo: espnLogo(59) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "19",
-    date: "2026-03-13",
-    time: "8:00 PM",
-    opponent: { name: "Georgia Tech", abbreviation: "GT", logo: espnLogo(59) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "20",
-    date: "2026-03-14",
-    time: "3:00 PM",
-    opponent: { name: "Georgia Tech", abbreviation: "GT", logo: espnLogo(59) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "21",
-    date: "2026-03-17",
-    time: "6:00 PM",
-    opponent: { name: "College of Charleston", abbreviation: "COFC", logo: espnLogo(232) },
-    isHome: false,
-    venue: "Patriots Point Stadium",
-    location: "Mount Pleasant, S.C.",
-    isConference: false,
-  },
-  {
-    id: "22",
-    date: "2026-03-18",
-    time: "7:00 PM",
-    opponent: { name: "The Citadel", abbreviation: "CIT", logo: espnLogo(2643) },
-    isHome: false,
-    venue: "Joseph P. Riley Jr. Park",
-    location: "Charleston, S.C.",
-    isConference: false,
-  },
-  {
-    id: "23",
-    date: "2026-03-20",
-    time: "4:30 PM",
-    opponent: { name: "Notre Dame", abbreviation: "ND", logo: espnLogo(87) },
-    isHome: false,
-    venue: "Frank Eck Stadium",
-    location: "Notre Dame, Ind.",
-    isConference: true,
-  },
-  {
-    id: "24",
-    date: "2026-03-21",
-    time: "2:00 PM",
-    opponent: { name: "Notre Dame", abbreviation: "ND", logo: espnLogo(87) },
-    isHome: false,
-    venue: "Frank Eck Stadium",
-    location: "Notre Dame, Ind.",
-    isConference: true,
-  },
-  {
-    id: "25",
-    date: "2026-03-22",
-    time: "1:00 PM",
-    opponent: { name: "Notre Dame", abbreviation: "ND", logo: espnLogo(87) },
-    isHome: false,
-    venue: "Frank Eck Stadium",
-    location: "Notre Dame, Ind.",
-    isConference: true,
-  },
-  {
-    id: "26",
-    date: "2026-03-24",
-    time: "7:00 PM",
-    opponent: { name: "Coastal Carolina", abbreviation: "CCU", logo: espnLogo(324) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "27",
-    date: "2026-03-26",
-    time: "7:00 PM",
-    opponent: { name: "Miami", abbreviation: "MIA", logo: espnLogo(2390) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "28",
-    date: "2026-03-27",
-    time: "8:00 PM",
-    opponent: { name: "Miami", abbreviation: "MIA", logo: espnLogo(2390) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "29",
-    date: "2026-03-28",
-    time: "3:00 PM",
-    opponent: { name: "Miami", abbreviation: "MIA", logo: espnLogo(2390) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  // April
-  {
-    id: "30",
-    date: "2026-04-01",
-    time: "6:30 PM",
-    opponent: { name: "Wake Forest", abbreviation: "WAKE", logo: espnLogo(154) },
-    isHome: false,
-    isNeutral: true,
-    venue: "Truist Field",
-    location: "Charlotte, N.C.",
-    isConference: false,
-  },
-  {
-    id: "31",
-    date: "2026-04-03",
-    time: "9:05 PM",
-    opponent: { name: "Stanford", abbreviation: "STAN", logo: espnLogo(24) },
-    isHome: false,
-    venue: "Klein Field at Sunken Diamond",
-    location: "Stanford, Calif.",
-    isConference: true,
-  },
-  {
-    id: "32",
-    date: "2026-04-04",
-    time: "5:05 PM",
-    opponent: { name: "Stanford", abbreviation: "STAN", logo: espnLogo(24) },
-    isHome: false,
-    venue: "Klein Field at Sunken Diamond",
-    location: "Stanford, Calif.",
-    isConference: true,
-  },
-  {
-    id: "33",
-    date: "2026-04-05",
-    time: "4:05 PM",
-    opponent: { name: "Stanford", abbreviation: "STAN", logo: espnLogo(24) },
-    isHome: false,
-    venue: "Klein Field at Sunken Diamond",
-    location: "Stanford, Calif.",
-    isConference: true,
-  },
-  {
-    id: "34",
-    date: "2026-04-06",
-    time: "9:00 PM",
-    opponent: { name: "Santa Clara", abbreviation: "SCU", logo: espnLogo(2541) },
-    isHome: false,
-    venue: "Stephen Schott Stadium",
-    location: "Santa Clara, Calif.",
-    isConference: false,
-  },
-  {
-    id: "35",
-    date: "2026-04-10",
-    time: "6:00 PM",
-    opponent: { name: "North Carolina", abbreviation: "UNC", logo: espnLogo(153) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "36",
-    date: "2026-04-11",
-    time: "2:00 PM",
-    opponent: { name: "North Carolina", abbreviation: "UNC", logo: espnLogo(153) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "37",
-    date: "2026-04-12",
-    time: "12:30 PM",
-    opponent: { name: "North Carolina", abbreviation: "UNC", logo: espnLogo(153) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "38",
-    date: "2026-04-14",
-    time: "6:05 PM",
-    opponent: { name: "Charlotte", abbreviation: "CLT", logo: espnLogo(2429) },
-    isHome: false,
-    venue: "Truist Field",
-    location: "Charlotte, N.C.",
-    isConference: false,
-  },
-  {
-    id: "39",
-    date: "2026-04-16",
-    time: "7:00 PM",
-    opponent: { name: "Virginia", abbreviation: "UVA", logo: espnLogo(258) },
-    isHome: false,
-    venue: "Disharoon Park",
-    location: "Charlottesville, Va.",
-    isConference: true,
-  },
-  {
-    id: "40",
-    date: "2026-04-17",
-    time: "6:00 PM",
-    opponent: { name: "Virginia", abbreviation: "UVA", logo: espnLogo(258) },
-    isHome: false,
-    venue: "Disharoon Park",
-    location: "Charlottesville, Va.",
-    isConference: true,
-  },
-  {
-    id: "41",
-    date: "2026-04-18",
-    time: "1:00 PM",
-    opponent: { name: "Virginia", abbreviation: "UVA", logo: espnLogo(258) },
-    isHome: false,
-    venue: "Disharoon Park",
-    location: "Charlottesville, Va.",
-    isConference: true,
-  },
-  {
-    id: "42",
-    date: "2026-04-21",
-    time: "7:00 PM",
-    opponent: { name: "USC Upstate", abbreviation: "UPST", logo: espnLogo(2908) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: false,
-  },
-  {
-    id: "43",
-    date: "2026-04-24",
-    time: "6:00 PM",
-    opponent: { name: "Louisville", abbreviation: "LOU", logo: espnLogo(97) },
-    isHome: false,
-    venue: "Jim Patterson Stadium",
-    location: "Louisville, Ky.",
-    isConference: true,
-  },
-  {
-    id: "44",
-    date: "2026-04-25",
-    time: "2:00 PM",
-    opponent: { name: "Louisville", abbreviation: "LOU", logo: espnLogo(97) },
-    isHome: false,
-    venue: "Jim Patterson Stadium",
-    location: "Louisville, Ky.",
-    isConference: true,
-  },
-  {
-    id: "45",
-    date: "2026-04-26",
-    time: "2:00 PM",
-    opponent: { name: "Louisville", abbreviation: "LOU", logo: espnLogo(97) },
-    isHome: false,
-    venue: "Jim Patterson Stadium",
-    location: "Louisville, Ky.",
-    isConference: true,
-  },
-  // May
-  {
-    id: "46",
-    date: "2026-05-01",
-    time: "6:00 PM",
-    opponent: { name: "Boston College", abbreviation: "BC", logo: espnLogo(103) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "47",
-    date: "2026-05-02",
-    time: "2:00 PM",
-    opponent: { name: "Boston College", abbreviation: "BC", logo: espnLogo(103) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "48",
-    date: "2026-05-03",
-    time: "1:00 PM",
-    opponent: { name: "Boston College", abbreviation: "BC", logo: espnLogo(103) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "49",
-    date: "2026-05-05",
-    time: "6:00 PM",
-    opponent: { name: "Coastal Carolina", abbreviation: "CCU", logo: espnLogo(324) },
-    isHome: false,
-    venue: "Springs Brooks Stadium",
-    location: "Conway, S.C.",
-    isConference: false,
-  },
-  {
-    id: "50",
-    date: "2026-05-08",
-    time: "6:00 PM",
-    opponent: { name: "Florida State", abbreviation: "FSU", logo: espnLogo(52) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "51",
-    date: "2026-05-09",
-    time: "6:00 PM",
-    opponent: { name: "Florida State", abbreviation: "FSU", logo: espnLogo(52) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "52",
-    date: "2026-05-10",
-    time: "3:00 PM",
-    opponent: { name: "Florida State", abbreviation: "FSU", logo: espnLogo(52) },
-    isHome: true,
-    venue: "Doug Kingsmore Stadium",
-    location: "Clemson, S.C.",
-    isConference: true,
-  },
-  {
-    id: "53",
-    date: "2026-05-12",
-    time: "6:00 PM",
-    opponent: { name: "USC Upstate", abbreviation: "UPST", logo: espnLogo(2908) },
-    isHome: false,
-    venue: "Fifth Third Park",
-    location: "Spartanburg, S.C.",
-    isConference: false,
-  },
-  {
-    id: "54",
-    date: "2026-05-14",
-    time: "6:00 PM",
-    opponent: { name: "Virginia Tech", abbreviation: "VT", logo: espnLogo(259) },
-    isHome: false,
-    venue: "English Field at Atlantic Union Bank Park",
-    location: "Blacksburg, Va.",
-    isConference: true,
-  },
-  {
-    id: "55",
-    date: "2026-05-15",
-    time: "3:00 PM",
-    opponent: { name: "Virginia Tech", abbreviation: "VT", logo: espnLogo(259) },
-    isHome: false,
-    venue: "English Field at Atlantic Union Bank Park",
-    location: "Blacksburg, Va.",
-    isConference: true,
-  },
-  {
-    id: "56",
-    date: "2026-05-16",
-    time: "1:00 PM",
-    opponent: { name: "Virginia Tech", abbreviation: "VT", logo: espnLogo(259) },
-    isHome: false,
-    venue: "English Field at Atlantic Union Bank Park",
-    location: "Blacksburg, Va.",
-    isConference: true,
-  },
-];
+  try {
+    const schedule = await getSchedule("baseball");
+    if (schedule?.events) {
+      games = schedule.events.map(transformEvent);
+    }
+  } catch (error) {
+    console.error("Failed to fetch baseball schedule:", error);
+  }
 
-export default function BaseballSchedulePage() {
   const now = new Date();
-  const upcomingGames = SCHEDULE_2026.filter((g) => new Date(g.date) > now);
-  const pastGames = SCHEDULE_2026.filter((g) => new Date(g.date) <= now && g.result).reverse();
+  const upcomingGames = games.filter((g) => new Date(g.date) > now);
+  const pastGames = games.filter((g) => new Date(g.date) <= now).reverse();
 
   return (
     <>
@@ -682,35 +160,43 @@ export default function BaseballSchedulePage() {
       {/* Schedule Section */}
       <section className="py-8 md:py-12 bg-gray-100">
         <div className="mx-auto px-4 max-w-[1150px]">
-          <div className="space-y-12">
-            {/* Upcoming Games */}
-            {upcomingGames.length > 0 && (
-              <div>
-                <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
-                  Upcoming Games
-                </h2>
-                <div className="space-y-3">
-                  {upcomingGames.map((game) => (
-                    <ScheduleRow key={game.id} game={game} />
-                  ))}
+          {games.length > 0 ? (
+            <div className="space-y-12">
+              {/* Upcoming Games */}
+              {upcomingGames.length > 0 && (
+                <div>
+                  <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
+                    Upcoming Games
+                  </h2>
+                  <div className="space-y-3">
+                    {upcomingGames.map((game) => (
+                      <ScheduleRow key={game.id} game={game} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Past Games / Results */}
-            {pastGames.length > 0 && (
-              <div>
-                <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
-                  Results
-                </h2>
-                <div className="space-y-3">
-                  {pastGames.map((game) => (
-                    <ScheduleRow key={game.id} game={game} />
-                  ))}
+              {/* Past Games */}
+              {pastGames.length > 0 && (
+                <div>
+                  <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
+                    Results
+                  </h2>
+                  <div className="space-y-3">
+                    {pastGames.map((game) => (
+                      <ScheduleRow key={game.id} game={game} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <p className="text-gray-500 text-lg">
+                Schedule not available. Check back soon!
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -718,7 +204,7 @@ export default function BaseballSchedulePage() {
       <section className="pb-8 bg-gray-100">
         <div className="mx-auto px-4 max-w-[1150px]">
           <p className="text-center text-xs text-gray-400">
-            Schedule data from clemsontigers.com. * denotes ACC game.
+            Schedule provided by ESPN. Data refreshes every hour.
           </p>
         </div>
       </section>
@@ -726,7 +212,7 @@ export default function BaseballSchedulePage() {
   );
 }
 
-function ScheduleRow({ game }: { game: ScheduleGame }) {
+function ScheduleRow({ game }: { game: SimpleScheduleGame }) {
   const gameDate = new Date(game.date);
   const isCompleted = !!game.result;
   const isWin = game.result?.win;
@@ -734,6 +220,23 @@ function ScheduleRow({ game }: { game: ScheduleGame }) {
   // Format date components
   const month = gameDate.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
   const day = gameDate.getDate();
+
+  // Format time
+  const timeStr = gameDate.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).toUpperCase();
+
+  // Get city from venue for away games
+  const getCity = (venue: string | undefined) => {
+    if (!venue) return null;
+    const parts = venue.split(",");
+    if (parts.length >= 2) {
+      return parts.slice(-2).join(",").trim().toUpperCase();
+    }
+    return venue.split(" ").slice(-2).join(" ").toUpperCase();
+  };
 
   return (
     <div className="group flex h-16 md:h-20 overflow-hidden rounded-sm shadow-sm hover:shadow-md transition-shadow duration-300">
@@ -749,9 +252,9 @@ function ScheduleRow({ game }: { game: ScheduleGame }) {
         {/* VS/@ indicator */}
         <span className={cn(
           "font-bold text-sm md:text-base",
-          game.isNeutral ? "text-gray-500" : game.isHome ? "text-[var(--clemson-orange)]" : "text-[var(--clemson-purple)]"
+          game.isHome ? "text-[var(--clemson-orange)]" : "text-[var(--clemson-purple)]"
         )}>
-          {game.isNeutral ? "N" : game.isHome ? "VS" : "@"}
+          {game.isHome ? "VS" : "@"}
         </span>
 
         {/* Time/Result and Location */}
@@ -765,23 +268,20 @@ function ScheduleRow({ game }: { game: ScheduleGame }) {
             </span>
           ) : (
             <span className="text-lg md:text-2xl font-bold text-gray-800">
-              {game.time}
+              {timeStr}
             </span>
           )}
-          {!game.isHome && (
+          {!game.isHome && game.venue && (
             <span className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wide">
-              ({game.location})
+              ({getCity(game.venue)})
             </span>
           )}
         </div>
 
-        {/* Team Name and Tags */}
-        <div className="hidden md:flex ml-auto items-center gap-2">
-          <span className="font-heading text-lg lg:text-xl font-bold text-gray-800 truncate max-w-[250px]">
-            {game.opponent.name}
-            {game.isConference && "*"}
-          </span>
-        </div>
+        {/* Team Name */}
+        <span className="hidden md:block ml-auto font-heading text-lg lg:text-xl font-bold text-gray-800 truncate max-w-[300px]">
+          {game.opponent.displayName}
+        </span>
       </div>
 
       {/* Right Side - Purple section with logo */}
@@ -797,7 +297,7 @@ function ScheduleRow({ game }: { game: ScheduleGame }) {
           </div>
         ) : (
           <span className="text-white font-bold text-lg md:text-xl">
-            {game.opponent.abbreviation}
+            {game.opponent.abbreviation || "TBD"}
           </span>
         )}
       </div>

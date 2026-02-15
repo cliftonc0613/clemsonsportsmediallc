@@ -35,8 +35,21 @@ const ESPN_BASE_URL = 'https://site.api.espn.com/apis/site/v2/sports';
 const ESPN_V2_URL = 'https://site.api.espn.com/apis/v2/sports';
 const ESPN_CORE_URL = 'https://sports.core.api.espn.com/v2/sports';
 
-/** Clemson Tigers team ID (same across all sports) */
+/** Clemson Tigers default team ID (football, basketball) */
 export const CLEMSON_TEAM_ID = '228';
+
+/** Sport-specific Clemson team IDs (ESPN uses different IDs per sport) */
+export const CLEMSON_TEAM_IDS: Record<SportType, string> = {
+  football: '228',
+  mensBasketball: '228',
+  womensBasketball: '228',
+  baseball: '117',
+} as const;
+
+/** Get the correct Clemson team ID for a given sport */
+export function getClemsonTeamId(sport: SportType): string {
+  return CLEMSON_TEAM_IDS[sport] || CLEMSON_TEAM_ID;
+}
 
 /** ACC Conference ID for filtering */
 export const ACC_CONFERENCE_ID = '1';
@@ -152,8 +165,9 @@ async function fetchESPN<T>(
  */
 export async function getTeamInfo(sport: SportType): Promise<ESPNTeamResponse | null> {
   const sportPath = SPORT_PATHS[sport];
+  const teamId = getClemsonTeamId(sport);
   return fetchESPN<ESPNTeamResponse>(
-    `${ESPN_BASE_URL}/${sportPath}/teams/${CLEMSON_TEAM_ID}`,
+    `${ESPN_BASE_URL}/${sportPath}/teams/${teamId}`,
     { cache: CACHE_TIMES.teamInfo }
   );
 }
@@ -222,8 +236,9 @@ export async function getSimpleTeamInfoById(sport: SportType, teamId: string): P
  */
 export async function getSchedule(sport: SportType): Promise<ESPNScheduleResponse | null> {
   const sportPath = SPORT_PATHS[sport];
+  const teamId = getClemsonTeamId(sport);
   return fetchESPN<ESPNScheduleResponse>(
-    `${ESPN_BASE_URL}/${sportPath}/teams/${CLEMSON_TEAM_ID}/schedule`,
+    `${ESPN_BASE_URL}/${sportPath}/teams/${teamId}/schedule`,
     { cache: CACHE_TIMES.schedule }
   );
 }
@@ -298,9 +313,10 @@ export async function getClemsonGame(sport: SportType): Promise<SimpleGame | nul
   if (!scoreboard?.events) return null;
 
   // Find game with Clemson
+  const teamId = getClemsonTeamId(sport);
   const clemsonGame = scoreboard.events.find((event) =>
     event.competitions[0]?.competitors.some(
-      (c) => c.team.id === CLEMSON_TEAM_ID
+      (c) => c.team.id === teamId
     )
   );
 
@@ -390,7 +406,7 @@ export async function getClemsonGameById(
     }
 
     // If records are still missing, fetch directly from team endpoints
-    const clemsonIsHome = game.homeTeam.id === CLEMSON_TEAM_ID;
+    const clemsonIsHome = game.homeTeam.id === getClemsonTeamId(sport);
     const clemsonTeam = clemsonIsHome ? game.homeTeam : game.awayTeam;
     const opponentTeam = clemsonIsHome ? game.awayTeam : game.homeTeam;
 
@@ -509,13 +525,14 @@ async function getScheduleWithSeason(
   season?: string
 ): Promise<ESPNScheduleResponse | null> {
   const sportPath = SPORT_PATHS[sport];
+  const teamId = getClemsonTeamId(sport);
   const params: Record<string, string | number> = {};
   if (season) {
     params.season = season;
   }
 
   return fetchESPN<ESPNScheduleResponse>(
-    `${ESPN_BASE_URL}/${sportPath}/teams/${CLEMSON_TEAM_ID}/schedule`,
+    `${ESPN_BASE_URL}/${sportPath}/teams/${teamId}/schedule`,
     { cache: CACHE_TIMES.schedule, params }
   );
 }
@@ -868,12 +885,13 @@ export const BASKETBALL_STAT_KEYS = {
  */
 export async function getRoster(sport: SportType, season?: number): Promise<ESPNRosterResponse | null> {
   const sportPath = SPORT_PATHS[sport];
+  const teamId = getClemsonTeamId(sport);
   const params: Record<string, string | number> = {};
   if (season) {
     params.season = season;
   }
   return fetchESPN<ESPNRosterResponse>(
-    `${ESPN_BASE_URL}/${sportPath}/teams/${CLEMSON_TEAM_ID}/roster`,
+    `${ESPN_BASE_URL}/${sportPath}/teams/${teamId}/roster`,
     { cache: CACHE_TIMES.roster, params }
   );
 }
