@@ -9,50 +9,54 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
 
 export const metadata: Metadata = {
-  title: `Men's Soccer Schedule 2025-26 | ${SITE_NAME}`,
-  description: "Clemson Tigers Men's Soccer 2025-26 schedule with game times, opponents, and results.",
+  title: `Women's Soccer Schedule 2025 | ${SITE_NAME}`,
+  description: "Clemson Tigers Women's Soccer 2025 schedule with game times, opponents, and results.",
   openGraph: {
-    title: `Men's Soccer Schedule 2025-26 | ${SITE_NAME}`,
-    description: "Clemson Tigers Men's Soccer 2025-26 schedule with game times, opponents, and results.",
+    title: `Women's Soccer Schedule 2025 | ${SITE_NAME}`,
+    description: "Clemson Tigers Women's Soccer 2025 schedule with game times, opponents, and results.",
     type: "website",
-    url: `${SITE_URL}/schedule/mens-soccer`,
+    url: `${SITE_URL}/schedule/womens-soccer`,
   },
 };
 
 // Revalidate every hour
 export const revalidate = 3600;
 
-// Static schedule data for Men's Soccer 2025-26
+// Static schedule data for Women's Soccer 2025
 interface ScheduleGame {
   id: string;
   date: string;
   time?: string;
   opponent: {
     name: string;
-    logo?: string;
+    logo: string;
     abbreviation: string;
+    rank?: number;
   };
   isHome: boolean;
   venue: string;
   location: string;
   isConference: boolean;
-  isExhibition: boolean;
+  isExhibition?: boolean;
   isPostseason?: boolean;
   postseasonName?: string;
   result?: {
     win: boolean;
     tie?: boolean;
     score: string;
+    overtime?: string;
   };
 }
 
-const SCHEDULE_2025_26: ScheduleGame[] = [
-  // Fall 2025 - Exhibition Games
+// ESPN team logo helper
+const espnLogo = (id: number) => `https://a.espncdn.com/i/teamlogos/ncaa/500/${id}.png`;
+
+const SCHEDULE_2025: ScheduleGame[] = [
+  // Preseason Scrimmages
   {
     id: "ex-1",
-    date: "2025-08-09",
-    time: "6:00 PM",
-    opponent: { name: "Charlotte", abbreviation: "CLT", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2429.png" },
+    date: "2025-08-04",
+    opponent: { name: "Alabama", abbreviation: "ALA", logo: espnLogo(333) },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
@@ -61,293 +65,236 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   },
   {
     id: "ex-2",
-    date: "2025-08-12",
-    time: "6:00 PM",
-    opponent: { name: "USC Upstate", abbreviation: "UPST", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2908.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: false,
-    isExhibition: true,
-  },
-  {
-    id: "ex-3",
-    date: "2025-08-16",
-    time: "7:00 PM",
-    opponent: { name: "Georgia State", abbreviation: "GAST", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2247.png" },
+    date: "2025-08-09",
+    opponent: { name: "Tennessee", abbreviation: "TENN", logo: espnLogo(2633) },
     isHome: false,
-    venue: "GSU Soccer Field",
-    location: "Atlanta, Ga.",
+    venue: "Regal Soccer Stadium",
+    location: "Knoxville, Tenn.",
     isConference: false,
     isExhibition: true,
   },
-  // Fall 2025 - Regular Season
+  // Regular Season
   {
     id: "1",
-    date: "2025-08-21",
-    opponent: { name: "Indiana", abbreviation: "IND", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/84.png" },
+    date: "2025-08-14",
+    opponent: { name: "Ohio State", abbreviation: "OSU", logo: espnLogo(194), rank: 18 },
     isHome: false,
-    venue: "Jerry Yeagley Field",
-    location: "Bloomington, Ind.",
+    venue: "Jesse Owens Memorial Stadium",
+    location: "Columbus, Ohio",
     isConference: false,
-    isExhibition: false,
-    result: { win: false, tie: true, score: "2-2" },
-  },
-  {
-    id: "2",
-    date: "2025-08-26",
-    opponent: { name: "South Carolina", abbreviation: "SC", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2579.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: false,
-    isExhibition: false,
-    result: { win: true, score: "4-1" },
-  },
-  {
-    id: "3",
-    date: "2025-08-29",
-    opponent: { name: "UAB", abbreviation: "UAB", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/5.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: false,
-    isExhibition: false,
-    result: { win: true, score: "6-0" },
-  },
-  {
-    id: "4",
-    date: "2025-09-05",
-    opponent: { name: "Pittsburgh", abbreviation: "PITT", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/221.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: true,
-    isExhibition: false,
-    result: { win: true, score: "3-2" },
-  },
-  {
-    id: "5",
-    date: "2025-09-09",
-    opponent: { name: "VCU", abbreviation: "VCU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2670.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: false,
-    isExhibition: false,
-    result: { win: false, score: "1-2" },
-  },
-  {
-    id: "6",
-    date: "2025-09-13",
-    opponent: { name: "SMU", abbreviation: "SMU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2567.png" },
-    isHome: false,
-    venue: "Washburne Soccer & Track Stadium",
-    location: "Dallas, Texas",
-    isConference: true,
     isExhibition: false,
     result: { win: false, tie: true, score: "1-1" },
   },
   {
-    id: "7",
-    date: "2025-09-16",
-    opponent: { name: "Queens", abbreviation: "QU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/3101.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: false,
-    isExhibition: false,
-    result: { win: false, score: "0-1" },
-  },
-  {
-    id: "8",
-    date: "2025-09-19",
-    opponent: { name: "California", abbreviation: "CAL", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/25.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: true,
-    isExhibition: false,
-    result: { win: true, score: "3-1" },
-  },
-  {
-    id: "9",
-    date: "2025-09-26",
-    opponent: { name: "Wake Forest", abbreviation: "WAKE", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/154.png" },
+    id: "2",
+    date: "2025-08-17",
+    opponent: { name: "Ohio", abbreviation: "OHIO", logo: espnLogo(195) },
     isHome: false,
-    venue: "Spry Stadium",
-    location: "Winston-Salem, N.C.",
-    isConference: true,
-    isExhibition: false,
-    result: { win: true, score: "4-3" },
-  },
-  {
-    id: "10",
-    date: "2025-10-04",
-    opponent: { name: "Elon", abbreviation: "ELON", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2210.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
+    venue: "Chessa Field",
+    location: "Athens, Ohio",
     isConference: false,
     isExhibition: false,
     result: { win: true, score: "1-0" },
   },
   {
-    id: "11",
-    date: "2025-10-10",
-    opponent: { name: "NC State", abbreviation: "NCST", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/152.png" },
+    id: "3",
+    date: "2025-08-21",
+    opponent: { name: "Virginia Tech", abbreviation: "VT", logo: espnLogo(259), rank: 15 },
     isHome: false,
-    venue: "Dail Soccer Field",
-    location: "Raleigh, N.C.",
-    isConference: true,
-    isExhibition: false,
-    result: { win: false, score: "0-1" },
-  },
-  {
-    id: "12",
-    date: "2025-10-17",
-    opponent: { name: "Duke", abbreviation: "DUKE", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/150.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: true,
-    isExhibition: false,
-    result: { win: true, score: "3-0" },
-  },
-  {
-    id: "13",
-    date: "2025-10-21",
-    opponent: { name: "UNCW", abbreviation: "UNCW", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/350.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
+    venue: "Thompson Field",
+    location: "Blacksburg, Va.",
     isConference: false,
-    isExhibition: false,
-    result: { win: true, score: "6-0" },
-  },
-  {
-    id: "14",
-    date: "2025-10-25",
-    opponent: { name: "Virginia", abbreviation: "UVA", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/258.png" },
-    isHome: false,
-    venue: "Klöckner Stadium",
-    location: "Charlottesville, Va.",
-    isConference: true,
     isExhibition: false,
     result: { win: false, score: "0-4" },
   },
   {
-    id: "15",
-    date: "2025-10-31",
-    opponent: { name: "Virginia Tech", abbreviation: "VT", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/259.png" },
+    id: "4",
+    date: "2025-08-28",
+    opponent: { name: "South Carolina", abbreviation: "SC", logo: espnLogo(2579), rank: 12 },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
     isConference: true,
     isExhibition: false,
-    result: { win: false, tie: true, score: "3-3" },
+    result: { win: false, tie: true, score: "0-0" },
   },
-  // ACC Tournament
+  {
+    id: "5",
+    date: "2025-08-31",
+    opponent: { name: "Appalachian State", abbreviation: "APP", logo: espnLogo(2026) },
+    isHome: true,
+    venue: "Historic Riggs Field",
+    location: "Clemson, S.C.",
+    isConference: false,
+    isExhibition: false,
+    result: { win: true, score: "3-0" },
+  },
+  {
+    id: "6",
+    date: "2025-09-04",
+    opponent: { name: "Charlotte", abbreviation: "CLT", logo: espnLogo(2429) },
+    isHome: true,
+    venue: "Historic Riggs Field",
+    location: "Clemson, S.C.",
+    isConference: false,
+    isExhibition: false,
+    result: { win: true, score: "2-0" },
+  },
+  {
+    id: "7",
+    date: "2025-09-07",
+    opponent: { name: "Georgia", abbreviation: "UGA", logo: espnLogo(61), rank: 15 },
+    isHome: true,
+    venue: "Historic Riggs Field",
+    location: "Clemson, S.C.",
+    isConference: false,
+    isExhibition: false,
+    result: { win: false, tie: true, score: "1-1" },
+  },
+  {
+    id: "8",
+    date: "2025-09-11",
+    opponent: { name: "Stanford", abbreviation: "STAN", logo: espnLogo(24), rank: 3 },
+    isHome: true,
+    venue: "Historic Riggs Field",
+    location: "Clemson, S.C.",
+    isConference: true,
+    isExhibition: false,
+    result: { win: false, tie: true, score: "2-2" },
+  },
+  {
+    id: "9",
+    date: "2025-09-14",
+    opponent: { name: "California", abbreviation: "CAL", logo: espnLogo(25) },
+    isHome: true,
+    venue: "Historic Riggs Field",
+    location: "Clemson, S.C.",
+    isConference: true,
+    isExhibition: false,
+    result: { win: false, tie: true, score: "2-2" },
+  },
+  {
+    id: "10",
+    date: "2025-09-19",
+    opponent: { name: "Louisville", abbreviation: "LOU", logo: espnLogo(97) },
+    isHome: false,
+    venue: "Lynn Stadium",
+    location: "Louisville, Ky.",
+    isConference: true,
+    isExhibition: false,
+    result: { win: false, score: "0-1" },
+  },
+  {
+    id: "11",
+    date: "2025-09-25",
+    opponent: { name: "Virginia", abbreviation: "UVA", logo: espnLogo(258), rank: 1 },
+    isHome: true,
+    venue: "Historic Riggs Field",
+    location: "Clemson, S.C.",
+    isConference: true,
+    isExhibition: false,
+    result: { win: false, score: "0-3" },
+  },
+  {
+    id: "12",
+    date: "2025-09-28",
+    opponent: { name: "Notre Dame", abbreviation: "ND", logo: espnLogo(87), rank: 2 },
+    isHome: true,
+    venue: "Historic Riggs Field",
+    location: "Clemson, S.C.",
+    isConference: true,
+    isExhibition: false,
+    result: { win: false, score: "1-5" },
+  },
+  {
+    id: "13",
+    date: "2025-10-05",
+    opponent: { name: "Syracuse", abbreviation: "SYR", logo: espnLogo(183) },
+    isHome: false,
+    venue: "SU Soccer Stadium",
+    location: "Syracuse, N.Y.",
+    isConference: true,
+    isExhibition: false,
+    result: { win: true, score: "2-1" },
+  },
+  {
+    id: "14",
+    date: "2025-10-09",
+    opponent: { name: "SMU", abbreviation: "SMU", logo: espnLogo(2567) },
+    isHome: false,
+    venue: "Washburne Soccer & Track Stadium",
+    location: "Dallas, Texas",
+    isConference: true,
+    isExhibition: false,
+    result: { win: true, score: "3-2" },
+  },
+  {
+    id: "15",
+    date: "2025-10-16",
+    opponent: { name: "Wake Forest", abbreviation: "WAKE", logo: espnLogo(154), rank: 17 },
+    isHome: true,
+    venue: "Historic Riggs Field",
+    location: "Clemson, S.C.",
+    isConference: true,
+    isExhibition: false,
+    result: { win: true, score: "1-0" },
+  },
   {
     id: "16",
-    date: "2025-11-05",
-    opponent: { name: "Pittsburgh", abbreviation: "PITT", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/221.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
+    date: "2025-10-24",
+    opponent: { name: "Boston College", abbreviation: "BC", logo: espnLogo(103) },
+    isHome: false,
+    venue: "Newton Campus Field",
+    location: "Boston, Mass.",
     isConference: true,
     isExhibition: false,
-    isPostseason: true,
-    postseasonName: "ACC Tournament",
-    result: { win: false, score: "0-1" },
+    result: { win: true, score: "1-0" },
+  },
+  {
+    id: "17",
+    date: "2025-10-30",
+    opponent: { name: "Duke", abbreviation: "DUKE", logo: espnLogo(150), rank: 10 },
+    isHome: false,
+    venue: "Koskinen Stadium",
+    location: "Durham, N.C.",
+    isConference: true,
+    isExhibition: false,
+    result: { win: false, score: "2-3" },
   },
   // NCAA Tournament
   {
-    id: "17",
-    date: "2025-11-20",
-    opponent: { name: "Western Michigan", abbreviation: "WMU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2711.png" },
+    id: "18",
+    date: "2025-11-14",
+    opponent: { name: "Liberty", abbreviation: "LIB", logo: espnLogo(2335) },
     isHome: true,
     venue: "Historic Riggs Field",
     location: "Clemson, S.C.",
     isConference: false,
     isExhibition: false,
     isPostseason: true,
-    postseasonName: "NCAA Tournament",
-    result: { win: false, score: "0-1" },
-  },
-  // Spring 2026
-  {
-    id: "sp-1",
-    date: "2026-02-18",
-    time: "7:00 PM",
-    opponent: { name: "Portland Hearts of Pine", abbreviation: "PHP", logo: "https://a.espncdn.com/i/teamlogos/soccer/500/22528.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: false,
-    isExhibition: true,
+    postseasonName: "NCAA Round 1",
+    result: { win: true, score: "2-1" },
   },
   {
-    id: "sp-2",
-    date: "2026-02-26",
-    time: "7:00 PM",
-    opponent: { name: "Furman", abbreviation: "FUR", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/231.png" },
+    id: "19",
+    date: "2025-11-21",
+    opponent: { name: "Vanderbilt", abbreviation: "VAN", logo: espnLogo(238) },
     isHome: false,
-    venue: "Stone Soccer Stadium",
-    location: "Greenville, S.C.",
+    venue: "Vanderbilt Soccer Stadium",
+    location: "Nashville, Tenn.",
     isConference: false,
-    isExhibition: true,
-  },
-  {
-    id: "sp-3",
-    date: "2026-03-07",
-    time: "6:00 PM",
-    opponent: { name: "Greenville Triumph", abbreviation: "GVL", logo: "https://a.espncdn.com/i/teamlogos/soccer/500/19964.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: false,
-    isExhibition: true,
-  },
-  {
-    id: "sp-4",
-    date: "2026-03-28",
-    time: "2:00 PM",
-    opponent: { name: "Crown Legacy", abbreviation: "CLF", logo: "https://clemsontigers.com/wp-content/uploads/2026/01/Crown_Legacy_FC_logo.png" },
-    isHome: false,
-    venue: "Sportsplex at Matthews",
-    location: "Matthews, N.C.",
-    isConference: false,
-    isExhibition: true,
-  },
-  {
-    id: "sp-5",
-    date: "2026-04-12",
-    time: "2:00 PM",
-    opponent: { name: "Presbyterian", abbreviation: "PC", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2506.png" },
-    isHome: true,
-    venue: "Historic Riggs Field",
-    location: "Clemson, S.C.",
-    isConference: false,
-    isExhibition: true,
+    isExhibition: false,
+    isPostseason: true,
+    postseasonName: "NCAA Round 2",
+    result: { win: false, score: "2-3", overtime: "2OT" },
   },
 ];
 
-export default function MensSoccerSchedulePage() {
+export default function WomensSoccerSchedulePage() {
   // Separate games by category
-  const fallExhibition = SCHEDULE_2025_26.filter(g =>
-    g.isExhibition && new Date(g.date).getFullYear() === 2025
-  );
-
-  const regularSeason = SCHEDULE_2025_26.filter(g =>
-    !g.isExhibition && !g.isPostseason && new Date(g.date).getFullYear() === 2025
-  );
-
-  const postseason = SCHEDULE_2025_26.filter(g => g.isPostseason);
-
-  const spring2026 = SCHEDULE_2025_26.filter(g =>
-    new Date(g.date).getFullYear() === 2026
-  );
+  const exhibitions = SCHEDULE_2025.filter((g) => g.isExhibition);
+  const regularSeason = SCHEDULE_2025.filter((g) => !g.isExhibition && !g.isPostseason);
+  const postseason = SCHEDULE_2025.filter((g) => g.isPostseason);
 
   return (
     <>
@@ -358,7 +305,7 @@ export default function MensSoccerSchedulePage() {
         items={[
           { name: "Home", url: SITE_URL },
           { name: "Schedule", url: `${SITE_URL}/schedule` },
-          { name: "Men's Soccer", url: `${SITE_URL}/schedule/mens-soccer` },
+          { name: "Women's Soccer", url: `${SITE_URL}/schedule/womens-soccer` },
         ]}
       />
 
@@ -386,7 +333,7 @@ export default function MensSoccerSchedulePage() {
           {/* Header Content */}
           <div className="relative z-10 text-center">
             <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
-              2025-26 Men&apos;s Soccer Schedule
+              2025 Women&apos;s Soccer Schedule
             </h1>
 
             {/* Orange accent line */}
@@ -400,7 +347,7 @@ export default function MensSoccerSchedulePage() {
               <span className="mx-2">/</span>
               <span className="text-gray-400">Schedule</span>
               <span className="mx-2">/</span>
-              <span className="text-[var(--clemson-orange)]">Men&apos;s Soccer</span>
+              <span className="text-[var(--clemson-orange)]">Women&apos;s Soccer</span>
             </nav>
           </div>
         </div>
@@ -410,39 +357,25 @@ export default function MensSoccerSchedulePage() {
       <section className="py-8 md:py-12 bg-gray-100">
         <div className="mx-auto px-4 max-w-[1150px]">
           <div className="space-y-12">
-            {/* Spring 2026 */}
-            {spring2026.length > 0 && (
+            {/* Preseason/Exhibition */}
+            {exhibitions.length > 0 && (
               <div>
                 <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
-                  Spring 2026
+                  Preseason
                 </h2>
                 <div className="space-y-3">
-                  {spring2026.map((game) => (
+                  {exhibitions.map((game) => (
                     <ScheduleRow key={game.id} game={game} />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Fall 2025 Exhibition */}
-            {fallExhibition.length > 0 && (
-              <div>
-                <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
-                  Fall 2025 Exhibition
-                </h2>
-                <div className="space-y-3">
-                  {fallExhibition.map((game) => (
-                    <ScheduleRow key={game.id} game={game} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Fall 2025 Regular Season */}
+            {/* Regular Season */}
             {regularSeason.length > 0 && (
               <div>
                 <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
-                  Fall 2025 Regular Season
+                  Regular Season
                 </h2>
                 <div className="space-y-3">
                   {regularSeason.map((game) => (
@@ -456,7 +389,7 @@ export default function MensSoccerSchedulePage() {
             {postseason.length > 0 && (
               <div>
                 <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 text-[var(--clemson-purple)]">
-                  Postseason
+                  NCAA Tournament
                 </h2>
                 <div className="space-y-3">
                   {postseason.map((game) => (
@@ -521,6 +454,7 @@ function ScheduleRow({ game }: { game: ScheduleGame }) {
               isWin ? "text-emerald-600" : isTie ? "text-gray-600" : "text-rose-600"
             )}>
               {isWin ? "W" : isTie ? "T" : "L"} {game.result?.score}
+              {game.result?.overtime && ` (${game.result.overtime})`}
             </span>
           ) : (
             <span className="text-lg md:text-2xl font-bold text-gray-800">
@@ -536,6 +470,11 @@ function ScheduleRow({ game }: { game: ScheduleGame }) {
 
         {/* Team Name and Tags */}
         <div className="hidden md:flex ml-auto items-center gap-2">
+          {game.opponent.rank && (
+            <span className="text-xs bg-gray-800 text-white px-1.5 py-0.5 rounded font-bold">
+              #{game.opponent.rank}
+            </span>
+          )}
           <span className="font-heading text-lg lg:text-xl font-bold text-gray-800 truncate max-w-[250px]">
             {game.opponent.name}
             {game.isConference && "*"}

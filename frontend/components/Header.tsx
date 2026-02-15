@@ -49,7 +49,10 @@ const rosterCategories = [
 const scheduleCategories = [
   { slug: "football", label: "Football" },
   { slug: "mens-basketball", label: "Men's Basketball" },
+  { slug: "womens-basketball", label: "Women's Basketball" },
+  { slug: "baseball", label: "Baseball" },
   { slug: "mens-soccer", label: "Men's Soccer" },
+  { slug: "womens-soccer", label: "Women's Soccer" },
 ];
 
 // Main navigation items (without Sports dropdown)
@@ -209,8 +212,8 @@ export function Header() {
               >
                 Schedules
               </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <div className="grid w-[300px] grid-cols-1 gap-2 p-4 bg-white shadow-lg">
+              <NavigationMenuContent className="!left-1/2 !-translate-x-1/2">
+                <div className="grid w-[400px] grid-cols-2 gap-2 p-4 bg-white shadow-lg">
                   {scheduleCategories.map((schedule) => (
                     <Link
                       key={schedule.slug}
