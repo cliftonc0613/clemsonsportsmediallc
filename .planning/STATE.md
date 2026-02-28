@@ -4,17 +4,17 @@
 
 See: .planning/PROJECT.md (updated 2026-01-20)
 
-**Core value:** Blog content delivery and Performance & SEO
-**Current focus:** v1.0 complete — planning next milestone
+**Core value:** Media files upload to S3 and serve from CloudFront transparently
+**Current focus:** Phase 5 — Bulk Migration (CT S3 Offloader plugin)
 
 ## Current Position
 
-Phase: v1.0 complete (9 phases shipped)
-Plan: Not started
-Status: Ready to plan v1.1
-Last activity: 2026-01-20 — v1.0 milestone shipped and archived
+Phase: 5 of 6 (Bulk Migration)
+Plan: 1 of 2 complete in phase
+Status: In progress
+Last activity: 2026-02-28 — Completed 05-01-PLAN.md (Bulk Migration Engine + WP-CLI Offload)
 
-Progress: ██████████ 100% (v1.0)
+Progress: █░ Phase 5: 1/2 plans
 
 ## Shipped Milestones
 
@@ -48,16 +48,22 @@ Progress: ██████████ 100% (v1.0)
 - Tag navigation not prominent in header
 - Hardcoded sport categories in homepage
 
+### Key Decisions (S3 Offloader)
+
+- Decoupled batch engine from CLI output for reuse by admin UI
+- Shared build_file_key_list() for path resolution across upload and reset
+- WP-CLI registration before plugins_loaded with credential guard
+
 ### Blockers/Concerns
 
 None.
 
 ## Session Continuity
 
-Last session: 2026-01-20
-Stopped at: v1.0 milestone complete
+Last session: 2026-02-28
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None
 
 ## Next Steps
 
-Run `/gsd:new-milestone` to start v1.1 planning.
+Execute 05-02-PLAN.md (status and reset subcommands).
