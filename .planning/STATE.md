@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-20)
 
 **Core value:** Media files upload to S3 and serve from CloudFront transparently
-**Current focus:** Phase 5 — Bulk Migration (CT S3 Offloader plugin)
+**Current focus:** Phase 6 — Admin UI and Finalization (CT S3 Offloader plugin)
 
 ## Current Position
 
-Phase: 5 of 6 (Bulk Migration)
+Phase: 6 of 6 (Admin UI and Finalization)
 Plan: 2 of 2 complete in phase
 Status: Phase complete
-Last activity: 2026-02-28 — Completed 05-02-PLAN.md (Status and Reset CLI Subcommands)
+Last activity: 2026-02-28 — Completed 06-02-PLAN.md (Stats Dashboard and Uninstall Cleanup)
 
-Progress: ██ Phase 5: 2/2 plans
+Progress: [██████████] 100%
 
 ## Shipped Milestones
 
@@ -55,6 +55,7 @@ Progress: ██ Phase 5: 2/2 plans
 - WP-CLI registration before plugins_loaded with credential guard
 - WP_CLI::confirm() for reset safety with native --yes flag support
 - Fallback to tracker key when attachment metadata missing during reset
+- Stats size uses metadata filesize only — no S3 API or filesystem calls
 
 ### Blockers/Concerns
 
@@ -63,9 +64,16 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 05-02-PLAN.md
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None
 
 ## Next Steps
 
-Phase 5 (Bulk Migration) is complete. All WP-CLI subcommands (offload, status, reset) are implemented. Proceed to Phase 6 or next milestone planning.
+Phase 6 (Admin UI and Finalization) is complete. The CT S3 Offloader plugin is feature-complete with:
+- Media Library status column with detail popups
+- Admin notices for missing credentials
+- Settings page with credentials, connection test, stats dashboard, and options
+- Complete uninstall cleanup with optional S3 deletion
+- WP-CLI commands (offload, status, reset)
+
+All 6 phases of the S3 Offloader plugin are done. Proceed to next milestone planning or testing.
