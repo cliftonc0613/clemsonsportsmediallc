@@ -36,8 +36,12 @@ export async function GET() {
         const title = decodeHtmlEntities(post.title.rendered);
         const excerpt = stripHtml(post.excerpt.rendered);
         const content = post.content.rendered;
-        const pubDate = new Date(post.date).toUTCString();
-        const link = `${SITE_URL}/blog/${post.slug}`;
+        const postDate = new Date(post.date);
+        const pubDate = postDate.toUTCString();
+        const year = postDate.getFullYear();
+        const month = String(postDate.getMonth() + 1).padStart(2, '0');
+        const day = String(postDate.getDate()).padStart(2, '0');
+        const link = `${SITE_URL}/${year}/${month}/${day}/${post.slug}`;
         const author = post.author_name || 'Author';
 
         return `

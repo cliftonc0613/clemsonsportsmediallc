@@ -387,9 +387,17 @@ export function WordPressContent({ html, className = "" }: WordPressContentProps
 
   return (
     <div ref={containerRef} className={className} suppressHydrationWarning>
-      {/* suppressHydrationWarning: Server uses regex sanitization, client uses DOMPurify.
-          Content is intentionally re-sanitized on client for security. */}
-      <div dangerouslySetInnerHTML={{ __html: processedHtml }} suppressHydrationWarning />
+      {/* Render HTML only after mount to avoid hydration mismatch.
+          Server uses regex sanitization, client uses DOMPurify - they produce different output. */}
+      {mounted ? (
+        <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
+      ) : (
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-4" />
+          <div className="h-4 bg-gray-200 rounded w-full mb-4" />
+          <div className="h-4 bg-gray-200 rounded w-5/6 mb-4" />
+        </div>
+      )}
 
       {/* Render YouTube players via portals */}
       {mounted && youtubeEmbeds.map((embed) => (

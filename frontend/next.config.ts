@@ -62,12 +62,18 @@ const nextConfig: NextConfig = {
         hostname: 'a.espncdn.com',
         pathname: '/i/teamlogos/**',
       },
-      // Production WordPress domain (uncomment when deploying)
-      // {
-      //   protocol: 'https',
-      //   hostname: 'wpstarter.mysites.io',
-      //   pathname: '/wp-content/uploads/**',
-      // },
+      // Production WordPress domain
+      {
+        protocol: 'https',
+        hostname: 'clemsonsportsmedia.com',
+        pathname: '/wp-content/uploads/**',
+      },
+      // Clemson Tigers official site for team logos
+      {
+        protocol: 'https',
+        hostname: 'clemsontigers.com',
+        pathname: '/wp-content/uploads/**',
+      },
     ],
   },
 

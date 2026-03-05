@@ -775,6 +775,7 @@ export async function search(params: {
       const items = await fetchAPI<Array<{
         id: number;
         slug: string;
+        date: string;
         title: { rendered: string };
         excerpt?: { rendered: string };
         content?: { rendered: string };
@@ -808,15 +809,27 @@ export async function search(params: {
             ? stripHtml(item.content.rendered).slice(0, 150)
             : '';
 
+        // Build URL with date format for posts (year/month/day/slug)
+        let url: string;
+        if (type === 'post') {
+          const postDate = new Date(item.date);
+          const year = postDate.getFullYear();
+          const month = String(postDate.getMonth() + 1).padStart(2, '0');
+          const day = String(postDate.getDate()).padStart(2, '0');
+          url = `/${year}/${month}/${day}/${item.slug}`;
+        } else if (type === 'page') {
+          url = `/${item.slug}`;
+        } else {
+          url = `/services/${item.slug}`;
+        }
+
         return {
           id: item.id,
           type,
           title: decodeHtmlEntities(item.title.rendered),
           excerpt: excerptText.slice(0, 150),
           slug: item.slug,
-          url: type === 'post' ? `/blog/${item.slug}`
-             : type === 'page' ? `/${item.slug}`
-             : `/services/${item.slug}`,
+          url,
           image: imageUrl ? {
             url: imageUrl,
             alt: featuredMedia?.alt_text || '',

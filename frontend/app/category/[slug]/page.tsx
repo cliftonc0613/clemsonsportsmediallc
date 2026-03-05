@@ -204,10 +204,16 @@ export default async function CategoryPage({
               {posts.slice(0, 4).map((post) => {
                 const title = decodeHtmlEntities(post.title.rendered);
                 const imageUrl = rewriteImageUrl(post.featured_image_url);
+                // Build date-based URL (year/month/day/slug)
+                const postDate = new Date(post.date);
+                const year = postDate.getFullYear();
+                const month = String(postDate.getMonth() + 1).padStart(2, "0");
+                const day = String(postDate.getDate()).padStart(2, "0");
+                const postUrl = `/${year}/${month}/${day}/${post.slug}`;
                 return (
                   <Link
                     key={post.id}
-                    href={`/blog/${post.slug}`}
+                    href={postUrl}
                     className="group block"
                   >
                     <div className="relative aspect-[3/4] overflow-hidden">

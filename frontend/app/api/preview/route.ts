@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { draftMode } from "next/headers";
+import { getPost } from "@/lib/wordpress";
 
 /**
  * WordPress Preview Handler
@@ -44,14 +45,42 @@ export async function GET(request: NextRequest) {
   draft.enable();
 
   // Determine the redirect path based on post type
-  const pathMap: Record<string, string> = {
-    post: `/blog/${slug}`,
-    page: `/${slug}`,
-    services: `/services/${slug}`,
-    testimonials: `/testimonials`,
-  };
+  let redirectPath: string;
 
-  const redirectPath = pathMap[type] || `/${slug}`;
+  if (type === "post") {
+    // For posts, fetch the post to get its date for the URL
+    try {
+      const post = await getPost(slug);
+      if (post) {
+        const postDate = new Date(post.date);
+        const year = postDate.getFullYear();
+        const month = String(postDate.getMonth() + 1).padStart(2, "0");
+        const day = String(postDate.getDate()).padStart(2, "0");
+        redirectPath = `/${year}/${month}/${day}/${slug}`;
+      } else {
+        // Fallback if post not found - use current date
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        redirectPath = `/${year}/${month}/${day}/${slug}`;
+      }
+    } catch {
+      // Fallback on error - use current date
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      redirectPath = `/${year}/${month}/${day}/${slug}`;
+    }
+  } else {
+    const pathMap: Record<string, string> = {
+      page: `/${slug}`,
+      services: `/services/${slug}`,
+      testimonials: `/testimonials`,
+    };
+    redirectPath = pathMap[type] || `/${slug}`;
+  }
 
   // Redirect to the preview page
   // Include query params so the page knows it's in preview mode

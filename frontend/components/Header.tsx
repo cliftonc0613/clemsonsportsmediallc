@@ -49,7 +49,10 @@ const rosterCategories = [
 const scheduleCategories = [
   { slug: "football", label: "Football" },
   { slug: "mens-basketball", label: "Men's Basketball" },
+  { slug: "womens-basketball", label: "Women's Basketball" },
+  { slug: "baseball", label: "Baseball" },
   { slug: "mens-soccer", label: "Men's Soccer" },
+  { slug: "womens-soccer", label: "Women's Soccer" },
 ];
 
 // Main navigation items (without Sports dropdown)
@@ -189,7 +192,7 @@ export function Header() {
                       key={roster.slug}
                       href={`/roster/${roster.slug}`}
                       className={`block px-4 py-3 font-heading text-sm font-semibold uppercase tracking-wide transition-colors rounded
-                        ${pathname === `/roster/${roster.slug}` || pathname.includes(`/roster/2025/${roster.slug}`)
+                        ${pathname === `/roster/${roster.slug}`
                           ? "bg-[var(--clemson-dark-purple)] text-white"
                           : "text-[var(--clemson-dark-purple)] hover:bg-[var(--clemson-purple)]/10 hover:text-[var(--clemson-purple)]"
                         }
@@ -209,8 +212,8 @@ export function Header() {
               >
                 Schedules
               </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <div className="grid w-[300px] grid-cols-1 gap-2 p-4 bg-white shadow-lg">
+              <NavigationMenuContent className="!left-1/2 !-translate-x-1/2">
+                <div className="grid w-[400px] grid-cols-2 gap-2 p-4 bg-white shadow-lg">
                   {scheduleCategories.map((schedule) => (
                     <Link
                       key={schedule.slug}
@@ -364,7 +367,7 @@ export function Header() {
                           href={`/roster/${roster.slug}`}
                           onClick={() => setIsOpen(false)}
                           className={`block py-2 px-8 font-heading text-sm font-semibold uppercase tracking-wide transition-colors text-white
-                            ${pathname === `/roster/${roster.slug}` || pathname.includes(`/roster/2025/${roster.slug}`)
+                            ${pathname === `/roster/${roster.slug}`
                               ? "bg-white/20"
                               : "hover:bg-white/10"
                             }

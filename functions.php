@@ -159,7 +159,49 @@ function starter_theme_register_post_types() {
         'hierarchical'        => false,
         'menu_position'       => 6,
         'menu_icon'           => 'dashicons-format-quote',
-        'supports'            => array('title', 'thumbnail', 'revisions'),
+        'supports'            => array('title', 'editor', 'thumbnail', 'revisions'),
+    ));
+
+    // Gallery CPT
+    register_post_type('photo-gallery', array(
+        'labels' => array(
+            'name'                  => __('Galleries', 'starter-wp-theme'),
+            'singular_name'         => __('Gallery', 'starter-wp-theme'),
+            'menu_name'             => __('Galleries', 'starter-wp-theme'),
+            'add_new'               => __('Add New', 'starter-wp-theme'),
+            'add_new_item'          => __('Add New Gallery', 'starter-wp-theme'),
+            'edit_item'             => __('Edit Gallery', 'starter-wp-theme'),
+            'new_item'              => __('New Gallery', 'starter-wp-theme'),
+            'view_item'             => __('View Gallery', 'starter-wp-theme'),
+            'view_items'            => __('View Galleries', 'starter-wp-theme'),
+            'search_items'          => __('Search Galleries', 'starter-wp-theme'),
+            'not_found'             => __('No galleries found', 'starter-wp-theme'),
+            'not_found_in_trash'    => __('No galleries found in Trash', 'starter-wp-theme'),
+            'all_items'             => __('All Galleries', 'starter-wp-theme'),
+            'archives'              => __('Gallery Archives', 'starter-wp-theme'),
+            'attributes'            => __('Gallery Attributes', 'starter-wp-theme'),
+            'insert_into_item'      => __('Insert into gallery', 'starter-wp-theme'),
+            'uploaded_to_this_item' => __('Uploaded to this gallery', 'starter-wp-theme'),
+            'featured_image'        => __('Gallery Cover Image', 'starter-wp-theme'),
+            'set_featured_image'    => __('Set gallery cover image', 'starter-wp-theme'),
+            'remove_featured_image' => __('Remove gallery cover image', 'starter-wp-theme'),
+            'use_featured_image'    => __('Use as gallery cover image', 'starter-wp-theme'),
+        ),
+        'public'              => true,
+        'publicly_queryable'  => true,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'show_in_nav_menus'   => true,
+        'show_in_rest'        => true,
+        'rest_base'           => 'photo-gallery',
+        'query_var'           => true,
+        'rewrite'             => array('slug' => 'photo-gallery', 'with_front' => false),
+        'capability_type'     => 'post',
+        'has_archive'         => true,
+        'hierarchical'        => false,
+        'menu_position'       => 7,
+        'menu_icon'           => 'dashicons-format-gallery',
+        'supports'            => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
     ));
 }
 add_action('init', 'starter_theme_register_post_types');
@@ -333,6 +375,58 @@ function starter_theme_preview_link($preview_link, $post) {
     );
 }
 add_filter('preview_post_link', 'starter_theme_preview_link', 10, 2);
+
+/**
+ * Redirect published post permalinks to Next.js frontend
+ * Makes "View Post" button in admin link to the frontend
+ */
+function starter_theme_frontend_permalink($permalink, $post_or_id) {
+    // Get post ID regardless of what was passed
+    if (is_numeric($post_or_id)) {
+        $post_id = $post_or_id;
+    } elseif (is_object($post_or_id) && isset($post_or_id->ID)) {
+        $post_id = $post_or_id->ID;
+    } else {
+        return $permalink;
+    }
+
+    // Force fresh post lookup from database
+    $post = get_post($post_id);
+    if (!$post) {
+        return $permalink;
+    }
+
+    $slug = $post->post_name;
+    if (empty($slug)) {
+        return $permalink;
+    }
+
+    $frontend_url = defined('STARTER_FRONTEND_URL')
+        ? STARTER_FRONTEND_URL
+        : get_option('starter_frontend_url', 'http://localhost:3000');
+
+    // Build frontend URL based on post type
+    switch ($post->post_type) {
+        case 'post':
+            $year = date('Y', strtotime($post->post_date));
+            $month = date('m', strtotime($post->post_date));
+            $day = date('d', strtotime($post->post_date));
+            return trailingslashit($frontend_url) . $year . '/' . $month . '/' . $day . '/' . $slug;
+        case 'page':
+            return trailingslashit($frontend_url) . $slug;
+        case 'services':
+            return trailingslashit($frontend_url) . 'services/' . $slug;
+        case 'testimonials':
+            return trailingslashit($frontend_url) . 'testimonials/' . $slug;
+        case 'photo-gallery':
+            return trailingslashit($frontend_url) . 'photo-gallery/' . $slug;
+        default:
+            return $permalink;
+    }
+}
+add_filter('post_link', 'starter_theme_frontend_permalink', 10, 2);
+add_filter('page_link', 'starter_theme_frontend_permalink', 10, 2);
+add_filter('post_type_link', 'starter_theme_frontend_permalink', 10, 2);
 
 /**
  * Trigger Next.js revalidation when content is published or updated
@@ -534,6 +628,51 @@ function starter_theme_register_photo_credit_field() {
     ));
 }
 add_action('acf/init', 'starter_theme_register_photo_credit_field');
+
+/**
+ * Set Gutenberg meta box panel to 50% height by default
+ */
+function starter_theme_admin_meta_box_styles() {
+    $screen = get_current_screen();
+
+    // Only apply to CPTs with editor support
+    $cpts_with_meta = array('services', 'testimonials', 'photo-gallery');
+
+    if ($screen && in_array($screen->post_type, $cpts_with_meta) && $screen->is_block_editor()) {
+        ?>
+        <style>
+            /* Set meta box panel to 50% viewport height */
+            .interface-interface-skeleton__secondary-sidebar,
+            .edit-post-meta-boxes-area {
+                min-height: 50vh !important;
+            }
+
+            /* Gutenberg meta box container */
+            .edit-post-layout__metaboxes {
+                flex: 1 1 50vh !important;
+                min-height: 50vh !important;
+            }
+
+            /* Meta box area wrapper */
+            .edit-post-meta-boxes-area__container {
+                max-height: none !important;
+            }
+
+            /* Ensure the editor content area shares space */
+            .interface-interface-skeleton__content {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .edit-post-visual-editor {
+                flex: 1 1 50vh;
+                min-height: 50vh;
+            }
+        </style>
+        <?php
+    }
+}
+add_action('admin_head', 'starter_theme_admin_meta_box_styles');
 
 /**
  * Include additional functionality files

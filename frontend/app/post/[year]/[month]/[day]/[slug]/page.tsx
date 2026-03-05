@@ -31,18 +31,26 @@ import { ReadingProgress } from "@/components/ReadingProgress";
 import { SaveOfflineButton } from "@/components/SaveOfflineButton";
 import { AuthorBio } from "@/components/AuthorBio";
 import { PostMeta } from "@/components/PostMeta";
+import { BlogSidebar } from "@/components/BlogSidebar";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Starter WP Theme";
 
 interface BlogPostPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ year: string; month: string; day: string; slug: string }>;
+}
+
+// Helper to get post URL with date format (year/month/day/slug)
+function getPostUrl(post: { slug: string; date: string }) {
+  const postDate = new Date(post.date);
+  const year = postDate.getFullYear();
+  const month = String(postDate.getMonth() + 1).padStart(2, "0");
+  const day = String(postDate.getDate()).padStart(2, "0");
+  return `/${year}/${month}/${day}/${post.slug}`;
 }
 
 // Generate static paths for all posts
 export async function generateStaticParams() {
-  // If WordPress isn't configured during build, return empty array
-  // Pages will be generated on-demand with ISR
   if (!isWordPressConfigured()) {
     console.warn('WORDPRESS_API_URL not set - skipping static generation for blog posts');
     return [];
@@ -50,9 +58,15 @@ export async function generateStaticParams() {
 
   try {
     const posts = await getPosts({ per_page: 100 });
-    return posts.map((post) => ({
-      slug: post.slug,
-    }));
+    return posts.map((post) => {
+      const postDate = new Date(post.date);
+      return {
+        year: String(postDate.getFullYear()),
+        month: String(postDate.getMonth() + 1).padStart(2, "0"),
+        day: String(postDate.getDate()).padStart(2, "0"),
+        slug: post.slug,
+      };
+    });
   } catch (error) {
     console.error('Failed to fetch posts for static generation:', error);
     return [];
@@ -69,7 +83,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { year, month, day, slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
@@ -84,7 +98,7 @@ export async function generateMetadata({
 
   // Try to get RankMath SEO metadata
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const pageUrl = `${siteUrl}/blog/${slug}`;
+  const pageUrl = `${siteUrl}/${year}/${month}/${day}/${slug}`;
   const rankMathMeta = await getRankMathMeta(pageUrl);
 
   // Fallback metadata from WordPress post data
@@ -116,10 +130,20 @@ export async function generateMetadata({
 export const revalidate = 5;
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const { slug } = await params;
+  const { year, month, day, slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
+    notFound();
+  }
+
+  // Verify the year/month/day match the post date
+  const postDate = new Date(post.date);
+  const postYear = String(postDate.getFullYear());
+  const postMonth = String(postDate.getMonth() + 1).padStart(2, "0");
+  const postDay = String(postDate.getDate()).padStart(2, "0");
+
+  if (year !== postYear || month !== postMonth || day !== postDay) {
     notFound();
   }
 
@@ -138,12 +162,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // Fetch related posts (latest 3 posts excluding current)
   const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id] });
-  console.log('[DEBUG] Related Posts count:', relatedPosts.length);
+
+  // Fetch recent posts for sidebar (get 4 in case current is in the list)
+  const recentPosts = await getPosts({ per_page: 4 });
 
   // Fetch adjacent posts for navigation
   const { previous: previousPost, next: nextPost } = await getAdjacentPosts(post.date, post.id);
 
-  const postUrl = `${SITE_URL}/blog/${slug}`;
+  const postUrl = `${SITE_URL}/${year}/${month}/${day}/${slug}`;
 
   // Dynamic body classes for CSS targeting
   const bodyClasses = [
@@ -196,13 +222,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="container mx-auto px-4">
           {/* Featured Image - Hanging */}
           {featuredImageUrl && (
-            <div className="mx-auto max-w-4xl mb-8">
+            <div className="mx-auto max-w-[1100px] mb-8">
               <div className="relative aspect-video overflow-hidden">
                 <BlurImage
                   src={featuredImageUrl}
                   alt={title}
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 896px, 896px"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1100px) 100vw, 1100px"
                   className="object-cover"
                   priority
                 />
@@ -215,7 +241,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           {/* Title & Meta Below Image */}
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-[1250px] text-center">
             {/* Category Badges */}
             {categories.length > 0 && (
               <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
@@ -254,98 +280,106 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Article Content */}
       <article className="py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl">
-            <WordPressContent
-              html={contentHtml}
-              className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:font-bold prose-a:text-[var(--clemson-orange)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-blockquote:border-l-[var(--clemson-purple)] prose-blockquote:border-l-4"
-            />
-          </div>
+          <div className="mx-auto max-w-[1250px] flex flex-col lg:flex-row gap-8">
+            {/* Main Content */}
+            <div className="flex-1 min-w-0">
+              <WordPressContent
+                html={contentHtml}
+                className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:font-bold prose-a:text-[var(--clemson-orange)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-none prose-blockquote:border-l-[var(--clemson-purple)] prose-blockquote:border-l-4"
+              />
 
-          {/* Post Meta: Categories & Tags */}
-          <div className="mx-auto max-w-3xl mt-12 pt-8 border-t border-gray-200">
-            <PostMeta categories={categories} tags={tags} />
-          </div>
+              {/* Post Meta: Categories & Tags */}
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <PostMeta categories={categories} tags={tags} />
+              </div>
 
-          {/* Site Blurb */}
-          <div className="mx-auto max-w-3xl mt-8 pt-8 border-t border-gray-200">
-            <p className="text-gray-600 leading-relaxed">
-              Stay up-to-date with all things Clemson sports by visiting Clemson Sports Media,
-              your one-stop website for everything Clemson. We provide post-game interviews,
-              in-depth analysis, and comprehensive coverage of all Clemson sports. Don&apos;t miss
-              out on the latest news and updates, visit{" "}
-              <Link href="/" className="text-[var(--clemson-orange)] font-semibold hover:underline">
-                Clemson Sports Media
-              </Link>{" "}
-              today.
-            </p>
-          </div>
+              {/* Site Blurb */}
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <p className="text-gray-600 leading-relaxed">
+                  Stay up-to-date with all things Clemson sports by visiting Clemson Sports Media,
+                  your one-stop website for everything Clemson. We provide post-game interviews,
+                  in-depth analysis, and comprehensive coverage of all Clemson sports. Don&apos;t miss
+                  out on the latest news and updates, visit{" "}
+                  <Link href="/" className="text-[var(--clemson-orange)] font-semibold hover:underline">
+                    Clemson Sports Media
+                  </Link>{" "}
+                  today.
+                </p>
+              </div>
 
-          {/* Previous/Next Navigation */}
-          {(previousPost || nextPost) && (
-            <div className="mx-auto max-w-3xl mt-8 pt-8 border-t border-gray-200">
-              <div className="flex items-stretch">
-                {/* Previous */}
-                <div className="flex-1 pr-4">
-                  {previousPost && (
-                    <Link href={`/blog/${previousPost.slug}`} className="group flex items-start gap-3">
-                      <ChevronLeft className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
-                      <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
-                          Previous
-                        </span>
-                        <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
-                          {decodeHtmlEntities(previousPost.title.rendered)}
-                        </h4>
-                      </div>
-                    </Link>
-                  )}
+              {/* Previous/Next Navigation */}
+              {(previousPost || nextPost) && (
+                <div className="mt-8 pt-8 border-t border-gray-200">
+                  <div className="flex items-stretch">
+                    {/* Previous */}
+                    <div className="flex-1 pr-4">
+                      {previousPost && (
+                        <Link href={getPostUrl(previousPost)} className="group flex items-start gap-3">
+                          <ChevronLeft className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
+                          <div>
+                            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
+                              Previous
+                            </span>
+                            <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
+                              {decodeHtmlEntities(previousPost.title.rendered)}
+                            </h4>
+                          </div>
+                        </Link>
+                      )}
+                    </div>
+
+                    {/* Divider */}
+                    <div className="w-px bg-gray-200" />
+
+                    {/* Next */}
+                    <div className="flex-1 pl-4 text-right">
+                      {nextPost && (
+                        <Link href={getPostUrl(nextPost)} className="group flex items-start gap-3 justify-end">
+                          <div>
+                            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
+                              Next
+                            </span>
+                            <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
+                              {decodeHtmlEntities(nextPost.title.rendered)}
+                            </h4>
+                          </div>
+                          <ChevronRight className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
                 </div>
+              )}
 
-                {/* Divider */}
-                <div className="w-px bg-gray-200" />
-
-                {/* Next */}
-                <div className="flex-1 pl-4 text-right">
-                  {nextPost && (
-                    <Link href={`/blog/${nextPost.slug}`} className="group flex items-start gap-3 justify-end">
-                      <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--clemson-orange)]">
-                          Next
-                        </span>
-                        <h4 className="font-heading text-sm font-bold text-[var(--clemson-purple)] group-hover:underline mt-1 line-clamp-2">
-                          {decodeHtmlEntities(nextPost.title.rendered)}
-                        </h4>
-                      </div>
-                      <ChevronRight className="h-5 w-5 mt-1 text-gray-400 group-hover:text-[var(--clemson-purple)] flex-shrink-0" />
-                    </Link>
-                  )}
+              {/* Actions: Back to Blog, Save Offline & Share */}
+              <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+                <Button asChild variant="outline" className="border-[var(--clemson-purple)] text-[var(--clemson-purple)] hover:bg-[var(--clemson-purple)] hover:text-white">
+                  <Link href="/">← Back to Blog</Link>
+                </Button>
+                <div className="flex items-center gap-2">
+                  <SaveOfflineButton url={postUrl} title={title} />
+                  <ShareButton
+                    title={title}
+                    text={stripHtml(post.excerpt.rendered)}
+                    url={postUrl}
+                  />
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Actions: Back to Blog, Save Offline & Share */}
-          <div className="mx-auto max-w-3xl mt-8 flex flex-wrap items-center justify-between gap-4">
-            <Button asChild variant="outline" className="border-[var(--clemson-purple)] text-[var(--clemson-purple)] hover:bg-[var(--clemson-purple)] hover:text-white">
-              <Link href="/">← Back to Blog</Link>
-            </Button>
-            <div className="flex items-center gap-2">
-              <SaveOfflineButton url={postUrl} title={title} />
-              <ShareButton
-                title={title}
-                text={stripHtml(post.excerpt.rendered)}
-                url={postUrl}
-              />
+              {/* Author Bio */}
+              <div className="mt-12">
+                <AuthorBio
+                  name={authorName}
+                  avatar={authorAvatar}
+                  bio={authorBio}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Author Bio */}
-          <div className="mx-auto max-w-3xl mt-12">
-            <AuthorBio
-              name={authorName}
-              avatar={authorAvatar}
-              bio={authorBio}
-            />
+            {/* Sidebar - Hidden on mobile, visible on lg+ */}
+            <div className="hidden lg:block">
+              <BlogSidebar recentPosts={recentPosts} currentPostId={post.id} />
+            </div>
           </div>
         </div>
       </article>

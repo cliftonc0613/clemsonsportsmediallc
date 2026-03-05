@@ -2,16 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getRosterByGroup, getSimpleRoster } from "@/lib/roster";
+import { getCurrentRosterByGroup, getCurrentRoster, CURRENT_ROSTER_YEAR } from "@/lib/roster";
 import type { RosterSportSlug, SimpleRosterPlayer } from "@/lib/roster-types";
 import { BodyClass } from "@/components/BodyClass";
 import { BreadcrumbSchema } from "@/components/JsonLd";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
-
-// Available years for roster selection
-const AVAILABLE_YEARS = ["2025", "2026"];
 
 // Sport slug to RosterSportSlug mapping
 const SPORT_SLUG_MAP: Record<string, RosterSportSlug> = {
@@ -119,16 +116,12 @@ const SPORT_CONFIG: Record<
 export const revalidate = 3600;
 
 interface PageParams {
-  year: string;
   sport: string;
 }
 
-// Generate static params for all year/sport combinations
+// Generate static params for all sports
 export async function generateStaticParams() {
-  const sports = Object.keys(SPORT_SLUG_MAP);
-  return AVAILABLE_YEARS.flatMap((year) =>
-    sports.map((sport) => ({ year, sport }))
-  );
+  return Object.keys(SPORT_SLUG_MAP).map((sport) => ({ sport }));
 }
 
 // Generate metadata for each page
@@ -137,7 +130,7 @@ export async function generateMetadata({
 }: {
   params: Promise<PageParams>;
 }): Promise<Metadata> {
-  const { year, sport } = await params;
+  const { sport } = await params;
   const config = SPORT_CONFIG[sport];
 
   if (!config) {
@@ -145,13 +138,13 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${year} ${config.displayName} Roster | ${SITE_NAME}`,
-    description: `Clemson Tigers ${year} ${config.displayName} roster with player photos, positions, heights, weights, and class information.`,
+    title: `${config.displayName} Roster | ${SITE_NAME}`,
+    description: `Clemson Tigers ${config.displayName} roster with player photos, positions, heights, weights, and class information.`,
     openGraph: {
-      title: `${year} ${config.displayName} Roster | ${SITE_NAME}`,
-      description: `Clemson Tigers ${year} ${config.displayName} roster with player photos, positions, heights, weights, and class information.`,
+      title: `${config.displayName} Roster | ${SITE_NAME}`,
+      description: `Clemson Tigers ${config.displayName} roster with player photos, positions, heights, weights, and class information.`,
       type: "website",
-      url: `${SITE_URL}/roster/${year}/${sport}`,
+      url: `${SITE_URL}/roster/${sport}`,
     },
   };
 }
@@ -161,7 +154,7 @@ export default async function RosterPage({
 }: {
   params: Promise<PageParams>;
 }) {
-  const { year, sport } = await params;
+  const { sport } = await params;
 
   // Validate sport slug
   const sportType = SPORT_SLUG_MAP[sport];
@@ -171,22 +164,17 @@ export default async function RosterPage({
     notFound();
   }
 
-  // Validate year
-  if (!AVAILABLE_YEARS.includes(year)) {
-    notFound();
-  }
-
   let rosterGroups: Record<string, SimpleRosterPlayer[]> = {};
   let players: SimpleRosterPlayer[] = [];
 
   try {
     if (config.useGroups) {
-      rosterGroups = await getRosterByGroup(sportType, year);
+      rosterGroups = await getCurrentRosterByGroup(sportType);
     } else {
-      players = await getSimpleRoster(sportType, year);
+      players = await getCurrentRoster(sportType);
     }
   } catch (error) {
-    console.error(`Failed to fetch ${sport} roster for ${year}:`, error);
+    console.error(`Failed to fetch ${sport} roster:`, error);
   }
 
   // Sort groups by defined order for this sport
@@ -221,7 +209,7 @@ export default async function RosterPage({
         items={[
           { name: "Home", url: SITE_URL },
           { name: "Roster", url: `${SITE_URL}/roster` },
-          { name: config.displayName, url: `${SITE_URL}/roster/${year}/${sport}` },
+          { name: config.displayName, url: `${SITE_URL}/roster/${sport}` },
         ]}
       />
 
@@ -249,17 +237,14 @@ export default async function RosterPage({
           {/* Header Content */}
           <div className="relative z-10 text-center">
             <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
-              {year} {config.displayName} Roster
+              {config.displayName} Roster
             </h1>
 
             {/* Orange accent line */}
             <div className="w-24 h-1 bg-[var(--clemson-orange)] mx-auto mb-4" />
 
-            {/* Year Selector */}
-            <YearSelector currentYear={year} sport={sport} />
-
             {/* Sport Selector */}
-            <SportSelector currentSport={sport} year={year} />
+            <SportSelector currentSport={sport} />
 
             {/* Breadcrumb */}
             <nav className="text-base md:text-lg text-gray-300 uppercase mt-4">
@@ -323,9 +308,14 @@ export default async function RosterPage({
             )
           ) : (
             <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">
-                {year} roster not available. Check back soon!
-              </p>
+              <div className="inline-block bg-[var(--clemson-purple)]/10 rounded-lg p-8">
+                <p className="text-[var(--clemson-purple)] text-xl font-heading font-bold mb-2">
+                  Roster Coming Soon
+                </p>
+                <p className="text-gray-500">
+                  The {config.displayName} roster will be available once the season begins.
+                </p>
+              </div>
             </div>
           )}
         </div>
@@ -335,7 +325,7 @@ export default async function RosterPage({
       <section className="pb-8 bg-gray-100">
         <div className="mx-auto px-4 max-w-[1200px]">
           <p className="text-center text-xs text-gray-400">
-            Roster data from clemsontigers.com. Last updated for {year} season.
+            Roster data from clemsontigers.com. Last updated for {CURRENT_ROSTER_YEAR} season.
           </p>
         </div>
       </section>
@@ -343,45 +333,7 @@ export default async function RosterPage({
   );
 }
 
-function YearSelector({
-  currentYear,
-  sport,
-}: {
-  currentYear: string;
-  sport: string;
-}) {
-  return (
-    <div className="flex justify-center gap-2 mb-2">
-      {AVAILABLE_YEARS.map((year) => {
-        const isActive = year === currentYear;
-        return (
-          <Link
-            key={year}
-            href={`/roster/${year}/${sport}`}
-            className={`
-              px-4 py-2 rounded-full text-sm font-bold transition-all duration-200
-              ${
-                isActive
-                  ? "bg-[var(--clemson-orange)] text-white"
-                  : "bg-white/10 text-white hover:bg-white/20"
-              }
-            `}
-          >
-            {year}
-          </Link>
-        );
-      })}
-    </div>
-  );
-}
-
-function SportSelector({
-  currentSport,
-  year,
-}: {
-  currentSport: string;
-  year: string;
-}) {
+function SportSelector({ currentSport }: { currentSport: string }) {
   const sports = Object.keys(SPORT_SLUG_MAP);
   return (
     <div className="flex flex-wrap justify-center gap-2 mt-2">
@@ -392,7 +344,7 @@ function SportSelector({
         return (
           <Link
             key={sport}
-            href={`/roster/${year}/${sport}`}
+            href={`/roster/${sport}`}
             className={`
               px-3 py-1 rounded text-xs font-medium transition-all duration-200
               ${

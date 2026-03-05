@@ -8,6 +8,15 @@ interface BlogCardProps {
   post: WPPost;
 }
 
+// Helper to get post URL with date format (year/month/day/slug)
+function getPostUrl(post: WPPost) {
+  const postDate = new Date(post.date);
+  const year = postDate.getFullYear();
+  const month = String(postDate.getMonth() + 1).padStart(2, "0");
+  const day = String(postDate.getDate()).padStart(2, "0");
+  return `/${year}/${month}/${day}/${post.slug}`;
+}
+
 export function BlogCard({ post }: BlogCardProps) {
   const title = decodeHtmlEntities(post.title.rendered);
   const featuredImageUrl = rewriteImageUrl(post.featured_image_url);
@@ -15,6 +24,7 @@ export function BlogCard({ post }: BlogCardProps) {
   const avatarUrl = getPostAuthorAvatar(post);
   const readingTime = getReadingTime(post.content.rendered);
   const isQuickRead = readingTime <= 5;
+  const postUrl = getPostUrl(post);
 
   // Format date
   const formattedDate = new Date(post.date).toLocaleDateString("en-US", {
@@ -26,7 +36,7 @@ export function BlogCard({ post }: BlogCardProps) {
   return (
     <article className="group flex h-full flex-col">
       {/* Image Section */}
-      <Link href={`/blog/${post.slug}`} className="relative block">
+      <Link href={postUrl} className="relative block">
         <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
           {featuredImageUrl ? (
             <Image
@@ -56,7 +66,7 @@ export function BlogCard({ post }: BlogCardProps) {
         {/* Title */}
         <h3 className="mb-3 text-xl md:text-2xl font-heading font-bold leading-tight text-neutral-900">
           <Link
-            href={`/blog/${post.slug}`}
+            href={postUrl}
             className="transition-colors hover:text-[var(--clemson-orange)]"
           >
             <span className="line-clamp-3">{title}</span>

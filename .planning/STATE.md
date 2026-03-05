@@ -4,17 +4,17 @@
 
 See: .planning/PROJECT.md (updated 2026-01-20)
 
-**Core value:** Blog content delivery and Performance & SEO
-**Current focus:** v1.0 complete — planning next milestone
+**Core value:** Media files upload to S3 and serve from CloudFront transparently
+**Current focus:** Phase 6 — Admin UI and Finalization (CT S3 Offloader plugin)
 
 ## Current Position
 
-Phase: v1.0 complete (9 phases shipped)
-Plan: Not started
-Status: Ready to plan v1.1
-Last activity: 2026-01-20 — v1.0 milestone shipped and archived
+Phase: 6 of 6 (Admin UI and Finalization)
+Plan: 2 of 2 complete in phase
+Status: Phase complete
+Last activity: 2026-02-28 — Completed 06-02-PLAN.md (Stats Dashboard and Uninstall Cleanup)
 
-Progress: ██████████ 100% (v1.0)
+Progress: [██████████] 100%
 
 ## Shipped Milestones
 
@@ -48,16 +48,32 @@ Progress: ██████████ 100% (v1.0)
 - Tag navigation not prominent in header
 - Hardcoded sport categories in homepage
 
+### Key Decisions (S3 Offloader)
+
+- Decoupled batch engine from CLI output for reuse by admin UI
+- Shared build_file_key_list() for path resolution across upload and reset
+- WP-CLI registration before plugins_loaded with credential guard
+- WP_CLI::confirm() for reset safety with native --yes flag support
+- Fallback to tracker key when attachment metadata missing during reset
+- Stats size uses metadata filesize only — no S3 API or filesystem calls
+
 ### Blockers/Concerns
 
 None.
 
 ## Session Continuity
 
-Last session: 2026-01-20
-Stopped at: v1.0 milestone complete
+Last session: 2026-02-28
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None
 
 ## Next Steps
 
-Run `/gsd:new-milestone` to start v1.1 planning.
+Phase 6 (Admin UI and Finalization) is complete. The CT S3 Offloader plugin is feature-complete with:
+- Media Library status column with detail popups
+- Admin notices for missing credentials
+- Settings page with credentials, connection test, stats dashboard, and options
+- Complete uninstall cleanup with optional S3 deletion
+- WP-CLI commands (offload, status, reset)
+
+All 6 phases of the S3 Offloader plugin are done. Proceed to next milestone planning or testing.

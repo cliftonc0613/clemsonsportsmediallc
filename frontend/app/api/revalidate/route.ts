@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { getPost } from "@/lib/wordpress";
 
 /**
  * On-demand ISR Revalidation API
@@ -43,35 +44,53 @@ export async function POST(request: NextRequest) {
 
     // Handle WordPress post type + slug revalidation
     if (type && slug) {
-      const pathMap: Record<string, string> = {
-        post: `/blog/${slug}`,
-        page: `/${slug}`,
-        services: `/services/${slug}`,
-        testimonials: `/testimonials`,
-      };
+      let pathToRevalidate: string | null = null;
 
-      const pathToRevalidate = pathMap[type];
+      // For posts, we need to fetch the post to get its date for the URL
+      if (type === "post") {
+        try {
+          const post = await getPost(slug);
+          if (post) {
+            const postDate = new Date(post.date);
+            const year = postDate.getFullYear();
+            const month = String(postDate.getMonth() + 1).padStart(2, "0");
+            const day = String(postDate.getDate()).padStart(2, "0");
+            pathToRevalidate = `/${year}/${month}/${day}/${slug}`;
+          }
+        } catch {
+          // If we can't fetch the post, still try to revalidate listing pages
+          console.error(`Could not fetch post ${slug} for revalidation`);
+        }
+      } else {
+        const pathMap: Record<string, string> = {
+          page: `/${slug}`,
+          services: `/services/${slug}`,
+          testimonials: `/testimonials`,
+        };
+        pathToRevalidate = pathMap[type] || null;
+      }
+
       if (pathToRevalidate) {
         revalidatePath(pathToRevalidate);
-
-        // Also revalidate listing pages
-        if (type === "post") {
-          revalidatePath("/blog");
-          revalidatePath("/"); // Home page shows latest posts
-        } else if (type === "services") {
-          revalidatePath("/services");
-          revalidatePath("/"); // Home page shows services
-        } else if (type === "testimonials") {
-          revalidatePath("/"); // Home page shows testimonials
-        }
-
-        return NextResponse.json({
-          success: true,
-          message: `Revalidated ${type}: ${slug}`,
-          paths: [pathToRevalidate],
-          timestamp: new Date().toISOString(),
-        });
       }
+
+      // Also revalidate listing pages
+      if (type === "post") {
+        revalidatePath("/blog");
+        revalidatePath("/"); // Home page shows latest posts
+      } else if (type === "services") {
+        revalidatePath("/services");
+        revalidatePath("/"); // Home page shows services
+      } else if (type === "testimonials") {
+        revalidatePath("/"); // Home page shows testimonials
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: `Revalidated ${type}: ${slug}`,
+        paths: pathToRevalidate ? [pathToRevalidate] : [],
+        timestamp: new Date().toISOString(),
+      });
     }
 
     return NextResponse.json(
