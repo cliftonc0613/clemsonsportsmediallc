@@ -257,6 +257,20 @@ Click "Deploy" and wait for the build to complete. Your site will be live at `yo
 | `NEXT_PUBLIC_SITE_URL` | Yes | Frontend public URL |
 | `NEXT_PUBLIC_SITE_NAME` | No | Site name for structured data |
 
+### Vercel (Next.js) - Optional
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_SENTRY_DSN` | No | Sentry client-side error tracking DSN |
+| `SENTRY_DSN` | No | Sentry server-side error tracking DSN |
+| `SENTRY_AUTH_TOKEN` | No | Sentry auth token for source map uploads |
+| `YOUTUBE_API_KEY` | No | Google API key for ATP Podcast page |
+| `YOUTUBE_PLAYLIST_ID` | No | YouTube playlist ID for ATP Podcast |
+| `NEXT_PUBLIC_URL_REWRITES` | No | JSON mapping local URLs to production |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | No | VAPID key for push notifications |
+| `NEXT_PUBLIC_ANALYTICS_ID` | No | Web analytics tracking ID |
+| `HEALTH_CHECK_SECRET` | No | Secret for `/api/health` endpoint |
+
 ### WordPress (wp-config.php)
 
 | Constant | Required | Description |
@@ -264,6 +278,16 @@ Click "Deploy" and wait for the build to complete. Your site will be live at `yo
 | `STARTER_FRONTEND_URL` | Yes | Next.js frontend URL |
 | `STARTER_PREVIEW_SECRET` | Yes | Must match Vercel `PREVIEW_SECRET` |
 | `STARTER_REVALIDATION_SECRET` | Yes | Must match Vercel `REVALIDATION_SECRET` |
+
+### CT S3 Media Offloader (wp-config.php)
+
+| Constant | Required | Description |
+|----------|----------|-------------|
+| `S3MO_BUCKET` | Yes | S3 bucket name for media storage |
+| `S3MO_REGION` | Yes | AWS region (e.g., `us-east-1`) |
+| `S3MO_KEY` | Yes | AWS IAM access key ID |
+| `S3MO_SECRET` | Yes | AWS IAM secret access key |
+| `S3MO_CDN_URL` | No | CloudFront distribution URL for CDN delivery |
 
 ---
 
