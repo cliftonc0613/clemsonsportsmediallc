@@ -172,7 +172,7 @@ export default async function SoftballSchedulePage() {
         <section className="pt-10 md:pt-14 pb-2 bg-gray-100">
           <div className="mx-auto px-4 max-w-[1150px] text-center">
             <span className="font-heading text-sm md:text-base font-bold uppercase tracking-widest text-[var(--clemson-orange)]">
-              2026 Season
+              Record
             </span>
             <h2 className="font-heading text-4xl md:text-6xl font-bold text-[var(--clemson-purple)] mt-1">
               {teamRecord}
