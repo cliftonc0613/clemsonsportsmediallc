@@ -90,9 +90,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
 
-        {/* Adobe Fonts - Apotek (headlines) & Basic Sans (body) - loaded async to avoid render-blocking */}
-        <link rel="preload" href="https://use.typekit.net/rlq1tnk.css" as="style" />
-        <link rel="stylesheet" href="https://use.typekit.net/rlq1tnk.css" media="print" onLoad="this.media='all'" />
+        {/* Adobe Fonts - Apotek (headlines) & Basic Sans (body) */}
+        <link rel="stylesheet" href="https://use.typekit.net/rlq1tnk.css" />
 
         {/* DNS prefetch for WordPress API (dynamic based on environment) */}
         <link rel="dns-prefetch" href="//wp.clemsonsportsmediacom.local" />
