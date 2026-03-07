@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getSchedule, getClemsonTeamId } from "@/lib/espn";
+import { getSchedule, getClemsonTeamId, getSimpleTeamInfo } from "@/lib/espn";
 import type { SimpleScheduleGame } from "@/lib/espn-types";
 import { BodyClass } from "@/components/BodyClass";
 import { BreadcrumbSchema } from "@/components/JsonLd";
@@ -83,12 +83,17 @@ function transformEvent(event: any): SimpleScheduleGame {
 
 export default async function SoftballSchedulePage() {
   let games: SimpleScheduleGame[] = [];
+  let teamRecord: string | undefined;
 
   try {
-    const schedule = await getSchedule("softball");
+    const [schedule, teamInfo] = await Promise.all([
+      getSchedule("softball"),
+      getSimpleTeamInfo("softball"),
+    ]);
     if (schedule?.events) {
       games = schedule.events.map(transformEvent);
     }
+    teamRecord = teamInfo?.record;
   } catch (error) {
     console.error("Failed to fetch softball schedule:", error);
   }
@@ -153,6 +158,17 @@ export default async function SoftballSchedulePage() {
           </div>
         </div>
       </section>
+
+      {/* Team Record */}
+      {teamRecord && (
+        <section className="pt-8 md:pt-12 bg-gray-100">
+          <div className="mx-auto px-4 max-w-[1150px]">
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-[var(--clemson-purple)]">
+              Record: {teamRecord}
+            </h2>
+          </div>
+        </section>
+      )}
 
       {/* Schedule Section */}
       <section className="py-8 md:py-12 bg-gray-100">
