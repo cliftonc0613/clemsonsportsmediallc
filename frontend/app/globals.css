@@ -499,15 +499,15 @@ div.prose img {
    Quote & Pullquote Blocks
    -------------------------------------------------------------------------- */
 .wp-block-quote {
-  @apply my-6 pl-6 border-l-4 border-primary italic;
+  @apply my-6 pl-6 border-l-0 italic;
 }
 
 .wp-block-quote p {
-  @apply mb-2;
+  @apply mb-2 text-orange-500;
 }
 
 .wp-block-quote cite {
-  @apply block text-sm text-muted-foreground not-italic mt-2;
+  @apply block text-sm text-purple-600 font-bold not-italic mt-2;
 }
 
 .wp-block-quote.is-style-large {
