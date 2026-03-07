@@ -44,6 +44,7 @@ export const CLEMSON_TEAM_IDS: Record<SportType, string> = {
   mensBasketball: '228',
   womensBasketball: '228',
   baseball: '117',
+  softball: '1140',
 } as const;
 
 /** Get the correct Clemson team ID for a given sport */
@@ -60,6 +61,7 @@ export const SPORT_PATHS: Record<SportType, string> = {
   mensBasketball: 'basketball/mens-college-basketball',
   womensBasketball: 'basketball/womens-college-basketball',
   baseball: 'baseball/college-baseball',
+  softball: 'baseball/college-softball',
 } as const;
 
 /** Sport display names */
@@ -68,6 +70,7 @@ export const SPORT_NAMES: Record<SportType, string> = {
   mensBasketball: "Men's Basketball",
   womensBasketball: "Women's Basketball",
   baseball: 'Baseball',
+  softball: 'Softball',
 } as const;
 
 /** Map category slugs to sport types */
@@ -77,6 +80,7 @@ export const CATEGORY_TO_SPORT: Record<string, SportType> = {
   'mens-basketball': 'mensBasketball',
   'womens-basketball': 'womensBasketball',
   baseball: 'baseball',
+  softball: 'softball',
 } as const;
 
 // =============================================================================
@@ -1050,6 +1054,7 @@ const LEAGUE_PATHS: Record<SportType, string> = {
   mensBasketball: 'basketball/leagues/mens-college-basketball',
   womensBasketball: 'basketball/leagues/womens-college-basketball',
   baseball: 'baseball/leagues/college-baseball',
+  softball: 'baseball/leagues/college-softball',
 } as const;
 
 /** Player statistics response from ESPN Core API */

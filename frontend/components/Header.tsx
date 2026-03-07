@@ -51,6 +51,7 @@ const scheduleCategories = [
   { slug: "mens-basketball", label: "Men's Basketball" },
   { slug: "womens-basketball", label: "Women's Basketball" },
   { slug: "baseball", label: "Baseball" },
+  { slug: "softball", label: "Softball" },
   { slug: "mens-soccer", label: "Men's Soccer" },
   { slug: "womens-soccer", label: "Women's Soccer" },
 ];

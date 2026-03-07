@@ -8,7 +8,7 @@
 // Core Types
 // =============================================================================
 
-export type SportType = 'football' | 'mensBasketball' | 'womensBasketball' | 'baseball';
+export type SportType = 'football' | 'mensBasketball' | 'womensBasketball' | 'baseball' | 'softball';
 
 export interface ESPNLogo {
   href: string;
