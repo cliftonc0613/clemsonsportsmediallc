@@ -27,8 +27,8 @@ import { SportCategorySection } from "@/components/SportCategorySection";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
 
-// Enable ISR with 5 second revalidation
-export const revalidate = 5;
+// Enable ISR with 60 second revalidation
+export const revalidate = 60;
 
 /**
  * Clemson Sports Media Homepage
@@ -48,42 +48,48 @@ export default async function HomePage() {
   let mensBasketballGame: SimpleGame | null = null;
   let womensBasketballGame: SimpleGame | null = null;
 
-  // Fetch basketball game data (current game or next upcoming game)
-  try {
-    mensBasketballGame = await getClemsonGameById("mensBasketball", "latest");
-  } catch (error) {
-    console.error("Failed to fetch men's basketball game:", error);
-  }
-
-  try {
-    womensBasketballGame = await getClemsonGameById("womensBasketball", "latest");
-  } catch (error) {
-    console.error("Failed to fetch women's basketball game:", error);
-  }
-
   if (isWordPressConfigured()) {
     try {
-      // Fetch main data in parallel
-      [posts, breakingNewsPosts, categories, tags] = await Promise.all([
+      // Fetch ALL data in parallel — ESPN + WordPress together
+      const [
+        mainPosts,
+        breakingNews,
+        cats,
+        allTags,
+        mensGame,
+        womensGame,
+        ...sportResults
+      ] = await Promise.all([
         getPosts({ per_page: 20 }),
         getPostsByCategorySlug(BREAKING_NEWS_CATEGORY, { per_page: 4 }),
         getCategories({ per_page: 100 }),
         getTags({ per_page: 100 }),
+        getClemsonGameById("mensBasketball", "latest").catch(() => null),
+        getClemsonGameById("womensBasketball", "latest").catch(() => null),
+        ...SPORT_CATEGORIES.map((cat) =>
+          getPostsByCategorySlug(cat.slug, { per_page: 10 }).then((catPosts) => ({
+            slug: cat.slug,
+            posts: catPosts,
+          }))
+        ),
       ]);
 
-      // Fetch ALL sport category posts in parallel
-      const sportPromises = SPORT_CATEGORIES.map(async (cat) => {
-        const catPosts = await getPostsByCategorySlug(cat.slug, { per_page: 100 });
-        return { slug: cat.slug, posts: catPosts };
-      });
+      posts = mainPosts;
+      breakingNewsPosts = breakingNews;
+      categories = cats;
+      tags = allTags;
+      mensBasketballGame = mensGame;
+      womensBasketballGame = womensGame;
 
-      const sportResults = await Promise.all(sportPromises);
-      sportPosts = sportResults.reduce((acc, { slug, posts }) => {
-        acc[slug] = posts;
-        return acc;
-      }, {} as Record<string, WPPost[]>);
+      sportPosts = (sportResults as { slug: string; posts: WPPost[] }[]).reduce(
+        (acc, { slug, posts }) => {
+          acc[slug] = posts;
+          return acc;
+        },
+        {} as Record<string, WPPost[]>
+      );
     } catch (error) {
-      console.error("Failed to fetch WordPress content:", error);
+      console.error("Failed to fetch homepage content:", error);
     }
   }
 
