@@ -1,20 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import dynamic from "next/dynamic";
+import { SmoothScroll } from "@/components/SmoothScroll";
+import { ScrollAnimations } from "@/components/ScrollAnimations";
 import { Toaster } from "@/components/ui/sonner";
 import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema } from "@/lib/schema";
 import { Providers } from "./providers";
 import RegisterPWA from "@/components/RegisterPWA";
-
-// Dynamically import non-critical components to reduce initial JS bundle
-const SmoothScroll = dynamic(() => import("@/components/SmoothScroll").then(m => ({ default: m.SmoothScroll })), { ssr: false });
-const ScrollAnimations = dynamic(() => import("@/components/ScrollAnimations").then(m => ({ default: m.ScrollAnimations })), { ssr: false });
-const PWALoadScreen = dynamic(() => import("@/components/PWALoadScreen.enhanced"), { ssr: false });
-const RouteProgress = dynamic(() => import("@/components/RouteProgress"), { ssr: false });
-const NotificationPrompt = dynamic(() => import("@/components/NotificationPrompt").then(m => ({ default: m.NotificationPrompt })), { ssr: false });
-const PWAInstallPrompt = dynamic(() => import("@/components/PWAInstallPrompt").then(m => ({ default: m.PWAInstallPrompt })), { ssr: false });
+import PWALoadScreen from "@/components/PWALoadScreen.enhanced";
+import RouteProgress from "@/components/RouteProgress";
+import { NotificationPrompt } from "@/components/NotificationPrompt";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
