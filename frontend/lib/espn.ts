@@ -1114,16 +1114,17 @@ export async function getPlayerStatistics(
 
     const stats: SimplePlayerStats = {};
 
-    // Helper to find a stat by multiple possible names
+    // Helper to find a stat by name priority (tries first name across all stats, then second, etc.)
     const findStat = (names: string[]): number | undefined => {
-      for (const category of statsData.splits!.categories!) {
-        for (const stat of category.stats) {
-          if (names.some(n =>
-            stat.name?.toLowerCase() === n.toLowerCase() ||
-            stat.abbreviation?.toLowerCase() === n.toLowerCase()
-          )) {
-            // Prefer per-game value if available
-            return stat.perGameValue ?? stat.value;
+      for (const name of names) {
+        for (const category of statsData.splits!.categories!) {
+          for (const stat of category.stats) {
+            if (
+              stat.name?.toLowerCase() === name.toLowerCase() ||
+              stat.abbreviation?.toLowerCase() === name.toLowerCase()
+            ) {
+              return stat.value;
+            }
           }
         }
       }
