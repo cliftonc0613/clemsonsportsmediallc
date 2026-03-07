@@ -305,12 +305,13 @@
 }
 
 /* Blog Single Content Spacing */
+div.prose h1,
 div.prose h2,
 div.prose h3,
 div.prose h4,
 div.prose h5,
 div.prose h6 {
-  @apply mb-4 mt-8;
+  @apply mb-4 mt-8 text-orange-500;
 }
 
 div.prose p {
