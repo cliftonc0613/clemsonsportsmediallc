@@ -935,7 +935,12 @@ export function decodeHtmlEntities(text: string): string {
     '&nbsp;': ' ',
   };
 
-  return text.replace(/&[^;]+;/g, (entity) => entities[entity] || entity);
+  return text.replace(/&[^;]+;/g, (entity) => {
+    if (entities[entity]) return entities[entity];
+    const numMatch = entity.match(/&#(\d+);/);
+    if (numMatch) return String.fromCharCode(parseInt(numMatch[1], 10));
+    return entity;
+  });
 }
 
 /**
