@@ -9,6 +9,7 @@ import { generateOrganizationSchema } from "@/lib/schema";
 import { Providers } from "./providers";
 import RegisterPWA from "@/components/RegisterPWA";
 import PWALoadScreen from "@/components/PWALoadScreen.enhanced";
+import { Suspense } from "react";
 import RouteProgress from "@/components/RouteProgress";
 import { NotificationPrompt } from "@/components/NotificationPrompt";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
@@ -108,7 +109,9 @@ export default function RootLayout({
         <Providers>
           <PWALoadScreen />
           <RegisterPWA />
-          <RouteProgress />
+          <Suspense fallback={null}>
+            <RouteProgress />
+          </Suspense>
           <StructuredData data={organizationSchema} />
           <SmoothScroll />
           <ScrollAnimations />

@@ -100,7 +100,7 @@ export default async function SoftballSchedulePage() {
       const clemsonId = getClemsonTeamId("softball");
       const competitors = team?.nextEvent?.[0]?.competitions?.[0]?.competitors;
       const clemson = competitors?.find((c: any) => c.id === clemsonId);
-      teamRecord = clemson?.record?.[0]?.displayValue;
+      teamRecord = (clemson as any)?.record?.[0]?.displayValue;
     }
   } catch (error) {
     console.error("Failed to fetch softball schedule:", error);

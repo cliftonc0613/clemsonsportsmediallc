@@ -172,6 +172,7 @@ function getDefaultTitle(sport: SportType): string {
     mensBasketball: "Clemson Men's Basketball Scoreboard",
     womensBasketball: "Clemson Women's Basketball Scoreboard",
     baseball: "Clemson Baseball Scoreboard",
+    softball: "Clemson Softball Scoreboard",
   };
   return sportNames[sport] || "Clemson Scoreboard";
 }

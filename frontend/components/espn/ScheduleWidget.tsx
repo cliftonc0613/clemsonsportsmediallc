@@ -9,6 +9,7 @@ const SPORT_URL_SLUGS: Record<SportType, string> = {
   mensBasketball: "mens-basketball",
   womensBasketball: "womens-basketball",
   baseball: "baseball",
+  softball: "softball",
 };
 
 interface ScheduleWidgetProps {
