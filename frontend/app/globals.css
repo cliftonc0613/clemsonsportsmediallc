@@ -506,9 +506,11 @@ div.prose img {
   @apply mb-2 text-orange-500;
 }
 
-.wp-block-quote cite {
+.wp-block-quote cite,
+.wp-block-quote footer,
+.wp-block-quote .wp-block-quote__citation {
   @apply block text-lg font-bold not-italic mt-2;
-  color: var(--clemson-dark-purple);
+  color: #2E1A47;
 }
 
 .wp-block-quote.is-style-large {
