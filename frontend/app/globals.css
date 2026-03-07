@@ -507,7 +507,7 @@ div.prose img {
 }
 
 .wp-block-quote cite {
-  @apply block text-base font-bold not-italic mt-2;
+  @apply block text-lg font-bold not-italic mt-2;
   color: var(--clemson-dark-purple);
 }
 
