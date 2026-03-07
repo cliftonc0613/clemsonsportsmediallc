@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getSchedule, getClemsonTeamId, getSimpleTeamInfo } from "@/lib/espn";
+import { getSchedule, getClemsonTeamId, getTeamInfo } from "@/lib/espn";
 import type { SimpleScheduleGame } from "@/lib/espn-types";
 import { BodyClass } from "@/components/BodyClass";
 import { BreadcrumbSchema } from "@/components/JsonLd";
@@ -86,14 +86,22 @@ export default async function SoftballSchedulePage() {
   let teamRecord: string | undefined;
 
   try {
-    const [schedule, teamInfo] = await Promise.all([
+    const [schedule, teamData] = await Promise.all([
       getSchedule("softball"),
-      getSimpleTeamInfo("softball"),
+      getTeamInfo("softball"),
     ]);
     if (schedule?.events) {
       games = schedule.events.map(transformEvent);
     }
-    teamRecord = teamInfo?.record;
+    // Softball record is in nextEvent competitors, not team.record
+    const team = teamData?.team;
+    teamRecord = team?.record?.items?.find((r: any) => r.type === 'total')?.summary;
+    if (!teamRecord) {
+      const clemsonId = getClemsonTeamId("softball");
+      const competitors = team?.nextEvent?.[0]?.competitions?.[0]?.competitors;
+      const clemson = competitors?.find((c: any) => c.id === clemsonId);
+      teamRecord = clemson?.record?.[0]?.displayValue;
+    }
   } catch (error) {
     console.error("Failed to fetch softball schedule:", error);
   }
