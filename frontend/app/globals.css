@@ -641,16 +641,17 @@ div.prose img {
    Table Block
    -------------------------------------------------------------------------- */
 .wp-block-table {
-  @apply my-6 w-full overflow-x-auto;
+  @apply my-6 w-full overflow-x-auto block;
+  -webkit-overflow-scrolling: touch;
 }
 
 .wp-block-table table {
-  @apply w-full border-collapse;
+  @apply min-w-full border-collapse;
 }
 
 .wp-block-table th,
 .wp-block-table td {
-  @apply p-3 border border-border text-left;
+  @apply p-3 border border-border text-left whitespace-nowrap;
 }
 
 .wp-block-table th {
