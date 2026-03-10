@@ -233,6 +233,20 @@ export function Header() {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
+            {/* Photo Gallery Link */}
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link
+                  href="/photo-gallery"
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/photo-gallery") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
+                  `}
+                >
+                  Photos
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
             {/* ATP Podcast Link */}
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
@@ -243,6 +257,20 @@ export function Header() {
                   `}
                 >
                   ATP Podcast
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            {/* Contact Link */}
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link
+                  href="/contact"
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/contact") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
+                  `}
+                >
+                  Contact
                 </Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
@@ -418,6 +446,20 @@ export function Header() {
                   )}
                 </div>
 
+                {/* Photo Gallery */}
+                <Link
+                  href="/photo-gallery"
+                  onClick={() => setIsOpen(false)}
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                    ${isActive("/photo-gallery")
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
+                    }
+                  `}
+                >
+                  Photos
+                </Link>
+
                 {/* ATP Podcast */}
                 <Link
                   href="/atp-podcast"
@@ -430,6 +472,20 @@ export function Header() {
                   `}
                 >
                   ATP Podcast
+                </Link>
+
+                {/* Contact */}
+                <Link
+                  href="/contact"
+                  onClick={() => setIsOpen(false)}
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                    ${isActive("/contact")
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
+                    }
+                  `}
+                >
+                  Contact
                 </Link>
               </nav>
 
