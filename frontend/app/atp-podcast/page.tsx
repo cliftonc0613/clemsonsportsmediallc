@@ -30,7 +30,7 @@ export default async function VideoPage() {
 
   try {
     if (PLAYLIST_ID) {
-      videos = await getYouTubePlaylistVideos(PLAYLIST_ID, 50);
+      videos = await getYouTubePlaylistVideos(PLAYLIST_ID);
     }
   } catch (error) {
     console.error("Failed to fetch YouTube videos:", error);

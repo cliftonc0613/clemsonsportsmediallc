@@ -1,5 +1,5 @@
-import { getPosts, getCategories, getTags, getPostsByCategorySlug, isWordPressConfigured } from "@/lib/wordpress";
-import type { WPPost, WPCategory, WPTag } from "@/lib/wordpress";
+import { getPosts, getCategories, getTags, getPostsByCategorySlug, getPhotoGalleries, isWordPressConfigured } from "@/lib/wordpress";
+import type { WPPost, WPCategory, WPTag, WPPhotoGallery } from "@/lib/wordpress";
 import { getClemsonGameById } from "@/lib/espn";
 import type { SimpleGame } from "@/lib/espn-types";
 import { GameScoreWidget } from "@/components/espn";
@@ -23,6 +23,7 @@ import { BreakingNewsSection } from "@/components/BreakingNewsSection";
 import { ArticleListGrid } from "@/components/ArticleListGrid";
 import { SocialCTABar } from "@/components/SocialCTABar";
 import { SportCategorySection } from "@/components/SportCategorySection";
+import { GallerySlider } from "@/components/GallerySlider";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
@@ -47,6 +48,7 @@ export default async function HomePage() {
   let sportPosts: Record<string, WPPost[]> = {};
   let mensBasketballGame: SimpleGame | null = null;
   let womensBasketballGame: SimpleGame | null = null;
+  let photoGalleries: WPPhotoGallery[] = [];
 
   if (isWordPressConfigured()) {
     try {
@@ -58,6 +60,7 @@ export default async function HomePage() {
         allTags,
         mensGame,
         womensGame,
+        galleries,
         ...sportResults
       ] = await Promise.all([
         getPosts({ per_page: 20 }),
@@ -66,8 +69,9 @@ export default async function HomePage() {
         getTags({ per_page: 100 }),
         getClemsonGameById("mensBasketball", "latest").catch(() => null),
         getClemsonGameById("womensBasketball", "latest").catch(() => null),
+        getPhotoGalleries({ per_page: 30 }).catch(() => [] as WPPhotoGallery[]),
         ...SPORT_CATEGORIES.map((cat) =>
-          getPostsByCategorySlug(cat.slug, { per_page: 10 }).then((catPosts) => ({
+          getPostsByCategorySlug(cat.slug, { per_page: 12 }).then((catPosts) => ({
             slug: cat.slug,
             posts: catPosts,
           }))
@@ -80,6 +84,13 @@ export default async function HomePage() {
       tags = allTags;
       mensBasketballGame = mensGame;
       womensBasketballGame = womensGame;
+      // Shuffle galleries (Fisher-Yates) and take 15 for random variety per ISR cycle
+      const shuffled = [...(galleries as WPPhotoGallery[])];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      photoGalleries = shuffled.slice(0, 15);
 
       sportPosts = (sportResults as { slug: string; posts: WPPost[] }[]).reduce(
         (acc, { slug, posts }) => {
@@ -179,6 +190,9 @@ export default async function HomePage() {
           );
         });
       })()}
+
+      {/* Photo Gallery Slider */}
+      <GallerySlider galleries={photoGalleries} />
     </>
   );
 }

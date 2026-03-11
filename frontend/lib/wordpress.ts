@@ -274,6 +274,103 @@ export interface WPTag {
 }
 
 // =============================================================================
+// Photo Gallery (Custom Post Type)
+// =============================================================================
+
+/**
+ * Gallery fields from the WordPress REST API custom field registration
+ * Field names match the registered meta box fields
+ */
+export interface GalleryFields {
+  photographer_one_name?: string;
+  cliftons_photo_gallery?: number[];
+  photographer_two_name?: string;
+  davids_photo_gallery?: number[];
+}
+
+/**
+ * WordPress Media object (from /wp/v2/media endpoint)
+ */
+export interface WPMedia {
+  id: number;
+  source_url: string;
+  alt_text: string;
+  title: { rendered: string };
+  media_details: {
+    width: number;
+    height: number;
+    sizes: Record<string, {
+      source_url: string;
+      width: number;
+      height: number;
+    }>;
+  };
+}
+
+/**
+ * Photo Gallery Custom Post Type
+ */
+export interface WPPhotoGallery {
+  id: number;
+  date: string;
+  date_gmt: string;
+  modified: string;
+  modified_gmt: string;
+  slug: string;
+  status: string;
+  type: string;
+  link: string;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+    protected: boolean;
+  };
+  excerpt: {
+    rendered: string;
+    protected: boolean;
+  };
+  featured_media: number;
+  featured_image_url?: string | null;
+  event_type?: number[];
+  event_year?: number[];
+  gallery_fields?: GalleryFields;
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      source_url: string;
+      alt_text: string;
+      media_details?: {
+        sizes?: {
+          thumbnail?: { source_url: string };
+          medium?: { source_url: string };
+          large?: { source_url: string };
+        };
+      };
+    }>;
+    'wp:term'?: Array<Array<{
+      id: number;
+      name: string;
+      slug: string;
+      taxonomy: string;
+    }>>;
+  };
+}
+
+/**
+ * Event Type taxonomy term
+ */
+export interface WPEventType {
+  id: number;
+  count: number;
+  description: string;
+  link: string;
+  name: string;
+  slug: string;
+  parent: number;
+}
+
+// =============================================================================
 // API Fetch Functions
 // =============================================================================
 
@@ -1065,4 +1162,189 @@ export function getPostTags(post: WPPost): Array<{ id: number; name: string; slu
     name: tag.name,
     slug: tag.slug,
   }));
+}
+
+// =============================================================================
+// Photo Gallery Functions
+// =============================================================================
+
+/**
+ * Fetch photo galleries with optional filters
+ */
+export async function getPhotoGalleries(params?: {
+  per_page?: number;
+  page?: number;
+  event_type?: number[];
+  search?: string;
+  exclude?: number[];
+  orderby?: string;
+  order?: 'asc' | 'desc';
+}): Promise<WPPhotoGallery[]> {
+  const queryParams = new URLSearchParams();
+
+  if (params?.per_page) queryParams.set('per_page', params.per_page.toString());
+  if (params?.page) queryParams.set('page', params.page.toString());
+  if (params?.event_type?.length) queryParams.set('event_type', params.event_type.join(','));
+  if (params?.search) queryParams.set('search', params.search);
+  if (params?.exclude?.length) queryParams.set('exclude', params.exclude.join(','));
+  if (params?.orderby) queryParams.set('orderby', params.orderby);
+  if (params?.order) queryParams.set('order', params.order);
+
+  queryParams.set('_embed', 'true');
+
+  const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
+  return fetchAPI<WPPhotoGallery[]>(`/photo-gallery${query}`);
+}
+
+/**
+ * Fetch a single photo gallery by slug
+ */
+export async function getPhotoGallery(slug: string): Promise<WPPhotoGallery | null> {
+  const galleries = await fetchAPI<WPPhotoGallery[]>(`/photo-gallery?slug=${slug}&_embed=true`);
+  return galleries.length > 0 ? galleries[0] : null;
+}
+
+/**
+ * Fetch photo galleries with pagination metadata
+ */
+export async function getPhotoGalleriesWithPagination(params?: {
+  per_page?: number;
+  page?: number;
+  event_type?: number[];
+  search?: string;
+  orderby?: string;
+  order?: 'asc' | 'desc';
+}): Promise<PaginatedResult<WPPhotoGallery>> {
+  const apiUrl = getApiUrl();
+  const queryParams = new URLSearchParams();
+
+  const perPage = params?.per_page || 12;
+  const page = params?.page || 1;
+
+  queryParams.set('per_page', perPage.toString());
+  queryParams.set('page', page.toString());
+  if (params?.event_type?.length) queryParams.set('event_type', params.event_type.join(','));
+  if (params?.search) queryParams.set('search', params.search);
+  if (params?.orderby) queryParams.set('orderby', params.orderby);
+  if (params?.order) queryParams.set('order', params.order);
+  queryParams.set('_embed', 'true');
+
+  const url = `${apiUrl}/photo-gallery?${queryParams.toString()}&_t=${Date.now()}`;
+
+  const response = await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const galleries = await response.json() as WPPhotoGallery[];
+  const totalItems = parseInt(response.headers.get('X-WP-Total') || '0', 10);
+  const totalPages = parseInt(response.headers.get('X-WP-TotalPages') || '1', 10);
+
+  return {
+    items: galleries,
+    totalItems,
+    totalPages,
+    currentPage: page,
+  };
+}
+
+/**
+ * Fetch event_type taxonomy terms
+ */
+export async function getEventTypes(params?: {
+  per_page?: number;
+  hide_empty?: boolean;
+}): Promise<WPEventType[]> {
+  const queryParams = new URLSearchParams();
+
+  if (params?.per_page) queryParams.set('per_page', params.per_page.toString());
+  if (params?.hide_empty !== undefined) queryParams.set('hide_empty', params.hide_empty.toString());
+
+  const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
+  return fetchAPI<WPEventType[]>(`/event_type${query}`);
+}
+
+/**
+ * Fetch a single event_type term by slug
+ */
+export async function getEventTypeBySlug(slug: string): Promise<WPEventType | null> {
+  const terms = await fetchAPI<WPEventType[]>(`/event_type?slug=${slug}`);
+  return terms.length > 0 ? terms[0] : null;
+}
+
+/**
+ * Get all unique photo IDs from both photographer galleries
+ */
+export function getGalleryPhotoIds(gallery: WPPhotoGallery): number[] {
+  const ids = new Set<number>();
+
+  const addIds = (arr: number[] | undefined) => {
+    if (!arr) return;
+    for (const id of arr) {
+      ids.add(id);
+    }
+  };
+
+  addIds(gallery.gallery_fields?.cliftons_photo_gallery);
+  addIds(gallery.gallery_fields?.davids_photo_gallery);
+
+  return Array.from(ids);
+}
+
+/**
+ * Get total photo count for a gallery (from IDs, no fetch needed)
+ */
+export function getGalleryPhotoCount(gallery: WPPhotoGallery): number {
+  return getGalleryPhotoIds(gallery).length;
+}
+
+/**
+ * Fetch media objects by IDs in batches (WP REST API max 100 per request)
+ */
+export async function getMediaByIds(ids: number[]): Promise<WPMedia[]> {
+  if (ids.length === 0) return [];
+
+  const batchSize = 100;
+  const batches: number[][] = [];
+  for (let i = 0; i < ids.length; i += batchSize) {
+    batches.push(ids.slice(i, i + batchSize));
+  }
+
+  const results = await Promise.all(
+    batches.map((batch) =>
+      fetchAPI<WPMedia[]>(`/media?include=${batch.join(',')}&per_page=${batch.length}`)
+    )
+  );
+
+  return results.flat();
+}
+
+/**
+ * Fetch all gallery photos as full media objects
+ */
+export async function getGalleryPhotos(gallery: WPPhotoGallery): Promise<WPMedia[]> {
+  const ids = getGalleryPhotoIds(gallery);
+  if (ids.length === 0) return [];
+
+  const media = await getMediaByIds(ids);
+
+  // Preserve original order from gallery_fields
+  const mediaMap = new Map(media.map((m) => [m.id, m]));
+  return ids.map((id) => mediaMap.get(id)).filter((m): m is WPMedia => !!m);
+}
+
+/**
+ * Extract event_type terms from gallery's _embedded data
+ */
+export function getGalleryEventTypes(gallery: WPPhotoGallery): Array<{ id: number; name: string; slug: string }> {
+  const terms = gallery._embedded?.['wp:term'];
+  if (!terms) return [];
+
+  return terms.flat()
+    .filter((term) => term.taxonomy === 'event_type')
+    .map((term) => ({ id: term.id, name: term.name, slug: term.slug }));
 }

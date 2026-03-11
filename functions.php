@@ -203,6 +203,33 @@ function starter_theme_register_post_types() {
         'menu_icon'           => 'dashicons-format-gallery',
         'supports'            => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
     ));
+
+
+    // Event Year taxonomy for Photo Gallery
+    register_taxonomy('event_year', 'photo-gallery', array(
+        'labels' => array(
+            'name'          => __('Event Years', 'starter-wp-theme'),
+            'singular_name' => __('Event Year', 'starter-wp-theme'),
+        ),
+        'public'            => true,
+        'show_in_rest'      => true,
+        'hierarchical'      => true,
+        'show_admin_column' => true,
+        'rewrite'           => array('slug' => 'event-year'),
+    ));
+
+    // Event Type taxonomy for Photo Gallery
+    register_taxonomy('event_type', 'photo-gallery', array(
+        'labels' => array(
+            'name'          => __('Event Types', 'starter-wp-theme'),
+            'singular_name' => __('Event Type', 'starter-wp-theme'),
+        ),
+        'public'            => true,
+        'show_in_rest'      => true,
+        'hierarchical'      => true,
+        'show_admin_column' => true,
+        'rewrite'           => array('slug' => 'event-type'),
+    ));
 }
 add_action('init', 'starter_theme_register_post_types');
 

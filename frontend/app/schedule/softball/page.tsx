@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getSchedule, getClemsonTeamId, getTeamInfo } from "@/lib/espn";
+import { getSchedule, getClemsonTeamId } from "@/lib/espn";
 import type { SimpleScheduleGame } from "@/lib/espn-types";
 import { BodyClass } from "@/components/BodyClass";
 import { BreadcrumbSchema } from "@/components/JsonLd";
@@ -81,26 +81,34 @@ function transformEvent(event: any): SimpleScheduleGame {
   };
 }
 
+function computeRecord(games: SimpleScheduleGame[]): string | undefined {
+  const wins = games.filter((g) => g.result?.win === true).length;
+  const losses = games.filter((g) => g.result?.win === false).length;
+  if (wins === 0 && losses === 0) return undefined;
+  return `${wins}-${losses}`;
+}
+
 export default async function SoftballSchedulePage() {
   let games: SimpleScheduleGame[] = [];
   let teamRecord: string | undefined;
 
   try {
-    const [schedule, teamData] = await Promise.all([
-      getSchedule("softball"),
-      getTeamInfo("softball"),
-    ]);
+    const schedule = await getSchedule("softball");
     if (schedule?.events) {
       games = schedule.events.map(transformEvent);
-    }
-    // Softball record is in nextEvent competitors, not team.record
-    const team = teamData?.team;
-    teamRecord = team?.record?.items?.find((r: any) => r.type === 'total')?.summary;
-    if (!teamRecord) {
+
+      // ESPN softball team endpoint returns empty record — extract from schedule competitors
       const clemsonId = getClemsonTeamId("softball");
-      const competitors = team?.nextEvent?.[0]?.competitions?.[0]?.competitors;
-      const clemson = competitors?.find((c: any) => c.id === clemsonId);
-      teamRecord = (clemson as any)?.record?.[0]?.displayValue;
+      const lastEvent = schedule.events[schedule.events.length - 1];
+      const competitors = lastEvent?.competitions?.[0]?.competitors || [];
+      const clemson = competitors.find((c: any) => c.team?.id === clemsonId || c.id === clemsonId);
+      const recordEntry = (clemson as any)?.record?.find((r: any) => r.type === "total");
+      teamRecord = recordEntry?.displayValue;
+
+      // Fallback: compute record from game results if ESPN API returns empty
+      if (!teamRecord && games.length > 0) {
+        teamRecord = computeRecord(games);
+      }
     }
   } catch (error) {
     console.error("Failed to fetch softball schedule:", error);

@@ -13,6 +13,7 @@ import { Suspense } from "react";
 import RouteProgress from "@/components/RouteProgress";
 import { NotificationPrompt } from "@/components/NotificationPrompt";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { SplashScreen } from "@/components/SplashScreen";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
@@ -107,6 +108,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <Providers>
+          <SplashScreen />
           <PWALoadScreen />
           <RegisterPWA />
           <Suspense fallback={null}>

@@ -662,6 +662,20 @@ div.prose img {
   @apply bg-muted/50;
 }
 
+.wp-block-table tbody tr {
+  @apply transition-colors;
+}
+
+.wp-block-table tbody tr:hover {
+  @apply bg-muted/30;
+}
+
+
+.wp-block-table.is-style-compact th,
+.wp-block-table.is-style-compact td {
+  @apply px-2 py-1 text-sm;
+}
+
 /* --------------------------------------------------------------------------
    List Block
    -------------------------------------------------------------------------- */
@@ -1130,6 +1144,57 @@ iframe[src*="hudl.com"] {
 }
 
 /* --------------------------------------------------------------------------
+   Universal Splash Screen
+   Shows on initial page load for ALL users (server-rendered, zero JS needed)
+   -------------------------------------------------------------------------- */
+.app-splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #F56600 0%, #522D80 100%);
+  opacity: 1;
+  transition: opacity 0.4s ease-out;
+}
+
+.app-splash-screen--hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.app-splash-screen__logo {
+  width: 160px;
+  height: 160px;
+  animation: splash-pulse 2s ease-in-out infinite;
+}
+
+.app-splash-screen__text {
+  margin-top: 1.5rem;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+@keyframes splash-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* --------------------------------------------------------------------------
    PWA Loading Screen
    Splash screen displayed when PWA launches in standalone mode
    -------------------------------------------------------------------------- */
@@ -1379,4 +1444,195 @@ iframe[src*="hudl.com"] {
 
 .link-underline-orange:hover::after {
   @apply w-full;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery Card — Year Ribbon
+   Diagonal banner in top-right corner of the image container
+   -------------------------------------------------------------------------- */
+
+.year-ribbon-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5rem;
+  height: 5rem;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.year-ribbon {
+  position: absolute;
+  top: 1rem;
+  right: -1.75rem;
+  width: 6.5rem;
+  background: var(--clemson-purple);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0;
+  transform: rotate(45deg);
+  transform-origin: center;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery Card — Image Overlay (title + date)
+   Gradient overlay at the bottom of the image
+   -------------------------------------------------------------------------- */
+
+.gallery-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+  padding: 2rem 0.875rem 0.75rem;
+}
+
+/* Load-more button for GalleryInfiniteGrid */
+.gallery-load-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2.5rem;
+  background: var(--clemson-purple);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.gallery-load-more-btn:hover:not(:disabled) {
+  background: var(--clemson-dark-purple);
+}
+
+.gallery-load-more-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery Masonry Grids
+   CSS column-count masonry — zero dependencies
+   -------------------------------------------------------------------------- */
+
+/* Archive page masonry — 4 cols desktop, 3 tablet, 2 mobile */
+.gallery-masonry-grid {
+  column-count: 4;
+  column-gap: 1.5rem;
+}
+
+.gallery-masonry-grid > * {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .gallery-masonry-grid {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-masonry-grid {
+    column-count: 2;
+  }
+}
+
+/* Single gallery photo masonry — tighter gaps */
+.photo-masonry-grid {
+  column-count: 4;
+  column-gap: 0.5rem;
+}
+
+.photo-masonry-grid > * {
+  break-inside: avoid;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .photo-masonry-grid {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .photo-masonry-grid {
+    column-count: 2;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   PhotoSwipe Overrides — contained (non-fullscreen) lightbox
+   -------------------------------------------------------------------------- */
+.pswp {
+  --pswp-bg: rgba(0, 0, 0, 0.92);
+  --pswp-transition-duration: 350ms;
+}
+
+.pswp__img {
+  border-radius: 4px;
+  transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth backdrop fade */
+.pswp__bg {
+  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth slide transitions between photos */
+.pswp__container {
+  transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Counter and controls fade */
+.pswp__top-bar,
+.pswp__button--arrow {
+  transition: opacity 250ms ease;
+}
+
+/* Gallery single page hero — fills full viewport width including nav offset */
+.gallery-hero-section {
+  position: relative;
+  min-height: 60vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* ── Gallery Slider (Swiper) ── */
+.gallery-slider-section {
+  padding: 2.5rem 0 3rem;
+}
+
+.gallery-swiper-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.gallery-swiper-wrapper .swiper-button-prev,
+.gallery-swiper-wrapper .swiper-button-next {
+  color: var(--clemson-orange);
+}
+
+.gallery-swiper-wrapper .swiper-button-prev::after,
+.gallery-swiper-wrapper .swiper-button-next::after {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .gallery-swiper-wrapper .swiper-button-prev,
+  .gallery-swiper-wrapper .swiper-button-next {
+    display: none;
+  }
 }
