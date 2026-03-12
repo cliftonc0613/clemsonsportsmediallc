@@ -29,6 +29,8 @@ export function PhotoGrid({ photos }: PhotoGridProps) {
       alt: p.alt,
     }));
 
+    const isMobile = window.innerWidth <= 768;
+
     const pswp = new PhotoSwipe({
       dataSource,
       index,
@@ -36,7 +38,9 @@ export function PhotoGrid({ photos }: PhotoGridProps) {
       showAnimationDuration: 400,
       hideAnimationDuration: 300,
       zoomAnimationDuration: 350,
-      padding: { top: 60, bottom: 60, left: 80, right: 80 },
+      padding: isMobile
+        ? { top: 40, bottom: 40, left: 10, right: 10 }
+        : { top: 60, bottom: 60, left: 80, right: 80 },
       bgOpacity: 0.92,
       easing: "cubic-bezier(0.4, 0, 0.2, 1)",
     });

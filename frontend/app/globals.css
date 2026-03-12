@@ -1541,7 +1541,7 @@ iframe[src*="hudl.com"] {
 
 @media (max-width: 768px) {
   .gallery-masonry-grid {
-    column-count: 2;
+    column-count: 1;
   }
 }
 

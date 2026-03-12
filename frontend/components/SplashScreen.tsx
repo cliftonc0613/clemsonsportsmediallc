@@ -7,10 +7,22 @@ export function SplashScreen() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Trigger fade-out after hydration
-    setVisible(false);
+    // Only show splash screen for mobile PWA standalone mode
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as Navigator & { standalone?: boolean }).standalone === true ||
+      document.referrer.includes("android-app://");
 
-    // Remove from DOM after CSS transition completes
+    if (!(isMobile && isStandalone)) {
+      setMounted(true); // Skip splash for non-PWA users
+      return;
+    }
+
+    // PWA on mobile: show splash with fade-out
+    setVisible(false);
     const timer = setTimeout(() => setMounted(true), 600);
     return () => clearTimeout(timer);
   }, []);

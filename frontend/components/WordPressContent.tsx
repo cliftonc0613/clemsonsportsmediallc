@@ -100,14 +100,17 @@ function parseYouTubeEmbeds(html: string): { processedHtml: string; embeds: YouT
 
   // Pattern 1: WordPress figure blocks with YouTube embeds (most common)
   // Matches: <figure class="wp-block-embed is-type-video is-provider-youtube...">
-  const figurePattern = /<figure[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?<iframe[^>]*src="([^"]*(?:youtube|youtu\.be|youtube-nocookie)[^"]*)"[^>]*>[\s\S]*?<\/iframe>[\s\S]*?<\/figure>/gi;
+  // Uses (?:(?!<\/figure>)[\s\S])* instead of [\s\S]*? to prevent matching across
+  // multiple figure blocks (e.g., a Twitter figure followed by a YouTube figure)
+  const figurePattern = /<figure[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>(?:(?!<\/figure>)[\s\S])*<iframe[^>]*src="([^"]*(?:youtube|youtu\.be|youtube-nocookie)[^"]*)"[^>]*>(?:(?!<\/figure>)[\s\S])*<\/iframe>(?:(?!<\/figure>)[\s\S])*<\/figure>/gi;
 
   processedHtml = processedHtml.replace(figurePattern, (match, src) => {
     return createEmbed(src) || match;
   });
 
   // Pattern 2: WordPress embed wrapper divs
-  const wrapperPattern = /<div[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?<iframe[^>]*src="([^"]*(?:youtube|youtu\.be|youtube-nocookie)[^"]*)"[^>]*>[\s\S]*?<\/iframe>[\s\S]*?<\/div>/gi;
+  // Same boundary-safe approach to prevent cross-block matching
+  const wrapperPattern = /<div[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>(?:(?!<\/div>)[\s\S])*<iframe[^>]*src="([^"]*(?:youtube|youtu\.be|youtube-nocookie)[^"]*)"[^>]*>(?:(?!<\/div>)[\s\S])*<\/iframe>(?:(?!<\/div>)[\s\S])*<\/div>/gi;
 
   processedHtml = processedHtml.replace(wrapperPattern, (match, src) => {
     return createEmbed(src) || match;

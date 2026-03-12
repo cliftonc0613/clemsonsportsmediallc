@@ -71,7 +71,7 @@ export default async function HomePage() {
         getClemsonGameById("womensBasketball", "latest").catch(() => null),
         getPhotoGalleries({ per_page: 30 }).catch(() => [] as WPPhotoGallery[]),
         ...SPORT_CATEGORIES.map((cat) =>
-          getPostsByCategorySlug(cat.slug, { per_page: 12 }).then((catPosts) => ({
+          getPostsByCategorySlug(cat.slug, { per_page: 14 }).then((catPosts) => ({
             slug: cat.slug,
             posts: catPosts,
           }))
