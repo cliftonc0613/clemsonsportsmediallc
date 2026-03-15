@@ -313,7 +313,10 @@ export async function getScoreboard(
  * Get Clemson's current or most recent game
  */
 export async function getClemsonGame(sport: SportType): Promise<SimpleGame | null> {
-  const scoreboard = await getScoreboard(sport);
+  // Use groups=50 for basketball to include conference tournament games
+  const basketballSports: SportType[] = ['mensBasketball', 'womensBasketball'];
+  const params = basketballSports.includes(sport) ? { groups: '50' } : undefined;
+  const scoreboard = await getScoreboard(sport, params);
   if (!scoreboard?.events) return null;
 
   // Find game with Clemson

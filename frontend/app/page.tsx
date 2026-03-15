@@ -48,6 +48,7 @@ export default async function HomePage() {
   let sportPosts: Record<string, WPPost[]> = {};
   let mensBasketballGame: SimpleGame | null = null;
   let womensBasketballGame: SimpleGame | null = null;
+  let baseballGame: SimpleGame | null = null;
   let photoGalleries: WPPhotoGallery[] = [];
 
   if (isWordPressConfigured()) {
@@ -60,6 +61,7 @@ export default async function HomePage() {
         allTags,
         mensGame,
         womensGame,
+        baseballGameResult,
         galleries,
         ...sportResults
       ] = await Promise.all([
@@ -69,6 +71,7 @@ export default async function HomePage() {
         getTags({ per_page: 100 }),
         getClemsonGameById("mensBasketball", "latest").catch(() => null),
         getClemsonGameById("womensBasketball", "latest").catch(() => null),
+        getClemsonGameById("baseball", "latest").catch(() => null),
         getPhotoGalleries({ per_page: 30 }).catch(() => [] as WPPhotoGallery[]),
         ...SPORT_CATEGORIES.map((cat) =>
           getPostsByCategorySlug(cat.slug, { per_page: 14 }).then((catPosts) => ({
@@ -84,6 +87,7 @@ export default async function HomePage() {
       tags = allTags;
       mensBasketballGame = mensGame;
       womensBasketballGame = womensGame;
+      baseballGame = baseballGameResult;
       // Shuffle galleries (Fisher-Yates) and take 15 for random variety per ISR cycle
       const shuffled = [...(galleries as WPPhotoGallery[])];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -154,8 +158,9 @@ export default async function HomePage() {
           // Mark these posts as shown
           uniquePosts.forEach((post) => shownPostIds.add(post.id));
 
-          // Render scoreboard for basketball section
+          // Render scoreboard for basketball and baseball sections
           const isBasketball = cat.slug === "basketball";
+          const isBaseball = cat.slug === "baseball";
 
           return (
             <SportCategorySection
@@ -184,6 +189,16 @@ export default async function HomePage() {
                       title="Women's Basketball"
                     />
                   )}
+                </div>
+              )}
+              {isBaseball && baseballGame && (
+                <div className="mb-8">
+                  <GameScoreWidget
+                    sport="baseball"
+                    initialGame={baseballGame}
+                    postGameDuration={30}
+                    title="Baseball"
+                  />
                 </div>
               )}
             </SportCategorySection>

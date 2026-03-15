@@ -45,7 +45,7 @@ export function AlternatingGrid({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {topRowPosts[0] && <ImageCard post={topRowPosts[0]} />}
         {topRowPosts[0] && <TextCard post={topRowPosts[0]} tags={tags} showExclusive />}
-        {topRowPosts[1] && <ImageCard post={topRowPosts[1]} />}
+        {topRowPosts[1] && <div className="order-last sm:order-none"><ImageCard post={topRowPosts[1]} /></div>}
         {topRowPosts[1] && <TextCard post={topRowPosts[1]} tags={tags} />}
       </div>
 

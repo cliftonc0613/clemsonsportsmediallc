@@ -1,19 +1,16 @@
-# Show SplashScreen only in PWA standalone mode on mobile
-
-## Problem
-The `SplashScreen` component displays for ALL users (browser + PWA) with a 600ms fade. It should only appear when the website is loaded as an installed PWA on a mobile device.
+# Alternating Top Row Layout on Mobile Only
 
 ## Plan
-- [x] Add mobile user agent detection to `SplashScreen.tsx`
-- [x] Add standalone PWA mode detection (matchMedia, navigator.standalone, android-app referrer)
-- [x] Skip splash (set mounted=true immediately) when not mobile+standalone
-- [x] Keep existing fade behavior for PWA users
-- [x] Verify build passes
+On mobile, alternate the top 2 stories in each sport category section: Post 1 = `[Image][Text]`, Post 2 = `[Text][Image]`. Desktop stays unchanged.
+
+## Tasks
+- [x] Wrap Post 2's `ImageCard` with `order-last sm:order-none` in `components/AlternatingGrid.tsx`
+- [x] Verify `npm run build` passes
 
 ## Review
 
 ### Files Modified (1)
-- `components/SplashScreen.tsx` — Added mobile+standalone detection in the existing `useEffect`. If the user is NOT on a mobile device in PWA standalone mode, the splash is skipped entirely by immediately setting `mounted=true`. PWA users on mobile still get the 600ms branded splash fade. Detection logic matches the pattern used in `PWALoadScreen.enhanced.tsx`.
+- `components/AlternatingGrid.tsx` (line 48) — Wrapped Post 2's `ImageCard` in a `<div className="order-last sm:order-none">` so it appears below the text on mobile but stays in normal grid position on desktop.
 
 ### Summary
-Simple conditional guard added to the splash screen component. No other files changed. Browser users no longer see the splash delay. PWA users on mobile retain the branded loading experience.
+Single-line change. On mobile (`grid-cols-1`), `order-last` pushes Post 2's image below its text, creating the alternating `[Text][Image]` layout. On `sm+` breakpoints, `order-none` restores normal DOM order within the 4-column grid.
