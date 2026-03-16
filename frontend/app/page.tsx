@@ -47,7 +47,6 @@ export default async function HomePage() {
   let tags: WPTag[] = [];
   let sportPosts: Record<string, WPPost[]> = {};
   let mensBasketballGame: SimpleGame | null = null;
-  let womensBasketballGame: SimpleGame | null = null;
   let baseballGame: SimpleGame | null = null;
   let photoGalleries: WPPhotoGallery[] = [];
 
@@ -60,7 +59,6 @@ export default async function HomePage() {
         cats,
         allTags,
         mensGame,
-        womensGame,
         baseballGameResult,
         galleries,
         ...sportResults
@@ -70,7 +68,6 @@ export default async function HomePage() {
         getCategories({ per_page: 100 }),
         getTags({ per_page: 100 }),
         getClemsonGameById("mensBasketball", "latest").catch(() => null),
-        getClemsonGameById("womensBasketball", "latest").catch(() => null),
         getClemsonGameById("baseball", "latest").catch(() => null),
         getPhotoGalleries({ per_page: 30 }).catch(() => [] as WPPhotoGallery[]),
         ...SPORT_CATEGORIES.map((cat) =>
@@ -86,7 +83,6 @@ export default async function HomePage() {
       categories = cats;
       tags = allTags;
       mensBasketballGame = mensGame;
-      womensBasketballGame = womensGame;
       baseballGame = baseballGameResult;
       // Shuffle galleries (Fisher-Yates) and take 15 for random variety per ISR cycle
       const shuffled = [...(galleries as WPPhotoGallery[])];
@@ -171,24 +167,14 @@ export default async function HomePage() {
               categoryName={cat.name}
               categorySlug={cat.slug}
             >
-              {isBasketball && (mensBasketballGame || womensBasketballGame) && (
-                <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  {mensBasketballGame && (
-                    <GameScoreWidget
-                      sport="mensBasketball"
-                      initialGame={mensBasketballGame}
-                      postGameDuration={30}
-                      title="Men's Basketball"
-                    />
-                  )}
-                  {womensBasketballGame && (
-                    <GameScoreWidget
-                      sport="womensBasketball"
-                      initialGame={womensBasketballGame}
-                      postGameDuration={30}
-                      title="Women's Basketball"
-                    />
-                  )}
+              {isBasketball && mensBasketballGame && (
+                <div className="mb-8">
+                  <GameScoreWidget
+                    sport="mensBasketball"
+                    initialGame={mensBasketballGame}
+                    postGameDuration={30}
+                    title="Men's Basketball"
+                  />
                 </div>
               )}
               {isBaseball && baseballGame && (
