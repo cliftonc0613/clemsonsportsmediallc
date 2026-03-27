@@ -222,7 +222,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="container mx-auto px-4">
           {/* Featured Image - Hanging */}
           {featuredImageUrl && (
-            <div className="mx-auto max-w-[1100px] mb-8">
+            <div className="mx-auto max-w-[1400px] mb-8">
               <div className="relative aspect-video overflow-hidden">
                 <BlurImage
                   src={featuredImageUrl}
@@ -235,13 +235,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
               {/* Photo Credit */}
               <p className="text-xs uppercase tracking-wider text-gray-500 mt-2">
-                Photo Credit: {(post.acf?.photo_credit as string) || "Clemson Sports Media"}
+                Photo Credit: {(post.acf?.photo_credit as string) || (post.acf?.photo_credit_name as string) || "Clemson Sports Media"}
               </p>
             </div>
           )}
 
           {/* Title & Meta Below Image */}
-          <div className="mx-auto max-w-[1250px] text-center">
+          <div className="mx-auto max-w-[1400px] text-center">
             {/* Category Badges */}
             {categories.length > 0 && (
               <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
@@ -280,7 +280,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Article Content */}
       <article className="py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-[1250px] flex flex-col lg:flex-row gap-8">
+          <div className="mx-auto max-w-[1400px] flex flex-col lg:flex-row gap-8">
             {/* Main Content */}
             <div className="flex-1 min-w-0">
               <WordPressContent

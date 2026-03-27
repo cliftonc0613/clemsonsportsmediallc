@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPosts, getServices, getPages, isWordPressConfigured } from "@/lib/wordpress";
+import { getPosts, getServices, getPages, getPhotoGalleries, isWordPressConfigured } from "@/lib/wordpress";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -8,13 +8,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let posts: Awaited<ReturnType<typeof getPosts>> = [];
   let services: Awaited<ReturnType<typeof getServices>> = [];
   let pages: Awaited<ReturnType<typeof getPages>> = [];
+  let photoGalleries: Awaited<ReturnType<typeof getPhotoGalleries>> = [];
 
   if (isWordPressConfigured()) {
     try {
-      [posts, services, pages] = await Promise.all([
+      [posts, services, pages, photoGalleries] = await Promise.all([
         getPosts({ per_page: 100 }),
         getServices({ per_page: 100 }),
         getPages({ per_page: 100 }),
+        getPhotoGalleries({ per_page: 100 }),
       ]);
     } catch (error) {
       console.error('Failed to fetch WordPress content for sitemap:', error);
@@ -55,6 +57,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${SITE_URL}/photo-gallery`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
   ];
 
   // Blog posts - medium priority, updated monthly
@@ -89,5 +97,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     }));
 
-  return [...staticPages, ...blogPosts, ...servicePages, ...wpPages];
+  // Photo galleries
+  const galleryPages: MetadataRoute.Sitemap = photoGalleries.map((gallery) => ({
+    url: `${SITE_URL}/photo-gallery/${gallery.slug}`,
+    lastModified: new Date(gallery.modified),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...blogPosts, ...servicePages, ...wpPages, ...galleryPages];
 }

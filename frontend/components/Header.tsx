@@ -51,6 +51,7 @@ const scheduleCategories = [
   { slug: "mens-basketball", label: "Men's Basketball" },
   { slug: "womens-basketball", label: "Women's Basketball" },
   { slug: "baseball", label: "Baseball" },
+  { slug: "softball", label: "Softball" },
   { slug: "mens-soccer", label: "Men's Soccer" },
   { slug: "womens-soccer", label: "Women's Soccer" },
 ];
@@ -121,7 +122,7 @@ export function Header() {
       ref={headerRef}
       className="fixed top-0 z-50 w-full border-b-4 border-[var(--clemson-purple)] bg-[var(--clemson-orange)]"
     >
-      <div className="container mx-auto flex h-[var(--header-height,4rem)] items-center px-4 transition-[height] duration-300 relative">
+      <div className="flex h-[var(--header-height,4rem)] items-center px-4 transition-[height] duration-300 relative">
         {/* Logo - White version for orange background */}
         <Link href="/" className="flex items-center">
           <Image
@@ -135,22 +136,8 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation - Centered */}
-        <NavigationMenu className="hidden lg:flex absolute left-1/2 -translate-x-1/2">
+        <NavigationMenu className="hidden lg:flex ml-auto">
           <NavigationMenuList className="gap-1">
-            {/* Home Link */}
-            <NavigationMenuItem>
-              <NavigationMenuLink asChild>
-                <Link
-                  href="/"
-                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
-                    ${isActive("/") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
-                  `}
-                >
-                  Home
-                </Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-
             {/* Sports Dropdown */}
             <NavigationMenuItem>
               <NavigationMenuTrigger
@@ -232,6 +219,20 @@ export function Header() {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
+            {/* Photo Gallery Link */}
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link
+                  href="/photo-gallery"
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/photo-gallery") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
+                  `}
+                >
+                  Photos
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
             {/* ATP Podcast Link */}
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
@@ -245,11 +246,25 @@ export function Header() {
                 </Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
+
+            {/* Contact Link */}
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link
+                  href="/contact"
+                  className={`font-heading text-sm font-bold uppercase tracking-wider px-4 py-2 transition-colors relative text-white hover:text-white/80
+                    ${isActive("/contact") ? "after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:bg-white" : ""}
+                  `}
+                >
+                  Contact
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 
         {/* Desktop Search */}
-        <div className="hidden items-center gap-2 lg:flex ml-auto">
+        <div className="hidden items-center gap-2 lg:flex">
           <Button
             variant="ghost"
             size="icon"
@@ -292,20 +307,6 @@ export function Header() {
 
               {/* Mobile Navigation Links */}
               <nav className="flex flex-col space-y-1 pt-4">
-                {/* Home */}
-                <Link
-                  href="/"
-                  onClick={() => setIsOpen(false)}
-                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
-                    ${isActive("/")
-                      ? "bg-white/20 border-l-4 border-white"
-                      : "hover:bg-white/10"
-                    }
-                  `}
-                >
-                  Home
-                </Link>
-
                 {/* Sports Collapsible */}
                 <div>
                   <button
@@ -417,6 +418,20 @@ export function Header() {
                   )}
                 </div>
 
+                {/* Photo Gallery */}
+                <Link
+                  href="/photo-gallery"
+                  onClick={() => setIsOpen(false)}
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                    ${isActive("/photo-gallery")
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
+                    }
+                  `}
+                >
+                  Photos
+                </Link>
+
                 {/* ATP Podcast */}
                 <Link
                   href="/atp-podcast"
@@ -429,6 +444,20 @@ export function Header() {
                   `}
                 >
                   ATP Podcast
+                </Link>
+
+                {/* Contact */}
+                <Link
+                  href="/contact"
+                  onClick={() => setIsOpen(false)}
+                  className={`py-3 px-4 font-heading text-sm font-bold uppercase tracking-wider transition-colors text-white
+                    ${isActive("/contact")
+                      ? "bg-white/20 border-l-4 border-white"
+                      : "hover:bg-white/10"
+                    }
+                  `}
+                >
+                  Contact
                 </Link>
               </nav>
 

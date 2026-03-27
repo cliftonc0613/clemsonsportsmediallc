@@ -203,6 +203,33 @@ function starter_theme_register_post_types() {
         'menu_icon'           => 'dashicons-format-gallery',
         'supports'            => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
     ));
+
+
+    // Event Year taxonomy for Photo Gallery
+    register_taxonomy('event_year', 'photo-gallery', array(
+        'labels' => array(
+            'name'          => __('Event Years', 'starter-wp-theme'),
+            'singular_name' => __('Event Year', 'starter-wp-theme'),
+        ),
+        'public'            => true,
+        'show_in_rest'      => true,
+        'hierarchical'      => true,
+        'show_admin_column' => true,
+        'rewrite'           => array('slug' => 'event-year'),
+    ));
+
+    // Event Type taxonomy for Photo Gallery
+    register_taxonomy('event_type', 'photo-gallery', array(
+        'labels' => array(
+            'name'          => __('Event Types', 'starter-wp-theme'),
+            'singular_name' => __('Event Type', 'starter-wp-theme'),
+        ),
+        'public'            => true,
+        'show_in_rest'      => true,
+        'hierarchical'      => true,
+        'show_admin_column' => true,
+        'rewrite'           => array('slug' => 'event-type'),
+    ));
 }
 add_action('init', 'starter_theme_register_post_types');
 
@@ -587,47 +614,6 @@ function starter_theme_register_youtube_pattern() {
 }
 add_action('init', 'starter_theme_register_youtube_pattern');
 
-/**
- * Register Photo Credit ACF Field Group
- */
-function starter_theme_register_photo_credit_field() {
-    if (!function_exists('acf_add_local_field_group')) {
-        return;
-    }
-
-    acf_add_local_field_group(array(
-        'key' => 'group_photo_credit',
-        'title' => 'Photo Credit',
-        'fields' => array(
-            array(
-                'key' => 'field_photo_credit',
-                'label' => 'Photo Credit',
-                'name' => 'photo_credit',
-                'type' => 'text',
-                'instructions' => 'Credit for the featured image. Leave blank for default "Clemson Sports Media".',
-                'required' => 0,
-                'default_value' => '',
-                'placeholder' => 'e.g., Sean / Chelsea Weaver',
-            ),
-        ),
-        'location' => array(
-            array(
-                array(
-                    'param' => 'post_type',
-                    'operator' => '==',
-                    'value' => 'post',
-                ),
-            ),
-        ),
-        'menu_order' => 0,
-        'position' => 'side',
-        'style' => 'default',
-        'label_placement' => 'top',
-        'instruction_placement' => 'label',
-        'active' => true,
-    ));
-}
-add_action('acf/init', 'starter_theme_register_photo_credit_field');
 
 /**
  * Set Gutenberg meta box panel to 50% height by default

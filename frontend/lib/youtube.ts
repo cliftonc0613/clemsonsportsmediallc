@@ -69,65 +69,82 @@ function getApiKey(): string {
 }
 
 /**
- * Fetch videos from a YouTube playlist
+ * Fetch ALL videos from a YouTube playlist (paginates through all pages)
  */
 export async function getYouTubePlaylistVideos(
-  playlistId: string,
-  maxResults: number = 50
+  playlistId: string
 ): Promise<YouTubeVideo[]> {
   const apiKey = getApiKey();
 
-  // Step 1: Get playlist items
-  const playlistUrl = `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=${maxResults}&key=${apiKey}`;
+  // Step 1: Fetch all playlist items, following nextPageToken
+  const allItems: Array<{ snippet: PlaylistItemSnippet }> = [];
+  let pageToken: string | undefined;
 
-  const playlistResponse = await fetch(playlistUrl, {
-    next: { revalidate: 300 }, // Cache for 5 minutes
-  });
+  do {
+    const params = new URLSearchParams({
+      part: "snippet",
+      playlistId,
+      maxResults: "50",
+      key: apiKey,
+    });
+    if (pageToken) params.set("pageToken", pageToken);
 
-  if (!playlistResponse.ok) {
-    const error = await playlistResponse.text();
-    console.error("YouTube API Error (playlist):", error);
-    throw new Error(`YouTube API Error: ${playlistResponse.status}`);
-  }
+    const playlistResponse = await fetch(
+      `${YOUTUBE_API_BASE}/playlistItems?${params.toString()}`,
+      { next: { revalidate: 300 } }
+    );
 
-  const playlistData: PlaylistItemResponse = await playlistResponse.json();
+    if (!playlistResponse.ok) {
+      const error = await playlistResponse.text();
+      console.error("YouTube API Error (playlist):", error);
+      throw new Error(`YouTube API Error: ${playlistResponse.status}`);
+    }
 
-  if (!playlistData.items || playlistData.items.length === 0) {
+    const playlistData: PlaylistItemResponse = await playlistResponse.json();
+
+    if (playlistData.items) {
+      allItems.push(...playlistData.items);
+    }
+
+    pageToken = playlistData.nextPageToken;
+  } while (pageToken);
+
+  if (allItems.length === 0) {
     return [];
   }
 
-  // Step 2: Get video details (duration, view count)
-  const videoIds = playlistData.items
-    .map((item) => item.snippet.resourceId.videoId)
-    .join(",");
+  // Step 2: Get video details in batches of 50 (API limit per request)
+  const detailsMap = new Map<string, { duration: string; viewCount: string }>();
 
-  const detailsUrl = `${YOUTUBE_API_BASE}/videos?part=contentDetails,statistics&id=${videoIds}&key=${apiKey}`;
+  for (let i = 0; i < allItems.length; i += 50) {
+    const batch = allItems.slice(i, i + 50);
+    const videoIds = batch
+      .map((item) => item.snippet.resourceId.videoId)
+      .join(",");
 
-  const detailsResponse = await fetch(detailsUrl, {
-    next: { revalidate: 300 },
-  });
+    const detailsResponse = await fetch(
+      `${YOUTUBE_API_BASE}/videos?part=contentDetails,statistics&id=${videoIds}&key=${apiKey}`,
+      { next: { revalidate: 300 } }
+    );
 
-  if (!detailsResponse.ok) {
-    const error = await detailsResponse.text();
-    console.error("YouTube API Error (details):", error);
-    throw new Error(`YouTube API Error: ${detailsResponse.status}`);
-  }
+    if (!detailsResponse.ok) {
+      const error = await detailsResponse.text();
+      console.error("YouTube API Error (details):", error);
+      throw new Error(`YouTube API Error: ${detailsResponse.status}`);
+    }
 
-  const detailsData: VideoDetailsResponse = await detailsResponse.json();
+    const detailsData: VideoDetailsResponse = await detailsResponse.json();
 
-  // Create a map of video details for quick lookup
-  const detailsMap = new Map(
-    detailsData.items.map((item) => [
-      item.id,
-      {
+    for (const item of detailsData.items) {
+      detailsMap.set(item.id, {
         duration: item.contentDetails.duration,
         viewCount: item.statistics.viewCount,
-      },
-    ])
-  );
+      });
+    }
+  }
 
   // Step 3: Combine data
-  return playlistData.items.map((item) => {
+  return allItems.map((item) => {
     const videoId = item.snippet.resourceId.videoId;
     const details = detailsMap.get(videoId);
 

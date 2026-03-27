@@ -1,0 +1,44 @@
+{
+    "key": "group_photo_credit",
+    "title": "Photo Credit",
+    "fields": [
+        {
+            "key": "field_photo_credit",
+            "label": "Photo Credit",
+            "name": "photo_credit",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Credit for the featured image. Leave blank for default \"Clemson Sports Media\".",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "e.g., Sean / Chelsea Weaver",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0
+}

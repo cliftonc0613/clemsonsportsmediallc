@@ -90,6 +90,8 @@ const nextConfig: NextConfig = {
       path.resolve(__dirname, 'node_modules'),
       'node_modules',
     ];
+    // Add "style" condition so webpack can resolve CSS package exports (tw-animate-css)
+    config.resolve.conditionNames = ['style', '...'];
     return config;
   },
 };
