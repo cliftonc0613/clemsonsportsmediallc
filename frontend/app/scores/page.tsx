@@ -25,7 +25,6 @@ export const revalidate = 60;
 
 // Sports to display on the scores page
 const SPORTS_TO_SHOW: SportType[] = [
-  "football",
   "mensBasketball",
   "womensBasketball",
 ];

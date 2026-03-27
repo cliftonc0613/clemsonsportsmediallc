@@ -15,8 +15,7 @@ const XIcon = ({ className }: { className?: string }) => (
 interface SocialLink {
   platform: string;
   icon: React.ReactNode;
-  count: string;
-  label: string;
+  handle: string;
   action: string;
   url: string;
   bgColor: string;
@@ -26,8 +25,7 @@ const socialLinks: SocialLink[] = [
   {
     platform: "Facebook",
     icon: <Facebook className="h-6 w-6" />,
-    count: "2.5K",
-    label: "Fans",
+    handle: "@CUSportsMedia",
     action: "LIKE",
     url: "https://www.facebook.com/cusportsmedia",
     bgColor: "bg-[#3b5998]",
@@ -35,8 +33,7 @@ const socialLinks: SocialLink[] = [
   {
     platform: "X",
     icon: <XIcon className="h-5 w-5" />,
-    count: "8.2K",
-    label: "Followers",
+    handle: "@CUSportsMedia",
     action: "FOLLOW",
     url: "https://x.com/CUSportsMedia",
     bgColor: "bg-black",
@@ -44,8 +41,7 @@ const socialLinks: SocialLink[] = [
   {
     platform: "YouTube",
     icon: <Youtube className="h-6 w-6" />,
-    count: "15K",
-    label: "Subscribers",
+    handle: "@clemson_sports_media",
     action: "SUBSCRIBE",
     url: "https://www.youtube.com/@clemson_sports_media",
     bgColor: "bg-[#cd201f]",
@@ -59,7 +55,7 @@ interface BlogSidebarProps {
 
 export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProps) {
   return (
-    <aside className="w-full lg:w-[300px] flex-shrink-0">
+    <aside className="w-full lg:w-[350px] flex-shrink-0">
       {/* Stay Connected Section */}
       <div className="mb-8">
         <div className="inline-block bg-[var(--clemson-orange)] text-white text-sm font-bold uppercase tracking-wider px-4 py-2 mb-4">
@@ -79,8 +75,7 @@ export function BlogSidebar({ recentPosts = [], currentPostId }: BlogSidebarProp
                 {social.icon}
               </div>
               <div className="flex-1 flex items-center px-4">
-                <span className="font-bold mr-2">{social.count}</span>
-                <span className="text-white/90">{social.label}</span>
+                <span className="text-white/90">{social.handle}</span>
               </div>
               <div className="px-4 py-3 font-bold text-sm">
                 {social.action}

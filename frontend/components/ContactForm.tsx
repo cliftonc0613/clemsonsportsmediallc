@@ -364,7 +364,7 @@ export function ContactForm({ services = [] }: ContactFormProps) {
           <Button
             type="submit"
             size="lg"
-            className="min-w-[200px] bg-neutral-900 hover:bg-neutral-800"
+            className="min-w-[200px] bg-[var(--clemson-orange)] hover:bg-[var(--clemson-orange)]/90"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -384,7 +384,7 @@ export function ContactForm({ services = [] }: ContactFormProps) {
         {/* Privacy Policy */}
         <p className="text-center text-sm text-muted-foreground">
           By submitting this form, you agree to our{" "}
-          <Link href="/privacy-policy" className="underline text-neutral-900 hover:text-neutral-600">
+          <Link href="/privacy-policy" className="underline text-[var(--clemson-purple)] hover:text-[var(--clemson-orange)]">
             Privacy Policy
           </Link>
         </p>

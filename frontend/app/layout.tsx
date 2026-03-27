@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Suspense } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -10,9 +9,11 @@ import { generateOrganizationSchema } from "@/lib/schema";
 import { Providers } from "./providers";
 import RegisterPWA from "@/components/RegisterPWA";
 import PWALoadScreen from "@/components/PWALoadScreen.enhanced";
+import { Suspense } from "react";
 import RouteProgress from "@/components/RouteProgress";
 import { NotificationPrompt } from "@/components/NotificationPrompt";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { SplashScreen } from "@/components/SplashScreen";
 import "./globals.css";
 
 // Site-wide Organization schema for rich snippets
@@ -91,7 +92,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
 
-        {/* Adobe Fonts - Apotek (headlines) & Basic Sans (body) with font-display:swap */}
+        {/* Adobe Fonts - Apotek (headlines) & Basic Sans (body) */}
         <link rel="stylesheet" href="https://use.typekit.net/rlq1tnk.css" />
 
         {/* DNS prefetch for WordPress API (dynamic based on environment) */}
@@ -107,6 +108,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <Providers>
+          <SplashScreen />
           <PWALoadScreen />
           <RegisterPWA />
           <Suspense fallback={null}>

@@ -35,18 +35,18 @@ export function AlternatingGrid({
 }: AlternatingGridProps) {
   if (posts.length === 0) return null;
 
-  // First 4 posts go in the alternating top row
-  const topRowPosts = posts.slice(0, 4);
-  const remainingPosts = posts.slice(4, 12);
+  // First 2 posts go in the alternating top row (each gets image + text pair)
+  const topRowPosts = posts.slice(0, 2);
+  const remainingPosts = posts.slice(2, 14);
 
   return (
     <div className={className}>
       {/* Top Row: Image | Text | Image | Text pattern */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {topRowPosts[0] && <ImageCard post={topRowPosts[0]} />}
-        {topRowPosts[1] && <TextCard post={topRowPosts[1]} tags={tags} showExclusive />}
-        {topRowPosts[2] && <ImageCard post={topRowPosts[2]} />}
-        {topRowPosts[3] && <TextCard post={topRowPosts[3]} tags={tags} />}
+        {topRowPosts[0] && <TextCard post={topRowPosts[0]} tags={tags} showExclusive />}
+        {topRowPosts[1] && <div className="order-last sm:order-none"><ImageCard post={topRowPosts[1]} /></div>}
+        {topRowPosts[1] && <TextCard post={topRowPosts[1]} tags={tags} />}
       </div>
 
       {/* Remaining Posts: Image cards with titles */}

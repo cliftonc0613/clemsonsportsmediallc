@@ -20,7 +20,7 @@ import type { SportType } from "@/lib/espn-types";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
-const POSTS_PER_PAGE = 13;
+const POSTS_PER_PAGE = 14;
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;

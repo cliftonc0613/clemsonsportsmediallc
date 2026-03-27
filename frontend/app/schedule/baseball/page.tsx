@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getSchedule, getClemsonTeamId } from "@/lib/espn";
+import { getSchedule, getClemsonTeamId, getSimpleTeamInfo } from "@/lib/espn";
 import type { SimpleScheduleGame } from "@/lib/espn-types";
 import { BodyClass } from "@/components/BodyClass";
 import { BreadcrumbSchema } from "@/components/JsonLd";
@@ -86,12 +86,17 @@ function transformEvent(event: any): SimpleScheduleGame {
 
 export default async function BaseballSchedulePage() {
   let games: SimpleScheduleGame[] = [];
+  let teamRecord: string | undefined;
 
   try {
-    const schedule = await getSchedule("baseball");
+    const [schedule, teamInfo] = await Promise.all([
+      getSchedule("baseball"),
+      getSimpleTeamInfo("baseball"),
+    ]);
     if (schedule?.events) {
       games = schedule.events.map(transformEvent);
     }
+    teamRecord = teamInfo?.record;
   } catch (error) {
     console.error("Failed to fetch baseball schedule:", error);
   }
@@ -156,6 +161,21 @@ export default async function BaseballSchedulePage() {
           </div>
         </div>
       </section>
+
+      {/* Team Record */}
+      {teamRecord && (
+        <section className="pt-10 md:pt-14 pb-2 bg-gray-100">
+          <div className="mx-auto px-4 max-w-[1150px] text-center">
+            <span className="font-heading text-sm md:text-base font-bold uppercase tracking-widest text-[var(--clemson-orange)]">
+              Record
+            </span>
+            <h2 className="font-heading text-4xl md:text-6xl font-bold text-[var(--clemson-purple)] mt-1">
+              {teamRecord}
+            </h2>
+            <div className="w-16 h-1 bg-[var(--clemson-orange)] mx-auto mt-4" />
+          </div>
+        </section>
+      )}
 
       {/* Schedule Section */}
       <section className="py-8 md:py-12 bg-gray-100">

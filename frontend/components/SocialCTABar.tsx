@@ -13,9 +13,9 @@ interface SocialCTABarProps {
 }
 
 const defaultLinks: SocialLink[] = [
-  { platform: "facebook", url: "https://facebook.com/clemsonsportsmedia" },
-  { platform: "instagram", url: "https://instagram.com/clemsonsportsmedia" },
-  { platform: "twitter", url: "https://twitter.com/clemsonsportsmedia" },
+  { platform: "facebook", url: "https://www.facebook.com/cusportsmedia" },
+  { platform: "youtube", url: "https://www.youtube.com/@clemson_sports_media" },
+  { platform: "twitter", url: "https://x.com/CUSportsMedia" },
 ];
 
 const socialIcons = {

@@ -1,5 +1,5 @@
-import { getPosts, getCategories, getTags, getPostsByCategorySlug, isWordPressConfigured } from "@/lib/wordpress";
-import type { WPPost, WPCategory, WPTag } from "@/lib/wordpress";
+import { getPosts, getCategories, getTags, getPostsByCategorySlug, getPhotoGalleries, isWordPressConfigured } from "@/lib/wordpress";
+import type { WPPost, WPCategory, WPTag, WPPhotoGallery } from "@/lib/wordpress";
 import { getClemsonGameById } from "@/lib/espn";
 import type { SimpleGame } from "@/lib/espn-types";
 import { GameScoreWidget } from "@/components/espn";
@@ -23,12 +23,13 @@ import { BreakingNewsSection } from "@/components/BreakingNewsSection";
 import { ArticleListGrid } from "@/components/ArticleListGrid";
 import { SocialCTABar } from "@/components/SocialCTABar";
 import { SportCategorySection } from "@/components/SportCategorySection";
+import { GallerySlider } from "@/components/GallerySlider";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
 
-// Enable ISR with 5 second revalidation
-export const revalidate = 5;
+// Enable ISR with 60 second revalidation
+export const revalidate = 60;
 
 /**
  * Clemson Sports Media Homepage
@@ -45,45 +46,59 @@ export default async function HomePage() {
   let categories: WPCategory[] = [];
   let tags: WPTag[] = [];
   let sportPosts: Record<string, WPPost[]> = {};
-  let mensBasketballGame: SimpleGame | null = null;
-  let womensBasketballGame: SimpleGame | null = null;
-
-  // Fetch basketball game data (current game or next upcoming game)
-  try {
-    mensBasketballGame = await getClemsonGameById("mensBasketball", "latest");
-  } catch (error) {
-    console.error("Failed to fetch men's basketball game:", error);
-  }
-
-  try {
-    womensBasketballGame = await getClemsonGameById("womensBasketball", "latest");
-  } catch (error) {
-    console.error("Failed to fetch women's basketball game:", error);
-  }
+  let baseballGame: SimpleGame | null = null;
+  let photoGalleries: WPPhotoGallery[] = [];
 
   if (isWordPressConfigured()) {
     try {
-      // Fetch main data in parallel
-      [posts, breakingNewsPosts, categories, tags] = await Promise.all([
+      // Fetch ALL data in parallel — ESPN + WordPress together
+      const [
+        mainPosts,
+        breakingNews,
+        cats,
+        allTags,
+        _mensGame,
+        baseballGameResult,
+        galleries,
+        ...sportResults
+      ] = await Promise.all([
         getPosts({ per_page: 20 }),
         getPostsByCategorySlug(BREAKING_NEWS_CATEGORY, { per_page: 4 }),
         getCategories({ per_page: 100 }),
         getTags({ per_page: 100 }),
+        getClemsonGameById("mensBasketball", "latest").catch(() => null),
+        getClemsonGameById("baseball", "latest").catch(() => null),
+        getPhotoGalleries({ per_page: 30 }).catch(() => [] as WPPhotoGallery[]),
+        ...SPORT_CATEGORIES.map((cat) =>
+          getPostsByCategorySlug(cat.slug, { per_page: 14 }).then((catPosts) => ({
+            slug: cat.slug,
+            posts: catPosts,
+          }))
+        ),
       ]);
 
-      // Fetch ALL sport category posts in parallel
-      const sportPromises = SPORT_CATEGORIES.map(async (cat) => {
-        const catPosts = await getPostsByCategorySlug(cat.slug, { per_page: 100 });
-        return { slug: cat.slug, posts: catPosts };
-      });
+      posts = mainPosts;
+      breakingNewsPosts = breakingNews;
+      categories = cats;
+      tags = allTags;
+      baseballGame = baseballGameResult;
+      // Shuffle galleries (Fisher-Yates) and take 15 for random variety per ISR cycle
+      const shuffled = [...(galleries as WPPhotoGallery[])];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      photoGalleries = shuffled.slice(0, 15);
 
-      const sportResults = await Promise.all(sportPromises);
-      sportPosts = sportResults.reduce((acc, { slug, posts }) => {
-        acc[slug] = posts;
-        return acc;
-      }, {} as Record<string, WPPost[]>);
+      sportPosts = (sportResults as { slug: string; posts: WPPost[] }[]).reduce(
+        (acc, { slug, posts }) => {
+          acc[slug] = posts;
+          return acc;
+        },
+        {} as Record<string, WPPost[]>
+      );
     } catch (error) {
-      console.error("Failed to fetch WordPress content:", error);
+      console.error("Failed to fetch homepage content:", error);
     }
   }
 
@@ -137,8 +152,8 @@ export default async function HomePage() {
           // Mark these posts as shown
           uniquePosts.forEach((post) => shownPostIds.add(post.id));
 
-          // Render scoreboard for basketball section
-          const isBasketball = cat.slug === "basketball";
+          // Render scoreboard for basketball and baseball sections
+          const isBaseball = cat.slug === "baseball";
 
           return (
             <SportCategorySection
@@ -149,30 +164,23 @@ export default async function HomePage() {
               categoryName={cat.name}
               categorySlug={cat.slug}
             >
-              {isBasketball && (mensBasketballGame || womensBasketballGame) && (
-                <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  {mensBasketballGame && (
-                    <GameScoreWidget
-                      sport="mensBasketball"
-                      initialGame={mensBasketballGame}
-                      postGameDuration={30}
-                      title="Men's Basketball"
-                    />
-                  )}
-                  {womensBasketballGame && (
-                    <GameScoreWidget
-                      sport="womensBasketball"
-                      initialGame={womensBasketballGame}
-                      postGameDuration={30}
-                      title="Women's Basketball"
-                    />
-                  )}
+              {isBaseball && baseballGame && (
+                <div className="mb-8">
+                  <GameScoreWidget
+                    sport="baseball"
+                    initialGame={baseballGame}
+                    postGameDuration={30}
+                    title="Baseball"
+                  />
                 </div>
               )}
             </SportCategorySection>
           );
         });
       })()}
+
+      {/* Photo Gallery Slider */}
+      <GallerySlider galleries={photoGalleries} />
     </>
   );
 }
