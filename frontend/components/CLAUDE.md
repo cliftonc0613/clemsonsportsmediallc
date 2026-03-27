@@ -8,4 +8,13 @@
 | ID | Time | T | Title | Read |
 |----|------|---|-------|------|
 | #3501 | 9:50 PM | 🔴 | Fixed YouTube embed regex to prevent cross-block matching | ~97 |
+
+### Mar 27, 2026
+
+| ID | Time | T | Title | Read |
+|----|------|---|-------|------|
+| #4561 | 12:48 PM | ✅ | Blog Sidebar Width Increased to 350px | ~323 |
+| #4560 | 12:45 PM | 🔄 | Social Media Links Display Handles Instead of Follower Counts | ~364 |
+| #4559 | 12:44 PM | 🔄 | Social Link Interface Simplified in Blog Sidebar | ~349 |
+| #4558 | 12:41 PM | ✅ | Simplified Social Media Links Display in Blog Sidebar | ~336 |
 </claude-mem-context>
