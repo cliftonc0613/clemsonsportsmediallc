@@ -46,7 +46,6 @@ export default async function HomePage() {
   let categories: WPCategory[] = [];
   let tags: WPTag[] = [];
   let sportPosts: Record<string, WPPost[]> = {};
-  let mensBasketballGame: SimpleGame | null = null;
   let baseballGame: SimpleGame | null = null;
   let photoGalleries: WPPhotoGallery[] = [];
 
@@ -58,7 +57,7 @@ export default async function HomePage() {
         breakingNews,
         cats,
         allTags,
-        mensGame,
+        _mensGame,
         baseballGameResult,
         galleries,
         ...sportResults
@@ -82,7 +81,6 @@ export default async function HomePage() {
       breakingNewsPosts = breakingNews;
       categories = cats;
       tags = allTags;
-      mensBasketballGame = mensGame;
       baseballGame = baseballGameResult;
       // Shuffle galleries (Fisher-Yates) and take 15 for random variety per ISR cycle
       const shuffled = [...(galleries as WPPhotoGallery[])];
@@ -155,7 +153,6 @@ export default async function HomePage() {
           uniquePosts.forEach((post) => shownPostIds.add(post.id));
 
           // Render scoreboard for basketball and baseball sections
-          const isBasketball = cat.slug === "basketball";
           const isBaseball = cat.slug === "baseball";
 
           return (
@@ -167,16 +164,6 @@ export default async function HomePage() {
               categoryName={cat.name}
               categorySlug={cat.slug}
             >
-              {isBasketball && mensBasketballGame && (
-                <div className="mb-8">
-                  <GameScoreWidget
-                    sport="mensBasketball"
-                    initialGame={mensBasketballGame}
-                    postGameDuration={30}
-                    title="Men's Basketball"
-                  />
-                </div>
-              )}
               {isBaseball && baseballGame && (
                 <div className="mb-8">
                   <GameScoreWidget
