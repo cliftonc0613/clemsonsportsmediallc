@@ -41,3 +41,281 @@ Design tokens and styling are defined in frontend/app/globals.css.
   white-space: nowrap;
   border: 0;
 }
+
+/* ==========================================================================
+   Login Page Template
+   ========================================================================== */
+
+.login-page {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: linear-gradient(135deg, #1a0a2e 0%, #16082a 50%, #0d0515 100%);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Noise texture overlay */
+.login-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Gradient glows */
+.login-page .glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.login-page .glow-1 {
+  top: -200px;
+  left: -200px;
+  background: #ff6b35;
+  animation: loginPulse 8s ease-in-out infinite;
+}
+
+.login-page .glow-2 {
+  bottom: -200px;
+  right: -200px;
+  background: #9b59b6;
+  animation: loginPulse 8s ease-in-out infinite reverse;
+}
+
+.login-page .glow-3 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #8e44ad;
+  opacity: 0.08;
+  animation: loginPulse 10s ease-in-out infinite 2s;
+}
+
+@keyframes loginPulse {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.2; transform: scale(1.1); }
+}
+
+/* Background watermark logo */
+.login-page .bg-logo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 93vmin;
+  height: auto;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Main container */
+.login-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+}
+
+/* Logo */
+.login-logo {
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: loginFadeUp 1s ease forwards;
+}
+
+.login-logo img {
+  height: 120px;
+  width: auto;
+}
+
+/* Title */
+.login-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  margin-bottom: 0.75rem;
+  opacity: 0;
+  animation: loginFadeUp 1s ease forwards 0.2s;
+}
+
+.login-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: loginFadeUp 1s ease forwards 0.4s;
+}
+
+/* Login form card */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 2.5rem;
+  background: rgba(155, 89, 182, 0.05);
+  border: 1px solid rgba(155, 89, 182, 0.15);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  opacity: 0;
+  animation: loginFadeUp 1s ease forwards 0.6s;
+}
+
+/* Error message */
+.login-error {
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  color: #ff6b6b;
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+/* Form fields */
+.login-form-group {
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.login-form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+}
+
+.login-form-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(155, 89, 182, 0.2);
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.9375rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.login-form-input:focus {
+  border-color: rgba(255, 107, 53, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.login-form-input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Remember me */
+.login-form-remember {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.login-form-remember input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #ff6b35;
+  cursor: pointer;
+}
+
+.login-form-remember label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+/* Submit button */
+.login-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #ff6b35;
+  color: #fff;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 60px rgba(255, 107, 53, 0.4);
+}
+
+.login-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.login-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* Back link */
+.login-back-link {
+  margin-top: 2rem;
+  opacity: 0;
+  animation: loginFadeUp 1s ease forwards 0.8s;
+}
+
+.login-back-link a {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-back-link a:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Animations */
+@keyframes loginFadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .login-container { padding: 1.5rem; }
+  .login-card { padding: 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-page *,
+  .login-page *::before,
+  .login-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
