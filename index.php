@@ -369,9 +369,15 @@ if (empty($endpoints) && $show_endpoints) {
                     </svg>
                 </a>
             <?php endif; ?>
-            <a href="<?php echo esc_url(admin_url()); ?>" class="cta cta-outline">
-                WordPress Admin
-            </a>
+            <?php if (is_user_logged_in()): ?>
+                <a href="<?php echo esc_url(admin_url()); ?>" class="cta cta-outline">
+                    WordPress Admin
+                </a>
+            <?php else: ?>
+                <a href="<?php echo esc_url(home_url('/login/')); ?>" class="cta cta-outline">
+                    Login Here
+                </a>
+            <?php endif; ?>
         </div>
 
         <?php if ($show_endpoints && !empty($endpoints)): ?>
