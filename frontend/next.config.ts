@@ -68,6 +68,12 @@ const nextConfig: NextConfig = {
         hostname: 'clemsonsportsmedia.com',
         pathname: '/wp-content/uploads/**',
       },
+      // CloudFront CDN for WordPress media
+      {
+        protocol: 'https',
+        hostname: 'd3meilmq70q0ao.cloudfront.net',
+        pathname: '/live/uploads/**',
+      },
       // Clemson Tigers official site for team logos
       {
         protocol: 'https',
