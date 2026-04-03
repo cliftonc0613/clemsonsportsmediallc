@@ -415,6 +415,7 @@ export async function getPosts(params?: {
   order?: 'asc' | 'desc';
   before?: string;
   after?: string;
+  lightweight?: boolean;
 }): Promise<WPPost[]> {
   const queryParams = new URLSearchParams();
 
@@ -428,8 +429,13 @@ export async function getPosts(params?: {
   if (params?.before) queryParams.set('before', params.before);
   if (params?.after) queryParams.set('after', params.after);
 
-  // Always include _embed to get featured image data
-  queryParams.set('_embed', 'true');
+  if (params?.lightweight) {
+    // Request only the fields needed for listing pages — avoids _embed overhead
+    queryParams.set('_fields', 'id,title,slug,date,excerpt,categories,tags,featured_image_url,author_name,post_fields');
+  } else {
+    // Full embed for single post pages and detail views
+    queryParams.set('_embed', 'true');
+  }
 
   const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
   return fetchAPI<WPPost[]>(`/posts${query}`);
@@ -680,6 +686,7 @@ export async function getPostsByCategorySlug(
     page?: number;
     orderby?: string;
     order?: 'asc' | 'desc';
+    lightweight?: boolean;
   }
 ): Promise<WPPost[]> {
   const category = await getCategoryBySlug(categorySlug);

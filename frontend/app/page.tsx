@@ -62,15 +62,15 @@ export default async function HomePage() {
         galleries,
         ...sportResults
       ] = await Promise.all([
-        getPosts({ per_page: 20 }),
-        getPostsByCategorySlug(BREAKING_NEWS_CATEGORY, { per_page: 4 }),
+        getPosts({ per_page: 20, lightweight: true }),
+        getPostsByCategorySlug(BREAKING_NEWS_CATEGORY, { per_page: 4, lightweight: true }),
         getCategories({ per_page: 100 }),
         getTags({ per_page: 100 }),
         getClemsonGameById("mensBasketball", "latest").catch(() => null),
         getClemsonGameById("baseball", "latest").catch(() => null),
         getPhotoGalleries({ per_page: 30 }).catch(() => [] as WPPhotoGallery[]),
         ...SPORT_CATEGORIES.map((cat) =>
-          getPostsByCategorySlug(cat.slug, { per_page: 14 }).then((catPosts) => ({
+          getPostsByCategorySlug(cat.slug, { per_page: 14, lightweight: true }).then((catPosts) => ({
             slug: cat.slug,
             posts: catPosts,
           }))
