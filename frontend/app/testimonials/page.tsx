@@ -118,7 +118,7 @@ export default async function TestimonialsPage() {
 
   if (isWordPressConfigured()) {
     try {
-      testimonials = await getTestimonials({ per_page: 100 });
+      testimonials = await getTestimonials({ per_page: 100, lightweight: true });
     } catch (error) {
       console.error("Failed to fetch testimonials:", error);
     }

@@ -18,7 +18,7 @@ const SITE_DESCRIPTION = 'Latest blog posts and updates';
 export async function GET() {
   try {
     // Fetch latest posts
-    const posts = await getPosts({ per_page: 20, orderby: 'date', order: 'desc' });
+    const posts = await getPosts({ per_page: 20, orderby: 'date', order: 'desc', lightweight: true });
 
     // Build RSS XML
     const rssXml = `<?xml version="1.0" encoding="UTF-8"?>

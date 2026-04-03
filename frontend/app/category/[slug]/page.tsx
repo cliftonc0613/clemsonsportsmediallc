@@ -57,6 +57,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const result = await getPostsByCategorySlugWithPagination(slug, {
     per_page: 1,
+    lightweight: true,
   });
 
   if (!result.category) {
@@ -101,6 +102,7 @@ export default async function CategoryPage({
   const result = await getPostsByCategorySlugWithPagination(slug, {
     per_page: POSTS_PER_PAGE,
     page: currentPage,
+    lightweight: true,
   });
 
   if (!result.category) {

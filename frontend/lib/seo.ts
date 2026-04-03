@@ -228,8 +228,7 @@ export async function getRankMathMeta(pageUrl: string): Promise<RankMathMeta | n
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-store",
-      next: { revalidate: 0 },
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {

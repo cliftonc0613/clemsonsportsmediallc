@@ -52,6 +52,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const result = await getPostsByTagSlugWithPagination(slug, {
     per_page: 1,
+    lightweight: true,
   });
 
   if (!result.tag) {
@@ -96,6 +97,7 @@ export default async function TagPage({
   const result = await getPostsByTagSlugWithPagination(slug, {
     per_page: POSTS_PER_PAGE,
     page: currentPage,
+    lightweight: true,
   });
 
   if (!result.tag) {
