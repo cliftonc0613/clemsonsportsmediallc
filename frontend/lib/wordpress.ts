@@ -375,20 +375,19 @@ export interface WPEventType {
 // =============================================================================
 
 /**
- * Generic fetch function with error handling
+ * Generic fetch function with error handling and ISR caching
  */
-async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
+async function fetchAPI<T>(endpoint: string, options?: RequestInit & { revalidate?: number }): Promise<T> {
   const apiUrl = getApiUrl();
-  // Add cache-busting parameter to bypass Flywheel/Fastly CDN caching
-  const separator = endpoint.includes('?') ? '&' : '?';
-  const url = `${apiUrl}${endpoint}${separator}_t=${Date.now()}`;
+  const url = `${apiUrl}${endpoint}`;
+  const { revalidate = 60, ...fetchOptions } = options || {};
 
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
     },
-    cache: 'no-store', // Always fetch fresh data from WordPress
-    ...options,
+    next: { revalidate },
+    ...fetchOptions,
   });
 
   if (!response.ok) {
@@ -739,15 +738,13 @@ export async function getPostsWithPagination(params?: {
   if (params?.order) queryParams.set('order', params.order);
   queryParams.set('_embed', 'true');
 
-  // Add cache-busting parameter
-  const separator = '&';
-  const url = `${apiUrl}/posts?${queryParams.toString()}${separator}_t=${Date.now()}`;
+  const url = `${apiUrl}/posts?${queryParams.toString()}`;
 
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
     },
-    cache: 'no-store',
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {
@@ -1236,11 +1233,11 @@ export async function getPhotoGalleriesWithPagination(params?: {
   if (params?.order) queryParams.set('order', params.order);
   queryParams.set('_embed', 'true');
 
-  const url = `${apiUrl}/photo-gallery?${queryParams.toString()}&_t=${Date.now()}`;
+  const url = `${apiUrl}/photo-gallery?${queryParams.toString()}`;
 
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
-    cache: 'no-store',
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {

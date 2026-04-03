@@ -49,35 +49,13 @@ function getPostUrl(post: { slug: string; date: string }) {
   return `/${year}/${month}/${day}/${post.slug}`;
 }
 
-// Generate static paths for all posts
+// Posts are generated on-demand via dynamicParams and cached via ISR
 export async function generateStaticParams() {
-  if (!isWordPressConfigured()) {
-    console.warn('WORDPRESS_API_URL not set - skipping static generation for blog posts');
-    return [];
-  }
-
-  try {
-    const posts = await getPosts({ per_page: 100 });
-    return posts.map((post) => {
-      const postDate = new Date(post.date);
-      return {
-        year: String(postDate.getFullYear()),
-        month: String(postDate.getMonth() + 1).padStart(2, "0"),
-        day: String(postDate.getDate()).padStart(2, "0"),
-        slug: post.slug,
-      };
-    });
-  } catch (error) {
-    console.error('Failed to fetch posts for static generation:', error);
-    return [];
-  }
+  return [];
 }
 
 // Allow dynamic paths not generated at build time
 export const dynamicParams = true;
-
-// Force dynamic rendering to always fetch fresh data from WordPress
-export const dynamic = 'force-dynamic';
 
 // Generate metadata for each post
 export async function generateMetadata({

@@ -56,11 +56,11 @@ const nextConfig: NextConfig = {
         hostname: 'wp.clemsonsportsmediacom.local',
         pathname: '/wp-content/uploads/**',
       },
-      // ESPN CDN for team logos
+      // ESPN CDN for team logos and combiner images
       {
         protocol: 'https',
         hostname: 'a.espncdn.com',
-        pathname: '/i/teamlogos/**',
+        pathname: '/**',
       },
       // Production WordPress domain
       {
