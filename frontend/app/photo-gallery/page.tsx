@@ -56,6 +56,7 @@ export default async function PhotoGalleryPage({
           page: currentPage,
           event_type: eventTypeFilter,
           search: search || undefined,
+          lightweight: true,
         })
       : Promise.resolve({
           items: [],

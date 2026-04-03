@@ -430,7 +430,7 @@ export async function getPosts(params?: {
 
   if (params?.lightweight) {
     // Request only the fields needed for listing pages — avoids _embed overhead
-    queryParams.set('_fields', 'id,title,slug,date,excerpt,categories,tags,featured_media,featured_image_url,author_name,post_fields');
+    queryParams.set('_fields', 'id,title,slug,date,modified,excerpt,content,categories,tags,featured_media,featured_image_url,author_name,post_fields');
   } else {
     // Full embed for single post pages and detail views
     queryParams.set('_embed', 'true');
@@ -471,6 +471,7 @@ export async function getAdjacentPosts(currentPostDate: string, currentPostId: n
     order: 'desc',
     before: currentPostDate,
     exclude: [currentPostId],
+    lightweight: true,
   });
 
   // Fetch next post (newer, after current date)
@@ -480,6 +481,7 @@ export async function getAdjacentPosts(currentPostDate: string, currentPostId: n
     order: 'asc',
     after: currentPostDate,
     exclude: [currentPostId],
+    lightweight: true,
   });
 
   return {
@@ -501,6 +503,7 @@ export async function getPages(params?: {
   parent?: number;
   orderby?: string;
   order?: 'asc' | 'desc';
+  lightweight?: boolean;
 }): Promise<WPPage[]> {
   const queryParams = new URLSearchParams();
 
@@ -510,7 +513,11 @@ export async function getPages(params?: {
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
 
-  queryParams.set('_embed', 'true');
+  if (params?.lightweight) {
+    queryParams.set('_fields', 'id,title,slug,date,modified');
+  } else {
+    queryParams.set('_embed', 'true');
+  }
 
   const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
   return fetchAPI<WPPage[]>(`/pages${query}`);
@@ -543,6 +550,7 @@ export async function getServices(params?: {
   page?: number;
   orderby?: string;
   order?: 'asc' | 'desc';
+  lightweight?: boolean;
 }): Promise<WPService[]> {
   const queryParams = new URLSearchParams();
 
@@ -551,7 +559,11 @@ export async function getServices(params?: {
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
 
-  queryParams.set('_embed', 'true');
+  if (params?.lightweight) {
+    queryParams.set('_fields', 'id,title,slug,date,modified,excerpt,featured_image_url');
+  } else {
+    queryParams.set('_embed', 'true');
+  }
 
   const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
   return fetchAPI<WPService[]>(`/services${query}`);
@@ -584,6 +596,7 @@ export async function getTestimonials(params?: {
   page?: number;
   orderby?: string;
   order?: 'asc' | 'desc';
+  lightweight?: boolean;
 }): Promise<WPTestimonial[]> {
   const queryParams = new URLSearchParams();
 
@@ -592,7 +605,11 @@ export async function getTestimonials(params?: {
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
 
-  queryParams.set('_embed', 'true');
+  if (params?.lightweight) {
+    queryParams.set('_fields', 'id,title,slug,date,modified,excerpt,content');
+  } else {
+    queryParams.set('_embed', 'true');
+  }
 
   const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
   return fetchAPI<WPTestimonial[]>(`/testimonials${query}`);
@@ -722,6 +739,7 @@ export async function getPostsWithPagination(params?: {
   exclude?: number[];
   orderby?: string;
   order?: 'asc' | 'desc';
+  lightweight?: boolean;
 }): Promise<PaginatedResult<WPPost>> {
   const apiUrl = getApiUrl();
   const queryParams = new URLSearchParams();
@@ -736,7 +754,12 @@ export async function getPostsWithPagination(params?: {
   if (params?.exclude?.length) queryParams.set('exclude', params.exclude.join(','));
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
-  queryParams.set('_embed', 'true');
+
+  if (params?.lightweight) {
+    queryParams.set('_fields', 'id,title,slug,date,modified,excerpt,content,categories,tags,featured_media,featured_image_url,author_name,post_fields');
+  } else {
+    queryParams.set('_embed', 'true');
+  }
 
   const url = `${apiUrl}/posts?${queryParams.toString()}`;
 
@@ -775,6 +798,7 @@ export async function getPostsByCategorySlugWithPagination(
     page?: number;
     orderby?: string;
     order?: 'asc' | 'desc';
+    lightweight?: boolean;
   }
 ): Promise<PaginatedResult<WPPost> & { category: WPCategory | null }> {
   const category = await getCategoryBySlug(categorySlug);
@@ -809,6 +833,7 @@ export async function getPostsByTagSlugWithPagination(
     page?: number;
     orderby?: string;
     order?: 'asc' | 'desc';
+    lightweight?: boolean;
   }
 ): Promise<PaginatedResult<WPPost> & { tag: WPTag | null }> {
   const tag = await getTagBySlug(tagSlug);
@@ -1183,6 +1208,7 @@ export async function getPhotoGalleries(params?: {
   exclude?: number[];
   orderby?: string;
   order?: 'asc' | 'desc';
+  lightweight?: boolean;
 }): Promise<WPPhotoGallery[]> {
   const queryParams = new URLSearchParams();
 
@@ -1194,7 +1220,11 @@ export async function getPhotoGalleries(params?: {
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
 
-  queryParams.set('_embed', 'true');
+  if (params?.lightweight) {
+    queryParams.set('_fields', 'id,title,slug,date,modified,excerpt,featured_image_url');
+  } else {
+    queryParams.set('_embed', 'true');
+  }
 
   const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
   return fetchAPI<WPPhotoGallery[]>(`/photo-gallery${query}`);
@@ -1218,6 +1248,7 @@ export async function getPhotoGalleriesWithPagination(params?: {
   search?: string;
   orderby?: string;
   order?: 'asc' | 'desc';
+  lightweight?: boolean;
 }): Promise<PaginatedResult<WPPhotoGallery>> {
   const apiUrl = getApiUrl();
   const queryParams = new URLSearchParams();
@@ -1231,7 +1262,12 @@ export async function getPhotoGalleriesWithPagination(params?: {
   if (params?.search) queryParams.set('search', params.search);
   if (params?.orderby) queryParams.set('orderby', params.orderby);
   if (params?.order) queryParams.set('order', params.order);
-  queryParams.set('_embed', 'true');
+
+  if (params?.lightweight) {
+    queryParams.set('_fields', 'id,title,slug,date,modified,excerpt,featured_image_url');
+  } else {
+    queryParams.set('_embed', 'true');
+  }
 
   const url = `${apiUrl}/photo-gallery?${queryParams.toString()}`;
 

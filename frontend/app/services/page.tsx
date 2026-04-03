@@ -21,7 +21,7 @@ export default async function ServicesPage() {
 
   if (isWordPressConfigured()) {
     try {
-      services = await getServices({ per_page: 100 });
+      services = await getServices({ per_page: 100, lightweight: true });
     } catch (error) {
       console.error('Failed to fetch services:', error);
     }

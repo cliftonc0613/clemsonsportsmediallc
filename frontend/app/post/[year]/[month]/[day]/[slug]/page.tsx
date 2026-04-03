@@ -139,10 +139,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const contentHtml = rewriteContentUrls(post.content.rendered);
 
   // Fetch related posts (latest 3 posts excluding current)
-  const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id] });
+  const relatedPosts = await getPosts({ per_page: 3, exclude: [post.id], lightweight: true });
 
   // Fetch recent posts for sidebar (get 4 in case current is in the list)
-  const recentPosts = await getPosts({ per_page: 4 });
+  const recentPosts = await getPosts({ per_page: 4, lightweight: true });
 
   // Fetch adjacent posts for navigation
   const { previous: previousPost, next: nextPost } = await getAdjacentPosts(post.date, post.id);
