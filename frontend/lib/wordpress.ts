@@ -120,6 +120,7 @@ export interface WPPost {
   categories: number[];
   tags: number[];
   acf?: Record<string, unknown>;
+  post_fields?: Record<string, unknown>;
   _embedded?: {
     author?: WPAuthor[];
     'wp:featuredmedia'?: Array<{

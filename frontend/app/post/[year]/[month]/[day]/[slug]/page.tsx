@@ -213,7 +213,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
               {/* Photo Credit */}
               <p className="text-xs uppercase tracking-wider text-gray-500 mt-2">
-                Photo Credit: {(post.acf?.photo_credit as string) || (post.acf?.photo_credit_name as string) || "Clemson Sports Media"}
+                Photo Credit: {(post.post_fields?.photo_credit_name as string) || (post.acf?.photo_credit as string) || "Clemson Sports Media"}
               </p>
             </div>
           )}
