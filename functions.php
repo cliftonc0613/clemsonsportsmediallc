@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 /**
  * Theme Constants
  */
-define('STARTER_THEME_VERSION', '1.0.0');
+define('STARTER_THEME_VERSION', '1.1.0');
 define('STARTER_THEME_DIR', get_template_directory());
 define('STARTER_THEME_URI', get_template_directory_uri());
 
@@ -659,6 +659,15 @@ function starter_theme_admin_meta_box_styles() {
     }
 }
 add_action('admin_head', 'starter_theme_admin_meta_box_styles');
+
+/**
+ * Prevent WordPress from redirecting /login to wp-login.php
+ * when a page with slug "login" exists using our custom template.
+ */
+function starter_theme_allow_login_page() {
+    remove_action('template_redirect', 'wp_redirect_admin_locations', 1000);
+}
+add_action('init', 'starter_theme_allow_login_page');
 
 /**
  * Include additional functionality files
