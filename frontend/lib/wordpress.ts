@@ -431,7 +431,7 @@ export async function getPosts(params?: {
 
   if (params?.lightweight) {
     // Request only the fields needed for listing pages — avoids _embed overhead
-    queryParams.set('_fields', 'id,title,slug,date,excerpt,categories,tags,featured_image_url,author_name,post_fields');
+    queryParams.set('_fields', 'id,title,slug,date,excerpt,categories,tags,featured_media,featured_image_url,author_name,post_fields');
   } else {
     // Full embed for single post pages and detail views
     queryParams.set('_embed', 'true');
