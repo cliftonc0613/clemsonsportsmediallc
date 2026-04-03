@@ -68,7 +68,7 @@ export default async function HomePage() {
         getTags({ per_page: 100 }),
         getClemsonGameById("mensBasketball", "latest").catch(() => null),
         getClemsonGameById("baseball", "latest").catch(() => null),
-        getPhotoGalleries({ per_page: 30 }).catch(() => [] as WPPhotoGallery[]),
+        getPhotoGalleries({ per_page: 30, lightweight: true }).catch(() => [] as WPPhotoGallery[]),
         ...SPORT_CATEGORIES.map((cat) =>
           getPostsByCategorySlug(cat.slug, { per_page: 14, lightweight: true }).then((catPosts) => ({
             slug: cat.slug,

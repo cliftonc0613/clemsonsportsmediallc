@@ -28,7 +28,7 @@ export async function generateStaticParams() {
   }
 
   try {
-    const services = await getServices({ per_page: 100 });
+    const services = await getServices({ per_page: 100, lightweight: true });
     return services.map((service) => ({
       slug: service.slug,
     }));

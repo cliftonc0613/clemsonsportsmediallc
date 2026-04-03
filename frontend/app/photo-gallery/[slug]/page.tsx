@@ -28,7 +28,7 @@ export async function generateStaticParams() {
   if (!isWordPressConfigured()) return [];
 
   try {
-    const galleries = await getPhotoGalleries({ per_page: 100 });
+    const galleries = await getPhotoGalleries({ per_page: 100, lightweight: true });
     return galleries.map((g) => ({ slug: g.slug }));
   } catch {
     return [];
@@ -118,6 +118,7 @@ export default async function GalleryPage({ params }: GalleryPageProps) {
         event_type: eventTypes.map((et) => et.id),
         exclude: [gallery.id],
         per_page: 3,
+        lightweight: true,
       });
     } catch {
       // silently ignore
@@ -128,6 +129,7 @@ export default async function GalleryPage({ params }: GalleryPageProps) {
       relatedGalleries = await getPhotoGalleries({
         exclude: [gallery.id],
         per_page: 3,
+        lightweight: true,
       });
     } catch {
       // silently ignore

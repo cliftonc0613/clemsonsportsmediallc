@@ -13,10 +13,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (isWordPressConfigured()) {
     try {
       [posts, services, pages, photoGalleries] = await Promise.all([
-        getPosts({ per_page: 100 }),
-        getServices({ per_page: 100 }),
-        getPages({ per_page: 100 }),
-        getPhotoGalleries({ per_page: 100 }),
+        getPosts({ per_page: 100, lightweight: true }),
+        getServices({ per_page: 100, lightweight: true }),
+        getPages({ per_page: 100, lightweight: true }),
+        getPhotoGalleries({ per_page: 100, lightweight: true }),
       ]);
     } catch (error) {
       console.error('Failed to fetch WordPress content for sitemap:', error);
