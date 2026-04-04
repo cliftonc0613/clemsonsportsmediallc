@@ -43,7 +43,6 @@ export async function generateStaticParams() {
 export const dynamicParams = true;
 
 // Force dynamic rendering
-export const dynamic = "force-dynamic";
 
 // Generate metadata for each tag
 export async function generateMetadata({
@@ -83,7 +82,6 @@ export async function generateMetadata({
   };
 }
 
-export const dynamic = "force-dynamic";
 
 export default async function TagPage({
   params,

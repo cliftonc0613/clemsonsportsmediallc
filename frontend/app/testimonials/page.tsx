@@ -14,7 +14,6 @@ export const metadata: Metadata = {
     "Read what our clients have to say about working with us. Real stories from real businesses.",
 };
 
-export const dynamic = "force-dynamic";
 
 // Value Block Component
 function ValueBlock({

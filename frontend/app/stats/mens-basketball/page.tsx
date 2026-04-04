@@ -31,7 +31,6 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every 15 minutes
-export const dynamic = "force-dynamic";
 
 interface OpponentInfo {
   id: string;

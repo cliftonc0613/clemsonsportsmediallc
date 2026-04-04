@@ -13,7 +13,6 @@ export const metadata: Metadata = {
     "Explore our comprehensive range of services designed to help your business grow and succeed.",
 };
 
-export const dynamic = "force-dynamic";
 
 export default async function ServicesPage() {
   let services: WPService[] = [];

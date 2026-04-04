@@ -24,7 +24,6 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
 
 interface PhotoGalleryPageProps {
   searchParams: Promise<{ page?: string; sport?: string; search?: string }>;

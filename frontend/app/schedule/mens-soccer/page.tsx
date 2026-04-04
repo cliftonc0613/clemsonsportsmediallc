@@ -20,7 +20,6 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every hour
-export const dynamic = "force-dynamic";
 
 // Static schedule data for Men's Soccer 2025-26
 interface ScheduleGame {

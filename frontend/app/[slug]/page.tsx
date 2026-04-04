@@ -90,7 +90,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export const dynamic = "force-dynamic";
 
 export default async function PageSingle({ params }: PageProps) {
   const { slug } = await params;

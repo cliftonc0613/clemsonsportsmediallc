@@ -22,7 +22,6 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every hour
-export const dynamic = "force-dynamic";
 
 // Transform schedule event to SimpleScheduleGame
 function transformEvent(event: any): SimpleScheduleGame {
