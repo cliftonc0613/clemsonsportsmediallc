@@ -118,10 +118,7 @@ interface PageParams {
   sport: string;
 }
 
-// Generate static params for all sports
-export async function generateStaticParams() {
-  return Object.keys(SPORT_SLUG_MAP).map((sport) => ({ sport }));
-}
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each page
 export async function generateMetadata({

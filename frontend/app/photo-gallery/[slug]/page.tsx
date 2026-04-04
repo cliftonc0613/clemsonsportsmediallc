@@ -24,18 +24,7 @@ interface GalleryPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  if (!isWordPressConfigured()) return [];
-
-  try {
-    const galleries = await getPhotoGalleries({ per_page: 100, lightweight: true });
-    return galleries.map((g) => ({ slug: g.slug }));
-  } catch {
-    return [];
-  }
-}
-
-export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

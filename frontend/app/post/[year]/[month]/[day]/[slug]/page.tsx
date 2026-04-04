@@ -49,13 +49,7 @@ function getPostUrl(post: { slug: string; date: string }) {
   return `/${year}/${month}/${day}/${post.slug}`;
 }
 
-// Posts are generated on-demand via dynamicParams and cached via ISR
-export async function generateStaticParams() {
-  return [];
-}
-
-// Allow dynamic paths not generated at build time
-export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each post
 export async function generateMetadata({

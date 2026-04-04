@@ -30,28 +30,7 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generate static paths for all pages
-export async function generateStaticParams() {
-  if (!isWordPressConfigured()) {
-    console.warn("WORDPRESS_API_URL not set - skipping static generation for pages");
-    return [];
-  }
-
-  try {
-    const pages = await getPages({ per_page: 100 });
-    return pages
-      .filter((page) => !RESERVED_SLUGS.includes(page.slug))
-      .map((page) => ({
-        slug: page.slug,
-      }));
-  } catch (error) {
-    console.error("Failed to fetch pages for static generation:", error);
-    return [];
-  }
-}
-
-// Allow dynamic paths not generated at build time
-export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each page
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
