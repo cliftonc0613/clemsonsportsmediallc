@@ -13,8 +13,7 @@ export const metadata: Metadata = {
     "Explore our comprehensive range of services designed to help your business grow and succeed.",
 };
 
-// Enable ISR with 5 second revalidation
-export const revalidate = 5;
+export const dynamic = "force-dynamic";
 
 export default async function ServicesPage() {
   let services: WPService[] = [];

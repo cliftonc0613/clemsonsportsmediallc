@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every 60 seconds for live scores
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 // Sports to display on the scores page
 const SPORTS_TO_SHOW: SportType[] = [

@@ -376,19 +376,18 @@ export interface WPEventType {
 // =============================================================================
 
 /**
- * Generic fetch function with error handling and ISR caching
+ * Generic fetch function with error handling - no caching
  */
-async function fetchAPI<T>(endpoint: string, options?: RequestInit & { revalidate?: number }): Promise<T> {
+async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const apiUrl = getApiUrl();
   const url = `${apiUrl}${endpoint}`;
-  const { revalidate = 60, ...fetchOptions } = options || {};
 
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
     },
-    next: { revalidate },
-    ...fetchOptions,
+    cache: 'no-store',
+    ...options,
   });
 
   if (!response.ok) {
@@ -768,7 +767,7 @@ export async function getPostsWithPagination(params?: {
     headers: {
       'Content-Type': 'application/json',
     },
-    next: { revalidate: 60 },
+    cache: 'no-store',
   });
 
   if (!response.ok) {
@@ -1274,7 +1273,7 @@ export async function getPhotoGalleriesWithPagination(params?: {
 
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
-    next: { revalidate: 60 },
+    cache: 'no-store',
   });
 
   if (!response.ok) {

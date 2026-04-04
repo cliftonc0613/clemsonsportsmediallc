@@ -113,7 +113,7 @@ const SPORT_CONFIG: Record<
 };
 
 // Revalidate every hour
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 interface PageParams {
   sport: string;
