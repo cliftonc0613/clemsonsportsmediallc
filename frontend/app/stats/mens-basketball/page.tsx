@@ -110,6 +110,8 @@ async function getNextOpponent(): Promise<OpponentInfo | null> {
   }
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function MensBasketballStatsPage() {
   // Fetch data in parallel
   const [clemsonStats, standings, opponentInfo, clemsonLeaders] = await Promise.all([

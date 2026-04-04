@@ -111,6 +111,8 @@ function FeaturedTestimonial({ testimonial }: { testimonial: WPTestimonial }) {
   );
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function TestimonialsPage() {
   let testimonials: WPTestimonial[] = [];
 

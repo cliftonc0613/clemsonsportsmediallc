@@ -82,6 +82,8 @@ function transformEvent(event: any): SimpleScheduleGame {
   };
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function FootballSchedulePage() {
   let games: SimpleScheduleGame[] = [];
   let teamRecord: string | undefined;
