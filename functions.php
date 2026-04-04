@@ -527,6 +527,47 @@ function starter_theme_trigger_revalidation_on_status_change($new_status, $old_s
 add_action('transition_post_status', 'starter_theme_trigger_revalidation_on_status_change', 10, 3);
 
 /**
+ * Diagnostic endpoint to test revalidation config (TEMPORARY - remove after debugging)
+ * GET /wp-json/starter/v1/revalidation-check
+ */
+add_action('rest_api_init', function() {
+    register_rest_route('starter/v1', '/revalidation-check', array(
+        'methods'  => 'GET',
+        'callback' => function() {
+            $frontend_url = defined('STARTER_FRONTEND_URL') ? STARTER_FRONTEND_URL : '(not defined)';
+            $secret_set = defined('STARTER_REVALIDATION_SECRET') && !empty(STARTER_REVALIDATION_SECRET);
+
+            // Test connectivity to Vercel
+            $test_result = 'skipped';
+            if ($frontend_url !== '(not defined)' && $secret_set) {
+                $response = wp_remote_post($frontend_url . '/api/revalidate', array(
+                    'timeout' => 15,
+                    'blocking' => true,
+                    'headers' => array('Content-Type' => 'application/json'),
+                    'body' => wp_json_encode(array(
+                        'secret' => STARTER_REVALIDATION_SECRET,
+                        'path' => '/',
+                    )),
+                ));
+                if (is_wp_error($response)) {
+                    $test_result = 'FAILED: ' . $response->get_error_message();
+                } else {
+                    $test_result = 'HTTP ' . wp_remote_retrieve_response_code($response) . ': ' . wp_remote_retrieve_body($response);
+                }
+            }
+
+            return array(
+                'frontend_url' => $frontend_url,
+                'revalidate_url' => $frontend_url . '/api/revalidate',
+                'secret_configured' => $secret_set,
+                'connectivity_test' => $test_result,
+            );
+        },
+        'permission_callback' => '__return_true',
+    ));
+});
+
+/**
  * Disable Gutenberg for this headless theme (optional)
  * Uncomment if you prefer the classic editor
  */
