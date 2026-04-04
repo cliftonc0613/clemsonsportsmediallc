@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getPost } from "@/lib/wordpress";
 
 /**
@@ -31,6 +31,9 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    // Bust all WordPress fetch data cache
+    revalidateTag("wordpress");
 
     // Handle path-based revalidation
     if (path) {

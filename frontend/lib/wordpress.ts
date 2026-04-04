@@ -387,7 +387,7 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit & { revalidat
     headers: {
       'Content-Type': 'application/json',
     },
-    next: { revalidate },
+    next: { revalidate, tags: ["wordpress"] },
     ...fetchOptions,
   });
 
@@ -768,7 +768,7 @@ export async function getPostsWithPagination(params?: {
     headers: {
       'Content-Type': 'application/json',
     },
-    next: { revalidate: 60 },
+    next: { revalidate: 60, tags: ["wordpress"] },
   });
 
   if (!response.ok) {
@@ -1274,7 +1274,7 @@ export async function getPhotoGalleriesWithPagination(params?: {
 
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
-    next: { revalidate: 60 },
+    next: { revalidate: 60, tags: ["wordpress"] },
   });
 
   if (!response.ok) {

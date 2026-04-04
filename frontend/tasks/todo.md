@@ -1,16 +1,16 @@
-# Alternating Top Row Layout on Mobile Only
+# Fix: WordPress post updates not purging Vercel cache
 
-## Plan
-On mobile, alternate the top 2 stories in each sport category section: Post 1 = `[Image][Text]`, Post 2 = `[Text][Image]`. Desktop stays unchanged.
+## Problem
+When a WordPress post is updated, the `save_post` hook fires and calls `/api/revalidate` on Vercel. The endpoint returns HTTP 200 success, but pages continue serving stale content.
 
-## Tasks
-- [x] Wrap Post 2's `ImageCard` with `order-last sm:order-none` in `components/AlternatingGrid.tsx`
-- [x] Verify `npm run build` passes
+## Root Cause
+`revalidatePath("/")` marks the page route as stale, but the underlying `fetch()` calls in `wordpress.ts` have their own `next: { revalidate: 3600 }` data cache. `revalidatePath` alone doesn't reliably invalidate the fetch data cache on Vercel.
 
-## Review
+## Fix
+- [ ] 1. Add `next: { tags: ["wordpress"] }` to `fetchAPI` in `wordpress.ts`
+- [ ] 2. Add `revalidateTag("wordpress")` to revalidation route
+- [ ] 3. Deploy to Vercel and test
 
-### Files Modified (1)
-- `components/AlternatingGrid.tsx` (line 48) — Wrapped Post 2's `ImageCard` in a `<div className="order-last sm:order-none">` so it appears below the text on mobile but stays in normal grid position on desktop.
-
-### Summary
-Single-line change. On mobile (`grid-cols-1`), `order-last` pushes Post 2's image below its text, creating the alternating `[Text][Image]` layout. On `sm+` breakpoints, `order-none` restores normal DOM order within the 4-column grid.
+## Files to change
+- `frontend/lib/wordpress.ts` - Add cache tag to `fetchAPI`
+- `frontend/app/api/revalidate/route.ts` - Add `revalidateTag`
