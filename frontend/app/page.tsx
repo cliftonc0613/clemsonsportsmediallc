@@ -105,6 +105,9 @@ export default async function HomePage() {
   const heroGridPosts = posts.slice(0, 5);
   const articleListPosts = posts.slice(5, 13);
 
+  // DEBUG: temporary - remove after fixing image issue
+  const debugPost = heroGridPosts[0];
+
   return (
     <>
       <BodyClass className="page-home" />
@@ -118,6 +121,13 @@ export default async function HomePage() {
           // Add social media URLs here
         ]}
       />
+
+      {/* DEBUG: remove after fixing */}
+      {debugPost && (
+        <div style={{background:'red',color:'white',padding:'10px',fontSize:'12px'}}>
+          DEBUG: slug={debugPost.slug} | featured_image_url={String(debugPost.featured_image_url)} | featured_media={debugPost.featured_media}
+        </div>
+      )}
 
       {/* Mini Hero with Logo */}
       <MiniHero />
