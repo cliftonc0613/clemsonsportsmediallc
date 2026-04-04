@@ -88,8 +88,7 @@ export async function generateMetadata({
   };
 }
 
-// Enable ISR with 5 second revalidation
-export const revalidate = 5;
+export const dynamic = "force-dynamic";
 
 export default async function CategoryPage({
   params,

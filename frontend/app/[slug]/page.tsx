@@ -90,8 +90,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-// Enable ISR with 5 second revalidation
-export const revalidate = 5;
+export const dynamic = "force-dynamic";
 
 export default async function PageSingle({ params }: PageProps) {
   const { slug } = await params;

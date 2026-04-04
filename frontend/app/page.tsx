@@ -28,8 +28,7 @@ import { GallerySlider } from "@/components/GallerySlider";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
 
-// Content refreshes every 60 seconds
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 /**
  * Clemson Sports Media Homepage

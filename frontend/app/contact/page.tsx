@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 // Revalidate services list every 5 seconds
-export const revalidate = 5;
+export const dynamic = "force-dynamic";
 
 export default async function ContactPage() {
   // Fetch services to populate the dropdown
