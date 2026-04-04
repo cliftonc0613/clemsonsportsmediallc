@@ -48,7 +48,6 @@ export async function generateStaticParams() {
 export const dynamicParams = true;
 
 // Force dynamic rendering
-export const dynamic = "force-dynamic";
 
 // Generate metadata for each category
 export async function generateMetadata({
@@ -88,7 +87,6 @@ export async function generateMetadata({
   };
 }
 
-export const dynamic = "force-dynamic";
 
 export default async function CategoryPage({
   params,

@@ -36,7 +36,6 @@ export async function generateStaticParams() {
 }
 
 export const dynamicParams = true;
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

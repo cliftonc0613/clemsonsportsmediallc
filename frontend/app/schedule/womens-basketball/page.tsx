@@ -22,7 +22,6 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every hour
-export const dynamic = "force-dynamic";
 
 // Game status overrides (for postponed games, etc.)
 // Uses month-day and partial opponent name matching for robustness

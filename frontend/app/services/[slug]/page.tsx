@@ -85,7 +85,6 @@ export async function generateMetadata({
   return generateSeoMetadata(rankMathMeta, fallback);
 }
 
-export const dynamic = "force-dynamic";
 
 export default async function ServicePage({ params }: ServicePageProps) {
   const { slug } = await params;
