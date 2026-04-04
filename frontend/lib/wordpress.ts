@@ -1143,13 +1143,18 @@ export function getPostAuthorAvatar(post: WPPost): string | null {
     return null;
   }
 
-  // Prefer 48px, fall back to 96px or 24px
-  return (
-    embeddedAuthor.avatar_urls['48'] ||
+  // Prefer 96px for better quality, fall back to smaller sizes
+  const url =
     embeddedAuthor.avatar_urls['96'] ||
+    embeddedAuthor.avatar_urls['48'] ||
     embeddedAuthor.avatar_urls['24'] ||
-    null
-  );
+    null;
+
+  if (!url) return null;
+
+  // Replace default mystery-man fallback with 404 so we can detect
+  // users without a real Gravatar and show initials instead
+  return url.replace('d=mm', 'd=404');
 }
 
 /**

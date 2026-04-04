@@ -74,6 +74,12 @@ const nextConfig: NextConfig = {
         hostname: 'd3meilmq70q0ao.cloudfront.net',
         pathname: '/live/uploads/**',
       },
+      // Gravatar for author avatars
+      {
+        protocol: 'https',
+        hostname: 'secure.gravatar.com',
+        pathname: '/avatar/**',
+      },
       // Clemson Tigers official site for team logos
       {
         protocol: 'https',

@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface AuthorBioProps {
   name: string;
@@ -19,6 +22,8 @@ export function AuthorBio({
   className = "",
 }: AuthorBioProps) {
   const hasSocialLinks = twitterUrl || linkedinUrl;
+  const [imgError, setImgError] = useState(false);
+  const showImage = avatar && !imgError;
 
   return (
     <div
@@ -27,13 +32,14 @@ export function AuthorBio({
       <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6">
         {/* Author Avatar */}
         <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-[var(--clemson-purple)] flex-shrink-0">
-          {avatar ? (
+          {showImage ? (
             <Image
               src={avatar}
               alt={name}
               fill
               className="object-cover"
               sizes="96px"
+              onError={() => setImgError(true)}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-white text-2xl md:text-3xl font-heading font-bold">
