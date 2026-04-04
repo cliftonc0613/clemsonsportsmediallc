@@ -331,6 +331,17 @@ function starter_theme_add_featured_image_to_rest() {
 add_action('rest_api_init', 'starter_theme_add_featured_image_to_rest');
 
 /**
+ * Prevent Flywheel/Varnish from caching REST API responses
+ * Ensures Vercel always gets fresh data from WordPress
+ */
+add_filter('rest_post_dispatch', function($response) {
+    $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    $response->header('Pragma', 'no-cache');
+    $response->header('Expires', '0');
+    return $response;
+});
+
+/**
  * Enable CORS for REST API (development only)
  * Remove or restrict in production
  */

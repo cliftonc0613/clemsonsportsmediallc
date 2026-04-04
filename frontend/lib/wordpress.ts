@@ -380,7 +380,9 @@ export interface WPEventType {
  */
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const apiUrl = getApiUrl();
-  const url = `${apiUrl}${endpoint}`;
+  // Add cache-busting param to bypass Flywheel's Varnish CDN cache
+  const separator = endpoint.includes('?') ? '&' : '?';
+  const url = `${apiUrl}${endpoint}${separator}_t=${Date.now()}`;
 
   const response = await fetch(url, {
     headers: {
@@ -761,7 +763,7 @@ export async function getPostsWithPagination(params?: {
     queryParams.set('_embed', 'true');
   }
 
-  const url = `${apiUrl}/posts?${queryParams.toString()}`;
+  const url = `${apiUrl}/posts?${queryParams.toString()}&_t=${Date.now()}`;
 
   const response = await fetch(url, {
     headers: {
@@ -1269,7 +1271,7 @@ export async function getPhotoGalleriesWithPagination(params?: {
     queryParams.set('_embed', 'true');
   }
 
-  const url = `${apiUrl}/photo-gallery?${queryParams.toString()}`;
+  const url = `${apiUrl}/photo-gallery?${queryParams.toString()}&_t=${Date.now()}`;
 
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
