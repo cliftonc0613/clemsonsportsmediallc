@@ -490,10 +490,10 @@ function starter_theme_trigger_revalidation($post_id, $post, $update) {
     // Build the revalidation URL
     $revalidate_url = $frontend_url . '/api/revalidate';
 
-    // Send the revalidation request
+    // Send the revalidation request (blocking so we can log success/failure)
     $response = wp_remote_post($revalidate_url, array(
-        'timeout'   => 10,
-        'blocking'  => false, // Don't wait for response
+        'timeout'   => 15,
+        'blocking'  => true,
         'headers'   => array(
             'Content-Type' => 'application/json',
         ),
@@ -504,9 +504,13 @@ function starter_theme_trigger_revalidation($post_id, $post, $update) {
         )),
     ));
 
-    // Log errors in debug mode
-    if (defined('WP_DEBUG') && WP_DEBUG && is_wp_error($response)) {
-        error_log('Revalidation error: ' . $response->get_error_message());
+    // Log result for debugging
+    if (is_wp_error($response)) {
+        error_log('Revalidation FAILED for ' . $post->post_type . ':' . $post->post_name . ' - ' . $response->get_error_message());
+    } else {
+        $code = wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        error_log('Revalidation ' . ($code === 200 ? 'OK' : 'FAILED(' . $code . ')') . ' for ' . $post->post_type . ':' . $post->post_name . ' - ' . $body);
     }
 }
 add_action('save_post', 'starter_theme_trigger_revalidation', 10, 3);

@@ -28,8 +28,8 @@ import { GallerySlider } from "@/components/GallerySlider";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Clemson Sports Media";
 
-// Enable ISR with 60 second revalidation
-export const revalidate = 60;
+// Cache until WordPress triggers on-demand revalidation (1 hour fallback)
+export const revalidate = 3600;
 
 /**
  * Clemson Sports Media Homepage
