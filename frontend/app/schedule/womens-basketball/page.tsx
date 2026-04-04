@@ -118,6 +118,8 @@ function transformEvent(event: any): SimpleScheduleGame {
   };
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function WomensBasketballSchedulePage() {
   let games: SimpleScheduleGame[] = [];
   let teamRecord: string | undefined;

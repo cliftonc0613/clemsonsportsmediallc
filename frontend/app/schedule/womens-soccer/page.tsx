@@ -289,6 +289,8 @@ const SCHEDULE_2025: ScheduleGame[] = [
   },
 ];
 
+export const dynamic = "force-dynamic";
+
 export default function WomensSoccerSchedulePage() {
   // Separate games by category
   const exhibitions = SCHEDULE_2025.filter((g) => g.isExhibition);

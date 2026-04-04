@@ -36,6 +36,8 @@ interface SportData {
   standings: SimpleStanding[];
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function ScoresPage() {
   // Fetch all data for each sport in parallel
   const sportDataPromises = SPORTS_TO_SHOW.map(async (sport): Promise<SportData> => {

@@ -332,6 +332,8 @@ const SCHEDULE_2025_26: ScheduleGame[] = [
   },
 ];
 
+export const dynamic = "force-dynamic";
+
 export default function MensSoccerSchedulePage() {
   // Separate games by category
   const fallExhibition = SCHEDULE_2025_26.filter(g =>

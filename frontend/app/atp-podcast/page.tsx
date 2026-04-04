@@ -24,6 +24,8 @@ export const metadata: Metadata = {
 
 // Revalidate every 5 minutes
 
+export const dynamic = "force-dynamic";
+
 export default async function VideoPage() {
   let videos: YouTubeVideo[] = [];
 

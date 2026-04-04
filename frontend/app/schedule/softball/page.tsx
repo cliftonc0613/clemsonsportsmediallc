@@ -87,6 +87,8 @@ function computeRecord(games: SimpleScheduleGame[]): string | undefined {
   return `${wins}-${losses}`;
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function SoftballSchedulePage() {
   let games: SimpleScheduleGame[] = [];
   let teamRecord: string | undefined;

@@ -29,6 +29,8 @@ interface PhotoGalleryPageProps {
   searchParams: Promise<{ page?: string; sport?: string; search?: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function PhotoGalleryPage({
   searchParams,
 }: PhotoGalleryPageProps) {
