@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Bust all WordPress fetch data cache
-    revalidateTag("wordpress");
+    revalidateTag("wordpress", { expire: 0 });
 
     // Handle path-based revalidation
     if (path) {
