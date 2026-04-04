@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every 15 minutes
-export const revalidate = 900;
+export const revalidate = 60;
 
 interface OpponentInfo {
   id: string;

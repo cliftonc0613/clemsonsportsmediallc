@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every 5 minutes
-export const revalidate = 300;
+export const revalidate = 60;
 
 export default async function VideoPage() {
   let videos: YouTubeVideo[] = [];
