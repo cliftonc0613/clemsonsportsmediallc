@@ -381,13 +381,13 @@ export interface WPEventType {
 async function fetchAPI<T>(endpoint: string, options?: RequestInit & { revalidate?: number }): Promise<T> {
   const apiUrl = getApiUrl();
   const url = `${apiUrl}${endpoint}`;
-  const { revalidate = 3600, ...fetchOptions } = options || {};
+  const { revalidate = 60, ...fetchOptions } = options || {};
 
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
     },
-    next: { revalidate, tags: ["wordpress"] },
+    next: { revalidate },
     ...fetchOptions,
   });
 
@@ -768,7 +768,7 @@ export async function getPostsWithPagination(params?: {
     headers: {
       'Content-Type': 'application/json',
     },
-    next: { revalidate: 60, tags: ["wordpress"] },
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {
@@ -1274,7 +1274,7 @@ export async function getPhotoGalleriesWithPagination(params?: {
 
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
-    next: { revalidate: 60, tags: ["wordpress"] },
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every hour
-export const revalidate = 3600;
+export const revalidate = 60;
 
 // Static schedule data for Women's Soccer 2025
 interface ScheduleGame {

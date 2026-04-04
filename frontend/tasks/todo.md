@@ -1,16 +1,15 @@
-# Fix: WordPress post updates not purging Vercel cache
+# Switch to 60-second TTL caching (Option 2)
 
 ## Problem
-When a WordPress post is updated, the `save_post` hook fires and calls `/api/revalidate` on Vercel. The endpoint returns HTTP 200 success, but pages continue serving stale content.
+On-demand revalidation via WordPress webhooks is unreliable on Vercel due to multi-layer caching. Too many moving parts that fail silently.
 
-## Root Cause
-`revalidatePath("/")` marks the page route as stale, but the underlying `fetch()` calls in `wordpress.ts` have their own `next: { revalidate: 3600 }` data cache. `revalidatePath` alone doesn't reliably invalidate the fetch data cache on Vercel.
+## Solution
+Replace on-demand revalidation with a simple 60-second TTL. Content is at most 1 minute stale. No webhook chain to debug.
 
-## Fix
-- [ ] 1. Add `next: { tags: ["wordpress"] }` to `fetchAPI` in `wordpress.ts`
-- [ ] 2. Add `revalidateTag("wordpress")` to revalidation route
-- [ ] 3. Deploy to Vercel and test
-
-## Files to change
-- `frontend/lib/wordpress.ts` - Add cache tag to `fetchAPI`
-- `frontend/app/api/revalidate/route.ts` - Add `revalidateTag`
+## Tasks
+- [ ] 1. Change `fetchAPI` default revalidate from 3600 to 60, remove tags
+- [ ] 2. Set all page-level `export const revalidate` to 60
+- [ ] 3. Delete revalidation endpoint (`app/api/revalidate/route.ts`)
+- [ ] 4. Remove revalidation hook from `functions.php`
+- [ ] 5. Remove diagnostic endpoint from `functions.php`
+- [ ] 6. Deploy and test

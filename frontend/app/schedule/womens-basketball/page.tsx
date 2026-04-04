@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every hour
-export const revalidate = 3600;
+export const revalidate = 60;
 
 // Game status overrides (for postponed games, etc.)
 // Uses month-day and partial opponent name matching for robustness

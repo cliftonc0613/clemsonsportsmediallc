@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 // Revalidate every hour
-export const revalidate = 3600;
+export const revalidate = 60;
 
 // Transform schedule event to SimpleScheduleGame
 function transformEvent(event: any): SimpleScheduleGame {
