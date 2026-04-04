@@ -18,28 +18,7 @@ interface ServicePageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generate static paths for all services
-export async function generateStaticParams() {
-  // If WordPress isn't configured during build, return empty array
-  // Pages will be generated on-demand with ISR
-  if (!isWordPressConfigured()) {
-    console.warn('WORDPRESS_API_URL not set - skipping static generation for services');
-    return [];
-  }
-
-  try {
-    const services = await getServices({ per_page: 100, lightweight: true });
-    return services.map((service) => ({
-      slug: service.slug,
-    }));
-  } catch (error) {
-    console.error('Failed to fetch services for static generation:', error);
-    return [];
-  }
-}
-
-// Allow dynamic paths not generated at build time
-export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each service
 export async function generateMetadata({

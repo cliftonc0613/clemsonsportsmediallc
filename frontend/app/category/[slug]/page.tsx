@@ -27,27 +27,7 @@ interface CategoryPageProps {
   searchParams: Promise<{ page?: string }>;
 }
 
-// Generate static paths for all categories
-export async function generateStaticParams() {
-  if (!isWordPressConfigured()) {
-    return [];
-  }
-
-  try {
-    const categories = await getCategories({ per_page: 100 });
-    return categories.map((category) => ({
-      slug: category.slug,
-    }));
-  } catch (error) {
-    console.error("Failed to fetch categories for static generation:", error);
-    return [];
-  }
-}
-
-// Allow dynamic paths not generated at build time
-export const dynamicParams = true;
-
-// Force dynamic rendering
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each category
 export async function generateMetadata({

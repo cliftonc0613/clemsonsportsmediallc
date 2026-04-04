@@ -22,27 +22,7 @@ interface TagPageProps {
   searchParams: Promise<{ page?: string }>;
 }
 
-// Generate static paths for all tags
-export async function generateStaticParams() {
-  if (!isWordPressConfigured()) {
-    return [];
-  }
-
-  try {
-    const tags = await getTags({ per_page: 100 });
-    return tags.map((tag) => ({
-      slug: tag.slug,
-    }));
-  } catch (error) {
-    console.error("Failed to fetch tags for static generation:", error);
-    return [];
-  }
-}
-
-// Allow dynamic paths not generated at build time
-export const dynamicParams = true;
-
-// Force dynamic rendering
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each tag
 export async function generateMetadata({
