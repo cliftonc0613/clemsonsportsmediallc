@@ -32,8 +32,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Bust all WordPress fetch data cache
-    revalidateTag("wordpress", { expire: 0 });
+    // Bust all WordPress fetch data cache (stale-while-revalidate)
+    revalidateTag("wordpress", "max");
 
     // Handle path-based revalidation
     if (path) {
