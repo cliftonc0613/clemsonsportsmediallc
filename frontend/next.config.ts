@@ -84,7 +84,7 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'clemsontigers.com',
-        pathname: '/wp-content/uploads/**',
+        pathname: '/**',
       },
     ],
   },
